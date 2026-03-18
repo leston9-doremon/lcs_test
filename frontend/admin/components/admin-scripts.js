@@ -1,5 +1,9 @@
 // Admin Panel JS — Panel switching and basic UI logic
 const ADMIN_TOKEN = sessionStorage.getItem('adminToken') || 'loretto-admin-2026';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? '' 
+  : 'https://loretto-cbse-school.onrender.com';
+
 function show(panelName, navEl) {
   // Hide all panels
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -26,7 +30,8 @@ function toast(msg) {
 }
 
 // ── SAVE (static pages) ───────────────────────────────────
-function save(section) {
+function save(section, ev, id = null) {
+  const event = ev || window.event;
   // Save to backend for all editable sections
   let data = {};
   let endpoint = '';
@@ -36,11 +41,16 @@ function save(section) {
     return;
   }
   if (section === 'News Article' || section === 'News') {
-    data = {
-      title: panel.querySelector('input[style*="font-weight:700"]')?.value || '',
-      date: panel.querySelector('input[type="date"]')?.value || '',
-      excerpt: panel.querySelector('textarea')?.value || ''
-    };
+    const card = event.target.closest('.item-card');
+    if (card) {
+      data = {
+        title: card.querySelector('input[style*="font-weight:700"]')?.value || '',
+        date: card.querySelector('input[type="date"]')?.value || '',
+        category: card.querySelector('input:not([type="date"]):not([style*="font-weight:700"])')?.value || 'Events',
+        excerpt: card.querySelector('.editable-area')?.value || '',
+        content: card.querySelector('textarea.tall')?.value || ''
+      };
+    }
     endpoint = '/api/news';
   } else if (section === 'Faculty') {
     const row = panel.querySelector('tr:last-child');
@@ -92,9 +102,13 @@ function save(section) {
     };
     endpoint = '/api/contact';
   }
+  
   if (endpoint) {
-    fetch(endpoint, {
-      method: 'POST',
+    const method = id ? 'PUT' : 'POST';
+    const finalEndpoint = id ? `${endpoint}/${id}` : endpoint;
+
+    fetch(API_BASE + finalEndpoint, {
+      method: method,
       headers: { 
         'Content-Type': 'application/json',
         'Authorization': ADMIN_TOKEN
@@ -212,20 +226,30 @@ document.addEventListener('keydown', e => {
 function addNewsCard() {
   const grid = document.getElementById('news-grid');
   if (!grid) return;
+  const uid = 'news-av-' + Date.now(), fid = 'news-photo-' + Date.now();
   const card = document.createElement('div');
   card.className = 'item-card';
   card.innerHTML = `
-    <div class="item-card-img" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy))"><span>📰</span></div>
+    <div class="item-card-img" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));position:relative;cursor:pointer;" onclick="trigUp('${fid}')">
+      <span>📰</span>
+      <div class="img-overlay">📷 Change Image<input type="file" id="${fid}" accept="image/*" style="display:none" onchange="previewMemberPhoto(this,'${uid}')" onclick="event.stopPropagation()"></div>
+      <div id="${uid}" style="position:absolute;inset:0;pointer-events:none;"></div>
+    </div>
     <div class="item-card-body">
-      <div style="display:flex;gap:6px;margin-bottom:8px;">
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
         <input class="editable" style="font-size:0.65rem;width:auto;" value="Events">
         <input type="date" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:0.75rem;font-family:'Nunito',sans-serif;outline:none;">
       </div>
       <input class="editable" style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--navy);display:block;width:100%;margin-bottom:6px;" value="New Article Title">
       <textarea class="editable-area">Article excerpt...</textarea>
+      <div class="fg" style="margin-top:8px;">
+        <label>Full Article Content</label>
+        <textarea class="tall" style="min-height:100px;">Full article content here...</textarea>
+      </div>
     </div>
     <div class="item-card-footer">
-      <button class="btn btn-gold btn-sm" onclick="save('News Article')">✓ Save</button>
+      <button class="btn btn-gold btn-sm" onclick="save('News Article', event)">✓ Save</button>
+      <button class="btn btn-outline btn-sm" onclick="trigUp('${fid}')">📷 Image</button>
       <button class="btn btn-danger btn-sm" onclick="delItem(this,'article')" style="margin-left:auto;">🗑</button>
     </div>`;
   grid.prepend(card);
@@ -541,4 +565,93 @@ function clearEmailForm() {
     e.preventDefault(); z.classList.remove('drag-over');
     toast('✓ File dropped — ready to save');
   });
-});
+});// ── FETCH AND POPULATE API DATA ───────────────────────────
+async function fetchAndPopulateAdmin() {
+  const token = ADMIN_TOKEN;
+  const headers = { 'Authorization': token };
+
+  try {
+    // 1. Fetch News
+    const newsRes = await fetch(`${API_BASE}/api/news`);
+    if (newsRes.ok) {
+      const news = await newsRes.json();
+      const grid = document.getElementById('news-grid');
+      if (grid && news.length > 0) {
+        // Clear existing static items (except the add button if any)
+        grid.innerHTML = '';
+        news.forEach(item => {
+          const fid = 'news-photo-' + item._id;
+          const uid = 'news-av-' + item._id;
+          const imgHtml = item.image 
+            ? `<div class="item-card-img" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));position:relative;cursor:pointer;" onclick="trigUp('${fid}')">
+                 <img src="${item.image}" style="width:100%;height:100%;object-fit:cover;opacity:0.6;">
+                 <div class="img-overlay">📷 Change Image<input type="file" id="${fid}" accept="image/*" style="display:none" onchange="previewMemberPhoto(this,'${uid}')" onclick="event.stopPropagation()"></div>
+                 <div id="${uid}" style="position:absolute;inset:0;pointer-events:none;"></div>
+               </div>`
+            : `<div class="item-card-img" style="background:linear-gradient(135deg,var(--navy-dark),var(--navy));position:relative;cursor:pointer;" onclick="trigUp('${fid}')">
+                 <span>📰</span>
+                 <div class="img-overlay">📷 Change Image<input type="file" id="${fid}" accept="image/*" style="display:none" onchange="previewMemberPhoto(this,'${uid}')" onclick="event.stopPropagation()"></div>
+                 <div id="${uid}" style="position:absolute;inset:0;pointer-events:none;"></div>
+               </div>`;
+
+          const card = document.createElement('div');
+          card.className = 'item-card';
+          card.dataset.id = item._id;
+          card.innerHTML = `
+            ${imgHtml}
+            <div class="item-card-body">
+              <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+                <input class="editable" style="font-size:0.65rem;width:auto;" value="${item.category || 'Events'}">
+                <input type="date" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:0.75rem;font-family:'Nunito',sans-serif;outline:none;" value="${item.date || ''}">
+              </div>
+              <input class="editable" style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--navy);display:block;width:100%;margin-bottom:6px;" value="${item.title || ''}">
+              <textarea class="editable-area">${item.excerpt || ''}</textarea>
+              <div class="fg" style="margin-top:8px;">
+                <label>Full Article Content</label>
+                <textarea class="tall" style="min-height:100px;">${item.content || ''}</textarea>
+              </div>
+            </div>
+            <div class="item-card-footer">
+              <button class="btn btn-gold btn-sm" onclick="save('News Article', event, '${item._id}')">✓ Save</button>
+              <button class="btn btn-outline btn-sm" onclick="trigUp('${fid}')">📷 Image</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteItemAPI('${item._id}', 'news', this)" style="margin-left:auto;">🗑</button>
+            </div>`;
+          grid.appendChild(card);
+        });
+      }
+    }
+
+    // You can add similar logic for Faculty, Management, Documents, Testimonials here...
+
+  } catch (err) {
+    console.error("Error fetching admin data:", err);
+  }
+}
+
+// Ensure the populate function runs when DOM is loaded
+document.addEventListener('DOMContentLoaded', fetchAndPopulateAdmin);
+
+// We need an enhanced delete function that actually calls the API
+function deleteItemAPI(id, type, btn) {
+  if (!confirm('Delete this item from server?')) return;
+  
+  fetch(`${API_BASE}/api/${type}/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': ADMIN_TOKEN }
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Failed to delete');
+    return res.json();
+  })
+  .then(() => {
+    const row = btn.closest('tr') || btn.closest('.item-card');
+    if (row) {
+      row.style.transition = 'all 0.3s';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(40px)';
+      setTimeout(() => row.remove(), 300);
+    }
+    toast('🗑 Item deleted from server');
+  })
+  .catch(() => toast('⚠ Error deleting item'));
+}
