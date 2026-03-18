@@ -1,35 +1,74 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const { Resend } = require('resend');
+const mongoose = require('mongoose');
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL;
+const MONGODB_URI = process.env.MONGODB_URI;
 
+// ==================== RESEND ====================
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
+// ==================== CLOUDINARY ====================
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Multer memory storage
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
+    allowed.includes(file.mimetype) ? cb(null, true) : cb(new Error('Invalid file type'));
+  }
+});
+
+// ==================== MONGODB ====================
 if (!ADMIN_TOKEN) {
-  console.warn('\n⚠️  WARNING: ADMIN_TOKEN environment variable is not set!');
-  console.warn('   Admin write operations will be disabled for security.\n');
+  console.warn('\n⚠️  WARNING: ADMIN_TOKEN not set!\n');
 }
 
-// Data directory
-const dataDir = path.join(__dirname, 'data');
-const backupsDir = path.join(dataDir, 'backups');
+if (MONGODB_URI) {
+  mongoose.connect(MONGODB_URI)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => console.error('❌ MongoDB error:', err));
+} else {
+  console.warn('⚠️  MONGODB_URI not set!');
+}
 
-// Ensure directories exist
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-if (!fs.existsSync(backupsDir)) fs.mkdirSync(backupsDir, { recursive: true });
+// ==================== SCHEMAS ====================
+const newsSchema = new mongoose.Schema({ title: String, category: String, date: String, excerpt: String, content: String, image: String }, { timestamps: true });
+const facultySchema = new mongoose.Schema({ name: String, subject: String, qualification: String, experience: String, photo: String }, { timestamps: true });
+const managementSchema = new mongoose.Schema({ name: String, role: String, photo: String, contact: String }, { timestamps: true });
+const documentSchema = new mongoose.Schema({ title: String, category: String, url: String, date: String }, { timestamps: true });
+const testimonialSchema = new mongoose.Schema({ name: String, role: String, text: String, rating: Number }, { timestamps: true });
+const contactSchema = new mongoose.Schema({ name: String, email: String, phone: String, subject: String, message: String }, { timestamps: true });
 
-// Middleware
+const News = mongoose.model('News', newsSchema);
+const Faculty = mongoose.model('Faculty', facultySchema);
+const Management = mongoose.model('Management', managementSchema);
+const Document = mongoose.model('Document', documentSchema);
+const Testimonial = mongoose.model('Testimonial', testimonialSchema);
+const Contact = mongoose.model('Contact', contactSchema);
+
+const models = { news: News, faculty: Faculty, management: Management, documents: Document, testimonials: Testimonial };
+
+// ==================== MIDDLEWARE ====================
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -37,20 +76,24 @@ app.use(helmet({
       "script-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "cdnjs.cloudflare.com"],
       "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "cdnjs.cloudflare.com"],
       "font-src": ["'self'", "fonts.gstatic.com", "data:", "https:"],
-      "img-src": ["'self'", "data:", "blob:", "https:"],
+      "img-src": ["'self'", "data:", "blob:", "https:", "res.cloudinary.com"],
     },
   },
-})); // Security headers
+}));
 
-app.use(morgan('dev')); // Request logging
+app.use(morgan('dev'));
 
-// Restricted CORS
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://lorettocentralschool.com',
   'https://loretto-cbse-school.pages.dev',
-  'https://loretto-cbse-school.onrender.com'
-];
+  'https://lorettoschool.pages.dev',
+  'https://loretto-cbse-school.onrender.com',
+  process.env.FRONTEND_URL || '',
+  process.env.RENDER_URL || ''
+].filter(Boolean);
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
@@ -61,202 +104,161 @@ app.use(cors({
   }
 }));
 
-app.use(express.json({ limit: '10mb' })); // Support larger base64 uploads
-
-// Static files
+app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// ==================== BASIC ROUTES ====================
+app.get('/admin-pannel.html', (req, res) => res.redirect('/admin/admin-panel.html'));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/index.html')));
 
-// Alias for common typo
-app.get('/admin-pannel.html', (req, res) => {
-  res.redirect('/admin/admin-panel.html');
-});
-
-// Redirect root to frontend/index.html if needed (though express.static handles index.html by default)
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: { error: 'Too many requests, please try again later.' }
-});
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: { error: 'Too many requests' } });
 app.use('/api/', limiter);
 
-// Authentication Middleware
 const authenticate = (req, res, next) => {
   const token = req.headers['authorization'] || req.headers['x-admin-token'];
-  if (req.method !== 'GET' && token !== ADMIN_TOKEN) {
-    return res.status(401).json({ error: 'Unauthorized: Invalid or missing admin token' });
-  }
+  if (token !== ADMIN_TOKEN) return res.status(401).json({ error: 'Unauthorized' });
   next();
 };
 
-// Helper: Backup data file
-function backupFile(filename) {
+// ==================== IMAGE UPLOAD ====================
+app.post('/api/upload', authenticate, upload.single('file'), async (req, res) => {
   try {
-    const src = path.join(dataDir, filename);
-    if (!fs.existsSync(src)) return;
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const dest = path.join(backupsDir, `${path.basename(filename, '.json')}_${timestamp}.json`);
-    fs.copyFileSync(src, dest);
-
-    // Cleanup old backups (keep last 10)
-    const files = fs.readdirSync(backupsDir)
-      .filter(f => f.startsWith(path.basename(filename, '.json')))
-      .map(f => ({ name: f, time: fs.statSync(path.join(backupsDir, f)).mtime.getTime() }))
-      .sort((a, b) => b.time - a.time);
-
-    if (files.length > 10) {
-      files.slice(10).forEach(f => fs.unlinkSync(path.join(backupsDir, f.name)));
-    }
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'loretto-school', resource_type: 'auto' },
+        (error, result) => error ? reject(error) : resolve(result)
+      );
+      stream.end(req.file.buffer);
+    });
+    res.json({ success: true, url: result.secure_url, public_id: result.public_id });
   } catch (err) {
-    console.error('Backup failed:', err);
-  }
-}
-
-// Helper: Read/Write JSON
-function readData(filename) {
-  try {
-    const filePath = path.join(dataDir, filename);
-    if (!fs.existsSync(filePath)) return [];
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch (err) {
-    console.error(`Read error (${filename}):`, err);
-    return null;
-  }
-}
-
-function writeData(filename, data) {
-  try {
-    backupFile(filename);
-    const filePath = path.join(dataDir, filename);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (err) {
-    console.error(`Write error (${filename}):`, err);
-    return false;
-  }
-}
-
-// ==================== GENERIC API HANDLER ====================
-const createHandler = (filename) => ({
-  get: (req, res) => {
-    const data = readData(filename);
-    if (data === null) return res.status(500).json({ error: 'Failed to read data' });
-    res.json(data);
-  },
-  post: (req, res) => {
-    const data = readData(filename) || [];
-    // Ensure it's an array if unshift is used
-    if (Array.isArray(data)) {
-      data.unshift({ ...req.body, id: Date.now() });
-    } else {
-      // For object-based storage like contact.json
-      Object.assign(data, req.body);
-    }
-
-    if (writeData(filename, data)) {
-      res.json({ success: true, message: 'Data saved successfully' });
-    } else {
-      res.status(500).json({ error: 'Failed to write data' });
-    }
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Failed to upload file' });
   }
 });
 
-// Register Endpoints
-const entities = ['news', 'faculty', 'management', 'documents', 'testimonials'];
-entities.forEach(entity => {
-  const handler = createHandler(`${entity}.json`);
-  app.get(`/api/${entity}`, handler.get);
-  app.post(`/api/${entity}`, authenticate, handler.post);
+app.delete('/api/upload/:public_id', authenticate, async (req, res) => {
+  try {
+    await cloudinary.uploader.destroy(decodeURIComponent(req.params.public_id));
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete file' });
+  }
 });
 
-// Special handler for Contact (Public POST, sends Email)
-const contactHandler = createHandler('contact.json');
-app.get('/api/contact', contactHandler.get);
+// ==================== CRUD API ====================
+Object.entries(models).forEach(([name, Model]) => {
+  app.get(`/api/${name}`, async (req, res) => {
+    try { res.json(await Model.find().sort({ createdAt: -1 })); }
+    catch (err) { res.status(500).json({ error: `Failed to fetch ${name}` }); }
+  });
+
+  app.post(`/api/${name}`, authenticate, async (req, res) => {
+    try { const doc = await new Model(req.body).save(); res.json({ success: true, data: doc }); }
+    catch (err) { res.status(500).json({ error: `Failed to save ${name}` }); }
+  });
+
+  app.put(`/api/${name}/:id`, authenticate, async (req, res) => {
+    try {
+      const doc = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!doc) return res.status(404).json({ error: 'Not found' });
+      res.json({ success: true, data: doc });
+    } catch (err) { res.status(500).json({ error: `Failed to update ${name}` }); }
+  });
+
+  app.delete(`/api/${name}/:id`, authenticate, async (req, res) => {
+    try { await Model.findByIdAndDelete(req.params.id); res.json({ success: true }); }
+    catch (err) { res.status(500).json({ error: `Failed to delete ${name}` }); }
+  });
+});
+
+// ==================== CONTACT ====================
+app.get('/api/contact', authenticate, async (req, res) => {
+  try { res.json(await Contact.find().sort({ createdAt: -1 })); }
+  catch (err) { res.status(500).json({ error: 'Failed to fetch contacts' }); }
+});
+
 app.post('/api/contact', async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
+  try {
+    await new Contact({ name, email, phone, subject, message }).save();
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to save message' });
+  }
 
-  // 1. Save to JSON (existing logic)
-  const data = readData('contact.json') || [];
-  const entry = { ...req.body, id: Date.now(), timestamp: new Date().toISOString() };
-  data.unshift(entry);
-
-  const saved = writeData('contact.json', data);
-  if (!saved) return res.status(500).json({ error: 'Failed to save contact data' });
-
-  // 2. Send Email via Resend
   if (resend && CONTACT_EMAIL) {
     try {
-      // Email to School
       await resend.emails.send({
         from: 'Loretto School Website <onboarding@resend.dev>',
         to: CONTACT_EMAIL,
-        subject: `New Contact Form Submission: ${subject || 'Enquiry'}`,
-        html: `
-          <h3>New Contact Form Submission</h3>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-          <p><strong>Subject:</strong> ${subject || 'N/A'}</p>
-          <p><strong>Message:</strong></p>
-          <p style="white-space: pre-wrap;">${message}</p>
-        `
+        subject: `New Contact Form: ${subject || 'Enquiry'}`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <div style="background:#094f4f;padding:20px;text-align:center;">
+            <h2 style="color:#e8b020;margin:0;">New Contact Form Submission</h2>
+          </div>
+          <div style="background:#fff;padding:20px;border-left:4px solid #c8960c;">
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+            <p><strong>Subject:</strong> ${subject || 'N/A'}</p>
+            <p><strong>Message:</strong></p>
+            <p style="background:#f5f5f5;padding:12px;white-space:pre-wrap;">${message}</p>
+          </div>
+        </div>`
       });
 
-      // Confirmation to Visitor
       if (email) {
         await resend.emails.send({
           from: 'Loretto Central School <onboarding@resend.dev>',
           to: email,
           subject: 'Thank you for contacting Loretto Central School',
-          html: `
-            <h3>Message Received</h3>
-            <p>Dear ${name},</p>
-            <p>Thank you for reaching out to Loretto Central School. We have received your message regarding "<strong>${subject || 'General Enquiry'}</strong>" and will get back to you shortly.</p>
-            <br>
-            <p>Best Regards,</p>
-            <p><strong>Loretto Central School Administration</strong></p>
-          `
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+            <div style="background:#094f4f;padding:20px;text-align:center;">
+              <h2 style="color:#e8b020;margin:0;">Loretto Central School</h2>
+            </div>
+            <div style="background:#fff;padding:20px;">
+              <p>Dear <strong>${name}</strong>,</p>
+              <p>Thank you for reaching out. We have received your message regarding <strong>"${subject || 'General Enquiry'}"</strong> and will get back to you within 24–48 working hours.</p>
+              <br/>
+              <p>Best Regards,<br/><strong>Loretto Central School Administration</strong></p>
+            </div>
+          </div>`
         });
       }
-
-      console.log(`Email sent for contact form submission from ${name}`);
     } catch (err) {
-      console.error('Error sending email via Resend:', err);
-      // We don't fail the request if email fails, as the data is already saved
+      console.error('Email error:', err);
     }
   }
 
   res.json({ success: true, message: 'Message sent successfully' });
 });
 
-// Health check (used for login validation)
+// ==================== HEALTH CHECK ====================
 app.get('/api/health', (req, res) => {
   const token = req.headers['authorization'] || req.headers['x-admin-token'];
-  if (token && token !== ADMIN_TOKEN) {
-    return res.status(401).json({ error: 'Invalid admin token' });
-  }
-  res.json({ status: 'ok', authenticated: !!token, time: new Date().toISOString() });
+  if (token && token !== ADMIN_TOKEN) return res.status(401).json({ error: 'Invalid admin token' });
+  res.json({
+    status: 'ok',
+    authenticated: !!token,
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    time: new Date().toISOString()
+  });
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong on the server' });
+  res.status(500).json({ error: 'Something went wrong' });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`
-  🚀 Loretto Admin Server
-  -----------------------
-  URL:    http://localhost:${PORT}
-  Panel:  http://localhost:${PORT}/admin/admin-panel.html
-  Data:   ${dataDir}
-  Auth:   ${ADMIN_TOKEN ? 'Enabled' : 'Disabled (No token set)'}
+  🚀 Loretto Central School Server
+  ----------------------------------
+  URL:        http://localhost:${PORT}
+  Admin:      http://localhost:${PORT}/admin/admin-login.html
+  MongoDB:    ${MONGODB_URI ? '✅ Configured' : '❌ Not configured'}
+  Resend:     ${RESEND_API_KEY ? '✅ Configured' : '❌ Not configured'}
+  Cloudinary: ${process.env.CLOUDINARY_CLOUD_NAME ? '✅ Configured' : '❌ Not configured'}
   `);
 });
