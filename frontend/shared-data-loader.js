@@ -3,7 +3,7 @@
  * Standardized data fetching and rendering for the frontend.
  */
 
-const API_BASE = '/api';
+const API_BASE = window.location.hostname === 'localhost' ? '/api' : 'https://loretto-cbse-school.onrender.com/api';
 
 /**
  * Generic Fetch Helper
