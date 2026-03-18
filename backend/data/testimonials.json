@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "Sample Parent",
+    "role": "Parent",
+    "text": "Great school with excellent faculty and infrastructure.",
+    "rating": 5
+  }
+]

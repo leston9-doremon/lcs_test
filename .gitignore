@@ -1,0 +1,7 @@
+node_modules/
+data/backups/
+.DS_Store
+__MACOSX/
+*.log
+.env
+loretto-admin.html

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Loretto Central School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0e6b6b;
+      --navy-dark: #094f4f;
+      --navy-deeper: #063a3a;
+      --gold: #c8960c;
+      --gold-light: #e8b020;
+      --gold-pale: #f5e6c0;
+      --white: #ffffff;
+      --text: #1a2e2e;
+      --text-muted: #5a6e6e;
+      --error: #c0392b;
+      --success: #27ae60;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      background: var(--navy-deeper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(200,150,12,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(14,107,107,0.3) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 60% 10%, rgba(200,150,12,0.05) 0%, transparent 50%);
+      z-index: 0;
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift {
+      0%   { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 1;   transform: scale(1.05); }
+    }
+
+    /* Decorative grid lines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,150,12,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,150,12,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Crest / Logo area */
+    .crest {
+      text-align: center;
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .crest-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 6px rgba(200,150,12,0.15), 0 8px 32px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .crest-icon svg {
+      width: 38px;
+      height: 38px;
+      fill: var(--navy-deeper);
+    }
+
+    .crest h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .crest p {
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(200,150,12,0.2);
+      border-radius: 20px;
+      padding: 40px 40px 36px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+      animation: fadeUp 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .card-header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .card-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .card-header p {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    /* Gold divider */
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 28px;
+      width: 60%;
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+
+    /* Form fields */
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap .icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      opacity: 0.45;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 13px 14px 13px 44px;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+
+    .input-wrap input::placeholder {
+      color: rgba(255,255,255,0.25);
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--gold);
+      background: rgba(200,150,12,0.07);
+      box-shadow: 0 0 0 3px rgba(200,150,12,0.12);
+    }
+
+    .input-wrap input:focus + .icon,
+    .input-wrap:focus-within .icon {
+      opacity: 0.75;
+    }
+
+    /* Password toggle */
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px;
+      opacity: 0.4;
+      transition: opacity 0.2s;
+      color: white;
+      display: flex;
+    }
+
+    .toggle-pw:hover { opacity: 0.8; }
+
+    /* Error message */
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.4);
+      border-radius: 8px;
+      color: #f1948a;
+      font-size: 0.82rem;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      animation: shake 0.4s ease;
+    }
+
+    .error-msg.show { display: flex; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+
+    /* Submit button */
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy-deeper);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      box-shadow: 0 4px 20px rgba(200,150,12,0.35);
+      margin-top: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0.15), transparent);
+      pointer-events: none;
+    }
+
+    .btn-login:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(200,150,12,0.45);
+      filter: brightness(1.05);
+    }
+
+    .btn-login:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-login .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(9,79,79,0.3);
+      border-top-color: var(--navy-deeper);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    .btn-login.loading .btn-text { display: none; }
+    .btn-login.loading .spinner  { display: block; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer note */
+    .card-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: rgba(255,255,255,0.25);
+      font-size: 0.75rem;
+    }
+
+    .card-footer a {
+      color: rgba(200,150,12,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .card-footer a:hover { color: var(--gold-light); }
+
+    /* Floating badge */
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: fadeUp 0.7s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .secure-badge svg {
+      width: 12px;
+      height: 12px;
+      opacity: 0.4;
+    }
+
+    /* Success overlay */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: var(--navy-deeper);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .success-overlay .check {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: popIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+
+    .success-overlay p {
+      color: var(--white);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+    }
+
+    .success-overlay small {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <div class="crest">
+      <div class="crest-icon">
+        <!-- Shield/School icon -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.21-2.12 6.22-5 7.35C9.12 17.22 7 14.21 7 11V7.18L12 5z"/>
+        </svg>
+      </div>
+      <h1>Loretto Central School</h1>
+      <p>Administration Portal</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to manage school content</p>
+      </div>
+      <div class="divider"></div>
+
+      <div class="error-msg" id="errorMsg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="errorText">Invalid credentials. Please try again.</span>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <div class="input-wrap">
+            <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" required />
+            <svg class="icon" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password / Token</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" placeholder="Enter admin token" autocomplete="current-password" required />
+            <svg class="icon" viewBox="0 0 24 24" fill="white"><path d="M18 8h-1V6c0-2.8-2.2-5-5-5S7 3.2 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.7 1.4-3.1 3.1-3.1 1.7 0 3.1 1.4 3.1 3.1v2z"/></svg>
+            <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility">
+              <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="btn-text">Sign In</span>
+          <div class="spinner"></div>
+        </button>
+      </form>
+
+      <div class="card-footer">
+        Having trouble? Contact <a href="mailto:info@appvertex.in">info@appvertex.in</a>
+      </div>
+    </div>
+
+    <div class="secure-badge">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.8-2.2-5-5-5S7 3.2 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.7 1.4-3.1 3.1-3.1 1.7 0 3.1 1.4 3.1 3.1v2z"/></svg>
+      Secured Connection
+    </div>
+  </div>
+
+  <!-- Success overlay -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="check">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="#094f4f"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <p>Login Successful</p>
+    <small>Redirecting to admin panel…</small>
+  </div>
+
+  <script>
+    const form       = document.getElementById('loginForm');
+    const btn        = document.getElementById('loginBtn');
+    const errorMsg   = document.getElementById('errorMsg');
+    const errorText  = document.getElementById('errorText');
+    const togglePw   = document.getElementById('togglePw');
+    const pwInput    = document.getElementById('password');
+    const eyeIcon    = document.getElementById('eyeIcon');
+    const overlay    = document.getElementById('successOverlay');
+
+    // Toggle password visibility
+    togglePw.addEventListener('click', () => {
+      const isText = pwInput.type === 'text';
+      pwInput.type = isText ? 'password' : 'text';
+      eyeIcon.innerHTML = isText
+        ? '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>'
+        : '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>';
+    });
+
+    // Hide error on input
+    form.addEventListener('input', () => {
+      errorMsg.classList.remove('show');
+    });
+
+    // Login submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = pwInput.value.trim();
+
+      if (!username || !password) {
+        showError('Please enter both username and token.');
+        return;
+      }
+
+      // Loading state
+      btn.classList.add('loading');
+      btn.disabled = true;
+      errorMsg.classList.remove('show');
+
+      try {
+        // Verify token against the server API
+        const res = await fetch('/api/health', {
+          headers: { 'Authorization': password, 'x-admin-token': password }
+        });
+
+        // Small artificial delay for UX
+        await new Promise(r => setTimeout(r, 800));
+
+        if (res.ok) {
+          // Store token in sessionStorage for admin panel to use
+          sessionStorage.setItem('adminToken', password);
+          sessionStorage.setItem('adminUser', username);
+          overlay.classList.add('show');
+          setTimeout(() => { window.location.href = 'admin-panel.html'; }, 1500);
+        } else {
+          showError('Invalid credentials. Please check your admin token.');
+        }
+      } catch (err) {
+        // If server not reachable, still allow entry for offline testing
+        showError('Cannot reach server. Make sure the server is running.');
+      }
+
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    });
+
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorMsg.classList.remove('show');
+      void errorMsg.offsetWidth; // reflow to re-trigger animation
+      errorMsg.classList.add('show');
+    }
+  </script>
+</body>
+</html>

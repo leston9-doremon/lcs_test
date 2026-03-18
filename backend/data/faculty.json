@@ -1,0 +1,15 @@
+[
+  {
+    "name": "",
+    "subject": "",
+    "qualification": "",
+    "experience": ""
+  },
+  {
+    "id": 1,
+    "name": "Dr. Sample Faculty",
+    "subject": "Mathematics",
+    "qualification": "M.Sc, B.Ed",
+    "experience": 10
+  }
+]
