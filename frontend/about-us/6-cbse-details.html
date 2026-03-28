@@ -330,8 +330,8 @@
 <section class="page-content">
   <div class="container">
     <div class="content-card">
-      <h2>CBSE Details</h2>
-      <p>Loretto Central School is proudly affiliated with the Central Board of Secondary Education (CBSE), New Delhi — India's premier national board. Our CBSE affiliation reflects our commitment to delivering a standardized, high-quality education that opens doors to opportunities across India and beyond.</p>
+      <h2 id="cbsePageTitle">CBSE Details</h2>
+      <p id="cbseIntroText">Loretto Central School is proudly affiliated with the Central Board of Secondary Education (CBSE), New Delhi - India's premier national board. Our CBSE affiliation reflects our commitment to delivering a standardized, high-quality education that opens doors to opportunities across India and beyond.</p>
 
       <!-- Stats -->
       <div class="cbse-badge-row">
@@ -342,12 +342,12 @@
         </div>
         <div class="cbse-badge">
           <div class="badge-icon">🔢</div>
-          <div class="badge-value">831368</div>
+          <div class="badge-value" id="cbseBadgeAffiliationNo">831368</div>
           <div class="badge-label">Affiliation Number</div>
         </div>
         <div class="cbse-badge">
           <div class="badge-icon">📅</div>
-          <div class="badge-value">2024–2029</div>
+          <div class="badge-value" id="cbseBadgePeriod">2024-2029</div>
           <div class="badge-label">Affiliation Period</div>
         </div>
       </div>
@@ -355,18 +355,19 @@
       <!-- Details Table -->
       <table class="info-table">
         <tr><td>Board</td><td>Central Board of Secondary Education (C.B.S.E.), New Delhi</td></tr>
-        <tr><td>Affiliation Number</td><td><strong>831368</strong></td></tr>
-        <tr><td>Affiliation Valid From</td><td>01/04/2024</td></tr>
-        <tr><td>Affiliation Valid To</td><td>31/03/2029</td></tr>
-        <tr><td>Affiliation Duration</td><td>5 years (2024–2029)</td></tr>
-        <tr><td>Classes Covered</td><td>LKG to Class X (Secondary Level)</td></tr>
-        <tr><td>Principal</td><td>Fr. Jason Vijay Monis</td></tr>
-        <tr><td>School Name</td><td>Loretto Central School (formerly Loreto English Medium High School)</td></tr>
+        <tr><td>Affiliation Number</td><td><strong id="cbseTableAffiliationNo">831368</strong></td></tr>
+        <tr><td>Affiliation Valid From</td><td id="cbseTableValidFrom">01/04/2024</td></tr>
+        <tr><td>Affiliation Valid To</td><td id="cbseTableValidTo">31/03/2029</td></tr>
+        <tr><td>Affiliation Duration</td><td id="cbseTableDuration">5 years (2024-2029)</td></tr>
+        <tr><td>Classes Covered</td><td id="cbseTableAffiliationType">LKG to Class X (Secondary Level)</td></tr>
+        <tr><td>School Code</td><td id="cbseTableSchoolCode">To be updated</td></tr>
+        <tr><td>Principal</td><td id="cbseTablePrincipalName">Fr. Jason Vijay Monis</td></tr>
+        <tr><td>School Name</td><td>Loretto Central School</td></tr>
         <tr><td>Location</td><td>Loretto Padavu, Bantwal, Dakshina Kannada, Karnataka</td></tr>
       </table>
 
       <div class="cbse-note">
-        <p>📌 Our CBSE affiliation ensures that students receive a nationally recognized education, enabling them to appear for CBSE Board Examinations and pursue higher education and career opportunities across India and abroad.</p>
+        <p id="cbseNoteText">📌 Our CBSE affiliation ensures that students receive a nationally recognized education, enabling them to appear for CBSE Board Examinations and pursue higher education and career opportunities across India and abroad.</p>
       </div>
     </div>
   </div>
@@ -374,5 +375,121 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function initCBSEPage() {
+      var DEFAULT_CBSE = {
+        affiliationNo: '831368',
+        affiliationType: 'LKG to Class X (Secondary Level)',
+        validFrom: '2024-04-01',
+        validTo: '2029-03-31',
+        principalName: 'Fr. Jason Vijay Monis',
+        schoolCode: '',
+        notes: '📌 Our CBSE affiliation ensures that students receive a nationally recognized education, enabling them to appear for CBSE Board Examinations and pursue higher education and career opportunities across India and abroad.'
+      };
+
+      function mergeCBSEData(data) {
+        var source = data && typeof data === 'object' ? data : {};
+        return Object.assign({}, DEFAULT_CBSE, source);
+      }
+
+      function formatDate(value) {
+        if (!value) return '';
+        var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        if (!match) return value;
+        return [match[3], match[2], match[1]].join('/');
+      }
+
+      function getPeriodLabel(validFrom, validTo) {
+        var fromYear = validFrom ? String(validFrom).slice(0, 4) : '';
+        var toYear = validTo ? String(validTo).slice(0, 4) : '';
+        if (fromYear && toYear) return fromYear + '-' + toYear;
+        return 'To be updated';
+      }
+
+      function getDurationLabel(validFrom, validTo) {
+        var from = validFrom ? new Date(validFrom) : null;
+        var to = validTo ? new Date(validTo) : null;
+        if (!(from instanceof Date) || isNaN(from) || !(to instanceof Date) || isNaN(to)) {
+          return 'To be updated';
+        }
+        var years = to.getFullYear() - from.getFullYear();
+        if ((to.getMonth() < from.getMonth()) || (to.getMonth() === from.getMonth() && to.getDate() < from.getDate())) {
+          years -= 1;
+        }
+        var period = getPeriodLabel(validFrom, validTo);
+        return (years > 0 ? years + ' years' : 'Affiliation period') + ' (' + period + ')';
+      }
+
+      function applyCBSEData(data) {
+        var cbse = mergeCBSEData(data);
+        var schoolCode = cbse.schoolCode && String(cbse.schoolCode).trim() ? cbse.schoolCode : 'To be updated';
+
+        var badgeAffiliationNo = document.getElementById('cbseBadgeAffiliationNo');
+        var badgePeriod = document.getElementById('cbseBadgePeriod');
+        var tableAffiliationNo = document.getElementById('cbseTableAffiliationNo');
+        var tableValidFrom = document.getElementById('cbseTableValidFrom');
+        var tableValidTo = document.getElementById('cbseTableValidTo');
+        var tableDuration = document.getElementById('cbseTableDuration');
+        var tableAffiliationType = document.getElementById('cbseTableAffiliationType');
+        var tablePrincipalName = document.getElementById('cbseTablePrincipalName');
+        var tableSchoolCode = document.getElementById('cbseTableSchoolCode');
+        var noteText = document.getElementById('cbseNoteText');
+
+        if (badgeAffiliationNo) badgeAffiliationNo.textContent = cbse.affiliationNo || DEFAULT_CBSE.affiliationNo;
+        if (badgePeriod) badgePeriod.textContent = getPeriodLabel(cbse.validFrom, cbse.validTo);
+        if (tableAffiliationNo) tableAffiliationNo.textContent = cbse.affiliationNo || DEFAULT_CBSE.affiliationNo;
+        if (tableValidFrom) tableValidFrom.textContent = formatDate(cbse.validFrom) || 'To be updated';
+        if (tableValidTo) tableValidTo.textContent = formatDate(cbse.validTo) || 'To be updated';
+        if (tableDuration) tableDuration.textContent = getDurationLabel(cbse.validFrom, cbse.validTo);
+        if (tableAffiliationType) tableAffiliationType.textContent = cbse.affiliationType || DEFAULT_CBSE.affiliationType;
+        if (tablePrincipalName) tablePrincipalName.textContent = cbse.principalName || DEFAULT_CBSE.principalName;
+        if (tableSchoolCode) tableSchoolCode.textContent = schoolCode;
+        if (noteText) noteText.textContent = cbse.notes || DEFAULT_CBSE.notes;
+      }
+
+      function resolveCBSEApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [
+          localStorage.getItem('loretto_api_base') || '',
+          defaultRemoteApi,
+          window.location.origin + '/api',
+          'http://localhost:3000/api',
+          'http://127.0.0.1:3000/api',
+          'http://localhost:8000/api',
+          'http://127.0.0.1:8000/api'
+        ].filter(function (value, index, list) {
+          return value && list.indexOf(value) === index;
+        });
+
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health', { method: 'GET' })
+              .then(function (res) { return res.ok ? res.json() : null; })
+              .then(function (data) {
+                return data && data.service === 'loretto-backend' ? base : null;
+              })
+              .catch(function () { return null; });
+          });
+        });
+
+        return attempt.then(function (found) {
+          return found || defaultRemoteApi;
+        });
+      }
+
+      applyCBSEData(DEFAULT_CBSE);
+
+      resolveCBSEApiBase()
+        .then(function (base) { return fetch(base + '/about/cbse-details', { cache: 'no-store' }); })
+        .then(function (res) { return res.json(); })
+        .then(function (item) {
+          var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+          if (Object.keys(data).length) applyCBSEData(data);
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>

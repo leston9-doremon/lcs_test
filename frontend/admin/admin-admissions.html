@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admissions Admin — Loretto Central School</title>
+  <script src="/admin/admin-auth.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="/admin/adminfooter.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0e6b6b;--navy-dark:#094f4f;--navy-deep:#062f2f;
+      --gold:#c8960c;--gold-light:#e8b020;--gold-pale:#f5e6c0;
+      --white:#fff;--bg:#f4f1eb;--bg2:#edeae2;
+      --text:#1a2e2e;--text-muted:#5a6e6e;--border:#ddd6c0;
+      --green:#27ae60;--red:#e74c3c;--sidebar-w:240px;
+      --shadow:0 4px 24px rgba(9,79,79,.10);--radius:14px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Nunito',sans-serif;color:var(--text);background:var(--bg);min-height:100vh;overflow-x:hidden}
+    .shell{display:flex;min-height:calc(100vh - 52px)}
+    .sidebar{width:var(--sidebar-w);background:var(--navy-deep);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(200,150,12,.3) transparent;z-index:100}
+    .sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:rgba(200,150,12,.3);border-radius:4px}
+    .sb-brand{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px}
+    .sb-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 3px 10px rgba(200,150,12,.4);flex-shrink:0}
+    .sb-title{font-family:'Playfair Display',serif;font-size:.84rem;font-weight:700;color:#fff}
+    .sb-sub{font-size:.57rem;color:var(--gold-light);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+    .sb-sec{font-size:.57rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);padding:16px 16px 5px}
+    .sb-nav{padding:4px 9px;flex:1}
+    .sb-lnk{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:9px;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.58);text-decoration:none;cursor:pointer;transition:all .2s;margin-bottom:2px;position:relative;border:none;background:none;width:100%;text-align:left}
+    .sb-lnk:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+    .sb-lnk.active{background:linear-gradient(135deg,rgba(200,150,12,.22),rgba(200,150,12,.12));color:var(--gold-light);border:1px solid rgba(200,150,12,.3)}
+    .sb-lnk.active::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;background:var(--gold-light);border-radius:0 3px 3px 0}
+    .sb-lnk .ic{font-size:.9rem;width:18px;text-align:center;flex-shrink:0}
+    .sb-footer{padding:12px 9px 14px;border-top:1px solid rgba(255,255,255,.07)}
+    .sb-user{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:9px;background:rgba(255,255,255,.05)}
+    .sb-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:var(--navy-deep);flex-shrink:0}
+    .sb-uname{font-size:.74rem;font-weight:700;color:#fff}
+    .sb-urole{font-size:.58rem;color:rgba(255,255,255,.4)}
+    .main{flex:1;min-width:0;display:flex;flex-direction:column}
+    .topbar{height:56px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;position:sticky;top:52px;z-index:50;box-shadow:0 2px 10px rgba(9,79,79,.06)}
+    .tb-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--navy-dark);flex:1}
+    .tb-title span{font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:600;color:var(--text-muted);display:block;margin-top:1px}
+    .tb-acts{display:flex;align-items:center;gap:8px}
+    .api-status{display:flex;align-items:center;gap:5px;font-size:.67rem;font-weight:700;color:var(--green);background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.2);padding:4px 9px;border-radius:20px}
+    .api-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .api-status.err{color:var(--red);background:rgba(231,76,60,.08);border-color:rgba(231,76,60,.2)}
+    .api-status.err .api-dot{background:var(--red)}
+    .page-tabs{display:flex;border-bottom:2px solid var(--border);background:var(--white);padding:0 22px;gap:4px;overflow-x:auto}
+    .tab-btn{padding:12px 18px;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;color:var(--text-muted);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+    .tab-btn:hover{color:var(--navy)}
+    .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
+    .panel{display:none;padding:22px}.panel.active{display:block}
+    .hero-card{background:linear-gradient(135deg,var(--navy-deep),var(--navy-dark));color:#fff;border-radius:18px;padding:24px 28px;box-shadow:var(--shadow);margin-bottom:20px;position:relative;overflow:hidden}
+    .hero-card::after{content:'';position:absolute;width:200px;height:200px;right:-30px;top:-50px;border-radius:50%;background:radial-gradient(circle,rgba(232,176,32,.22),transparent 70%);pointer-events:none}
+    .hero-card h1{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:6px;position:relative;z-index:1}
+    .hero-card p{max-width:680px;line-height:1.65;color:rgba(255,255,255,.82);font-size:.92rem;position:relative;z-index:1}
+    .grid{display:grid;grid-template-columns:1.35fr .95fr;gap:18px;align-items:start}
+    .stack{display:grid;gap:18px}
+    .block{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .bh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--white),var(--bg));flex-wrap:wrap}
+    .bt{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--navy-dark);display:flex;align-items:center;gap:6px}
+    .bt .ic{font-size:1rem}
+    .cpill{font-family:'Nunito',sans-serif;font-size:.6rem;font-weight:800;background:var(--gold-pale);color:var(--gold);border:1px solid rgba(200,150,12,.3);padding:2px 8px;border-radius:20px}
+    .bb{padding:18px}
+    .fg{display:grid;gap:12px}
+    .fg.c2{grid-template-columns:1fr 1fr}
+    .fg.c3{grid-template-columns:1fr 1fr 1fr}
+    .fg.c4{grid-template-columns:1fr 1fr 1fr auto}
+    .f label{display:block;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+    .f label .req{color:var(--gold);margin-left:2px}
+    .f input,.f textarea,.f select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:.85rem;color:var(--text);background:var(--white);outline:none;transition:border .2s,box-shadow .2s}
+    .f textarea{min-height:88px;resize:vertical}
+    .f input:focus,.f textarea:focus,.f select:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(14,107,107,.10)}
+    .hint{font-size:.69rem;color:var(--text-muted);margin-top:4px;line-height:1.55}
+    .btn-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border:none;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;transition:all .2s;white-space:nowrap}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.gd{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy-deep);box-shadow:0 3px 10px rgba(200,150,12,.25)}
+    .btn.tl{background:var(--navy);color:#fff}
+    .btn.tl:hover{background:var(--navy-dark)}
+    .btn.out{background:transparent;border:1.5px solid var(--border);color:var(--text-muted)}
+    .btn.out:hover{border-color:var(--navy);color:var(--navy)}
+    .btn.rd{background:rgba(231,76,60,.08);border:1.5px solid rgba(231,76,60,.2);color:var(--red)}
+    .btn.rd:hover{background:rgba(231,76,60,.15)}
+    .btn.sm{padding:5px 10px;font-size:.67rem}
+    .repeater{display:grid;gap:10px}
+    .item{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:14px}
+    .item-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+    .item-num{width:24px;height:24px;border-radius:50%;background:var(--navy);color:var(--gold-light);font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .item-title{font-size:.8rem;font-weight:800;color:var(--navy);flex:1}
+    .upload-row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+    .upload-row input[type="url"]{flex:1;min-width:200px}
+    .file-mini{font-size:.68rem;color:var(--text-muted);font-family:monospace;word-break:break-all;margin-top:4px;line-height:1.4}
+    .file-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(14,107,107,.08);border:1px solid rgba(14,107,107,.18);border-radius:20px;padding:3px 10px;font-size:.67rem;font-weight:700;color:var(--navy);margin-top:4px}
+    .preview-box{background:rgba(14,107,107,.05);border:1px dashed rgba(14,107,107,.2);border-radius:10px;padding:12px;font-size:.76rem;color:var(--text-muted);line-height:1.6}
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table thead th{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);padding:9px 13px;text-align:left;background:var(--bg);border-bottom:2px solid var(--border)}
+    .data-table tbody tr{border-bottom:1px solid var(--bg2);transition:background .15s}
+    .data-table tbody tr:hover{background:rgba(14,107,107,.03)}
+    .data-table tbody tr:last-child{border-bottom:none}
+    .data-table tbody td{padding:10px 13px;font-size:.8rem;color:var(--text);vertical-align:middle}
+    .data-table input[type="text"],.data-table input[type="number"],.data-table select{border:1.5px solid var(--border);border-radius:7px;padding:5px 9px;font-family:'Nunito',sans-serif;font-size:.8rem;color:var(--text);background:var(--white);outline:none;width:100%}
+    .data-table input:focus,.data-table select:focus{border-color:var(--navy)}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bg2)}
+    .toggle-row:last-child{border-bottom:none}
+    .tl-name{font-size:.82rem;font-weight:700;color:var(--text)}
+    .tl-desc{font-size:.69rem;color:var(--text-muted);margin-top:2px}
+    .toggle{position:relative;width:42px;height:22px;flex-shrink:0}
+    .toggle input{display:none}
+    .toggle-track{position:absolute;inset:0;background:var(--bg2);border-radius:12px;border:1.5px solid var(--border);cursor:pointer;transition:background .2s,border-color .2s}
+    .toggle-track::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;box-shadow:0 2px 5px rgba(0,0,0,.18);transition:transform .2s}
+    .toggle input:checked~.toggle-track{background:var(--navy);border-color:var(--navy-dark)}
+    .toggle input:checked~.toggle-track::after{transform:translateX(20px)}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+    .stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .stat-card.c-teal::before{background:linear-gradient(90deg,var(--navy),var(--navy-dark))}
+    .stat-card.c-gold::before{background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+    .stat-card.c-green::before{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+    .stat-card.c-blue::before{background:linear-gradient(90deg,#2980b9,#3498db)}
+    .stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:var(--text);line-height:1}
+    .stat-lbl{font-size:.72rem;color:var(--text-muted);font-weight:600;margin-top:4px}
+    .stat-icon{font-size:1.4rem;margin-bottom:10px}
+    .toast{position:fixed;right:24px;bottom:24px;background:var(--navy-deep);color:#fff;padding:11px 20px;border-radius:10px;font-size:.78rem;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.22);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:99998;border-left:4px solid var(--gold-light);display:flex;align-items:center;gap:8px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .note-box{background:var(--gold-pale);border:1px solid rgba(200,150,12,.4);border-radius:10px;padding:12px 16px;font-size:.76rem;color:var(--navy-dark);line-height:1.6}
+    @media(max-width:1100px){.grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}.fg.c3{grid-template-columns:1fr 1fr}}
+    @media(max-width:768px){.shell{display:block}.sidebar{position:relative;top:0;width:100%;height:auto;max-height:300px}.topbar{top:52px}.stats-row{grid-template-columns:1fr 1fr}.fg.c2,.fg.c3,.fg.c4{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-icon">🏫</div>
+      <div>
+        <div class="sb-title">Loretto Admin</div>
+        <div class="sb-sub">Admissions</div>
+      </div>
+    </div>
+
+    <div class="sb-sec">Admissions Pages</div>
+    <nav class="sb-nav">
+      <button class="sb-lnk active" data-side-tab="overview" onclick="switchTab('overview')"><span class="ic">📋</span> Overview Page</button>
+      <button class="sb-lnk" data-side-tab="enquiry" onclick="switchTab('enquiry')"><span class="ic">📝</span> Admission Enquiry</button>
+      <button class="sb-lnk" data-side-tab="tc" onclick="switchTab('tc')"><span class="ic">📄</span> Transfer Certificate</button>
+      <button class="sb-lnk" data-side-tab="fee" onclick="switchTab('fee')"><span class="ic">💰</span> Fee Structure</button>
+    </nav>
+
+    <div class="sb-sec">Site Navigation</div>
+    <nav class="sb-nav">
+      <a class="sb-lnk" href="admin-panel.html"><span class="ic">📊</span> Dashboard</a>
+      <a class="sb-lnk" href="adminschool-profile.html"><span class="ic">🏛️</span> About Us</a>
+      <a class="sb-lnk" href="admin-academics.html"><span class="ic">📚</span> Academics</a>
+      <a class="sb-lnk" href="admin-schoolinfo.html"><span class="ic">ℹ️</span> School Info</a>
+      <a class="sb-lnk" href="admin-contact.html"><span class="ic">📞</span> Contact</a>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div>
+          <div class="sb-uname">Admin</div>
+          <div class="sb-urole">Super Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="tb-title" id="topbarTitle">
+        Admissions — Overview
+        <span id="topbarSub">admissions/1-admissions.html · Key: admissions-overview</span>
+      </div>
+      <div class="tb-acts">
+        <div class="api-status" id="apiStatus"><span class="api-dot"></span> Connecting…</div>
+        <button class="btn out btn-sm" type="button" onclick="previewCurrent()">👁️ Preview</button>
+        <button class="btn gd" type="button" onclick="saveCurrentPanel()">💾 Save Changes</button>
+      </div>
+    </div>
+
+    <div class="page-tabs">
+      <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">📋 Overview</button>
+      <button class="tab-btn" data-tab="enquiry" onclick="switchTab('enquiry')">📝 Enquiry</button>
+      <button class="tab-btn" data-tab="tc" onclick="switchTab('tc')">📄 Transfer Certificate</button>
+      <button class="tab-btn" data-tab="fee" onclick="switchTab('fee')">💰 Fee Structure</button>
+    </div>
+
+    <div class="panel active" id="panel-overview">
+      <div class="hero-card">
+        <h1>📋 Admissions Overview</h1>
+        <p>Edit the main admissions page — banner, highlight cards, downloadable application forms, admission steps and the CTA block. Changes are saved to MongoDB and rendered live on <code>admissions/1-admissions.html</code>.</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card c-teal"><div class="stat-icon">🏷️</div><div class="stat-val" id="statHighlights">3</div><div class="stat-lbl">Highlight Cards</div></div>
+        <div class="stat-card c-gold"><div class="stat-icon">📄</div><div class="stat-val" id="statForms">3</div><div class="stat-lbl">Download Forms</div></div>
+        <div class="stat-card c-green"><div class="stat-icon">🪜</div><div class="stat-val" id="statSteps">4</div><div class="stat-lbl">Admission Steps</div></div>
+        <div class="stat-card c-blue"><div class="stat-icon">🔗</div><div class="stat-val">1</div><div class="stat-lbl">CTA Block</div></div>
+      </div>
+
+      <div class="grid">
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🖼️</span> Page Banner</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveOverview()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Page Title <span class="req">*</span></label><input id="heroTitle" type="text" value="Admissions"/></div>
+              <div class="f"><label>Hero Subtitle <span class="req">*</span></label><textarea id="heroSubtitle">Begin your child's journey of excellence at Loretto Central School - where every learner is valued, nurtured, and inspired.</textarea></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🏷️</span> Highlight Cards <span class="cpill" id="highlightCount">3</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addHighlight()">+ Add Card</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveOverview()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">These cards appear at the top of the admissions page. Each shows a title and description.</p>
+              <div class="repeater" id="highlightsList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📄</span> Application Forms <span class="cpill" id="formsCount">3</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addForm()">+ Add Form</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveOverview()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb fg">
+              <div class="fg c2">
+                <div class="f"><label>Section Heading</label><input id="formsHeading" type="text" value="Download Application Forms"/></div>
+                <div class="f"><label>Short Intro</label><input id="formsIntroShort" type="text" value="Choose the form for your child's class."/></div>
+              </div>
+              <div class="f"><label>Full Intro Paragraph</label><textarea id="formsIntro">Choose the appropriate application form based on the class you are applying for. Fill in the form carefully and submit it to the school office along with the required documents.</textarea></div>
+              <div class="note-box">📎 PDFs are uploaded to <strong>Cloudinary</strong> as <code>raw</code> resources. The URL is saved in MongoDB and served on the public page via the Download button.</div>
+              <div class="repeater" id="formsList"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🪜</span> Admission Steps <span class="cpill" id="stepsCount">4</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addStep()">+ Add Step</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveOverview()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Section Heading</label><input id="stepsHeading" type="text" value="Admission Process at a Glance"/></div>
+              <div class="repeater" id="stepsList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📢</span> CTA Block</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveOverview()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>CTA Title</label><input id="ctaTitle" type="text" value="Have Questions About Admissions?"/></div>
+              <div class="f"><label>CTA Text</label><textarea id="ctaText">Visit the school office or explore our detailed Admission Enquiry page for complete rules and guidelines.</textarea></div>
+              <div class="fg c2">
+                <div class="f"><label>Button Text</label><input id="ctaBtnText" type="text" value="Admission Enquiry →"/></div>
+                <div class="f"><label>Button Link</label><input id="ctaBtnLink" type="text" value="2-admission-enquiry.html"/></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh"><div class="bt"><span class="ic">ℹ️</span> Notes</div></div>
+            <div class="bb">
+              <div class="preview-box">
+                <strong>Content Key:</strong> <code>admissions-overview</code><br>
+                <strong>MongoDB:</strong> Stored in <code>content_blocks</code> collection under key <code>admissions-overview</code><br>
+                <strong>Cloudinary:</strong> PDFs uploaded as <code>resource_type: raw</code><br>
+                <strong>Live page:</strong> <code>admissions/1-admissions.html</code>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-enquiry">
+      <div class="hero-card">
+        <h1>📝 Admission Enquiry</h1>
+        <p>Manage the rules for admission, required documents list, sidebar download links, school office information, and quick tips shown on the Admission Enquiry page.</p>
+      </div>
+
+      <div class="grid">
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📜</span> Rules for Admission <span class="cpill" id="rulesCount">10</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addRule()">+ Add Rule</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">Numbered rules displayed on the enquiry page. Numbers update automatically.</p>
+              <div class="repeater" id="rulesList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📂</span> Required Documents <span class="cpill" id="docsCount">8</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addDoc()">+ Add Doc</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">Bullet list shown under "Documents Required".</p>
+              <div class="repeater" id="docsList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">✍️</span> Page Intro Text</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Opening Paragraph</label><textarea id="enquiryIntro">Committed to our core value of nurturing excellence, we at Loretto Central School ensure that optimum learning happens for your child in an environment that is student-centric, fosters mutual respect, and stimulates innovation.</textarea></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">⬇️</span> Sidebar Download Links</div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addSidebarLink()">+ Add Link</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">PDF links shown in the sidebar "Download Application Forms" card.</p>
+              <div class="repeater" id="sidebarLinksList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🏫</span> School Office Card</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Address</label><textarea id="officeAddress" style="min-height:60px;">Loretto Central School
+Loretto Padavu, Bantwal
+Dakshina Kannada – 574219</textarea></div>
+              <div class="f"><label>Working Hours Note</label><input id="officeHours" type="text" value="Please enquire during school working hours"/></div>
+              <div class="f"><label>Website URL</label><input id="officeWebsite" type="url" value="https://school.edu"/></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">💡</span> Quick Tips Sidebar Card</div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addTip()">+ Add Tip</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveEnquiry()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <div class="repeater" id="tipsList"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-tc">
+      <div class="hero-card">
+        <h1>📄 Transfer Certificate Format</h1>
+        <p>Manage the TC format preview fields, download feature card, and related content shown on <code>admissions/3-transfer-certificate.html</code>.</p>
+      </div>
+
+      <div class="grid">
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🏫</span> TC School Header</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveTC()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>School Name (on TC)</label><input id="tcSchoolName" type="text" value="LORETTO CENTRAL SCHOOL"/></div>
+              <div class="f"><label>Address Line on TC</label><input id="tcSchoolAddr" type="text" value="Loretto Padavu, Bantwal, Dakshina Kannada – 574219 | CBSE Affiliation No.: 831368"/></div>
+              <div class="f"><label>TC Document Title</label><input id="tcDocTitle" type="text" value="Transfer Certificate"/></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📋</span> TC Field Labels <span class="cpill" id="tcFieldCount">18</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addTcField()">+ Add Field</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveTC()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">These are the row labels shown in the TC preview table. The value column remains blank for issuing.</p>
+              <div class="repeater" id="tcFieldsList"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">✍️</span> TC Footer & Signatures</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveTC()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Class Teacher Label</label><input id="tcSig1" type="text" value="Class Teacher"/></div>
+              <div class="f"><label>Principal Label</label><input id="tcSig2" type="text" value="Principal"/></div>
+              <div class="f"><label>Footer Note</label><textarea id="tcFooterNote" style="min-height:60px;">This Transfer Certificate is issued on the request of the parent/guardian. No liability is accepted after 30 days of issue.</textarea></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">⬇️</span> TC Download Feature Card</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveTC()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Card Title</label><input id="tcDlTitle" type="text" value="Download TC Format"/></div>
+              <div class="f"><label>Card Description</label><textarea id="tcDlDesc" style="min-height:60px;">Download the standard Transfer Certificate format used by Loretto Central School for reference or record-keeping purposes.</textarea></div>
+              <div class="f"><label>PDF / File URL</label>
+                <div class="upload-row">
+                  <input id="tcDlUrl" type="url" value="https://school.edu/wp-content/uploads/2025/06/tc.pdf"/>
+                  <input id="tcDlPublicId" type="hidden" value=""/>
+                  <input id="tcDlResourceType" type="hidden" value="raw"/>
+                  <input id="tcDlType" type="hidden" value="upload"/>
+                  <button class="btn out btn-sm" type="button" onclick="document.getElementById('tcDlFile').click()">📤 Upload PDF</button>
+                </div>
+                <input id="tcDlFile" type="file" accept="application/pdf" style="display:none" onchange="uploadTcPdf(this)"/>
+                <div class="file-mini" id="tcDlUrlPreview">No file uploaded yet</div>
+              </div>
+              <div class="f"><label>Download Button Text</label><input id="tcDlBtnText" type="text" value="Download TC Format (PDF)"/></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh"><div class="bt"><span class="ic">⚙️</span> TC Page Settings</div></div>
+            <div class="bb">
+              <div class="toggle-row">
+                <div><div class="tl-name">Show TC Preview</div><div class="tl-desc">Display the TC format table on the public page</div></div>
+                <label class="toggle"><input type="checkbox" id="tcShowPreview" checked/><span class="toggle-track"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="tl-name">Show Download Card</div><div class="tl-desc">Display the PDF download feature card</div></div>
+                <label class="toggle"><input type="checkbox" id="tcShowDownload" checked/><span class="toggle-track"></span></label>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-fee">
+      <div class="hero-card">
+        <h1>💰 Fee Structure</h1>
+        <p>Edit the fee table, academic year badge, fee PDF download link, important notes, and payment methods shown on <code>admissions/4-fee-structure.html</code>.</p>
+      </div>
+
+      <div class="grid">
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">🗓️</span> Academic Year & Header</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveFee()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="fg c2">
+                <div class="f"><label>Academic Year Badge</label><input id="feeAcYear" type="text" value="2025–2026"/></div>
+                <div class="f"><label>Page Heading</label><input id="feePageHeading" type="text" value="Fee Structure Overview"/></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📊</span> Fee Categories Table <span class="cpill" id="feeRowCount">7</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addFeeRow()">+ Add Row</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveFee()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">Each row = one fee category. Leave amount blank for "As applicable".</p>
+              <div style="overflow-x:auto;">
+                <table class="data-table" id="feeTable">
+                  <thead>
+                    <tr>
+                      <th style="width:24%">Fee Category</th>
+                      <th style="width:30%">Description</th>
+                      <th style="width:16%">Frequency</th>
+                      <th style="width:18%">Amount (₹)</th>
+                      <th style="width:8%">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="feeTableBody"></tbody>
+                </table>
+              </div>
+              <div style="margin-top:14px;" class="fg c2">
+                <div class="f"><label>Total Row Label</label><input id="feeTotalLabel" type="text" value="Estimated Total (Annual)"/></div>
+                <div class="f"><label>Total Amount</label><input id="feeTotalAmount" type="text" value="As per Class"/></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">📌</span> Important Fee Notes <span class="cpill" id="feeNotesCount">7</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addFeeNote()">+ Add Note</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveFee()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <div class="repeater" id="feeNotesList"></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">⬇️</span> Fee Structure PDF Download</div>
+              <div class="btn-row"><button class="btn gd btn-sm" type="button" onclick="saveFee()">💾 Save</button></div>
+            </div>
+            <div class="bb fg">
+              <div class="f"><label>Download CTA Title</label><input id="feeDlTitle" type="text" value="Download Official Fee Structure PDF"/></div>
+              <div class="f"><label>Download CTA Description</label><textarea id="feeDlDesc">Download the complete and up-to-date fee structure for Academic Year 2025–2026, including class-wise breakdowns and all applicable charges.</textarea></div>
+              <div class="f"><label>PDF URL</label>
+                <div class="upload-row">
+                  <input id="feeDlUrl" type="url" value="https://school.edu/wp-content/uploads/2025/06/fees-3.pdf"/>
+                  <input id="feeDlPublicId" type="hidden" value=""/>
+                  <input id="feeDlResourceType" type="hidden" value="raw"/>
+                  <input id="feeDlType" type="hidden" value="upload"/>
+                  <button class="btn out btn-sm" type="button" onclick="document.getElementById('feeDlFile').click()">📤 Upload PDF</button>
+                </div>
+                <input id="feeDlFile" type="file" accept="application/pdf" style="display:none" onchange="uploadFeePdf(this)"/>
+                <div class="file-mini" id="feeDlUrlPreview">Using existing URL above</div>
+              </div>
+              <div class="f"><label>Button Text</label><input id="feeDlBtnText" type="text" value="Download Fee Structure (PDF)"/></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh">
+              <div class="bt"><span class="ic">💳</span> Payment Methods <span class="cpill" id="payMethodCount">3</span></div>
+              <div class="btn-row">
+                <button class="btn tl btn-sm" type="button" onclick="addPayMethod()">+ Add Method</button>
+                <button class="btn gd btn-sm" type="button" onclick="saveFee()">💾 Save</button>
+              </div>
+            </div>
+            <div class="bb">
+              <p class="hint" style="margin-bottom:12px;">Cards shown in the "Fee Payment Methods" section. Each can have an optional link button.</p>
+              <div class="repeater" id="payMethodsList"></div>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="bh"><div class="bt"><span class="ic">⚙️</span> Page Settings</div></div>
+            <div class="bb">
+              <div class="toggle-row">
+                <div><div class="tl-name">Show Fee Table</div><div class="tl-desc">Display the fee categories table</div></div>
+                <label class="toggle"><input type="checkbox" id="feeShowTable" checked/><span class="toggle-track"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="tl-name">Show Download CTA</div><div class="tl-desc">Display the PDF download banner</div></div>
+                <label class="toggle"><input type="checkbox" id="feeShowDl" checked/><span class="toggle-track"></span></label>
+              </div>
+              <div class="toggle-row">
+                <div><div class="tl-name">Show Payment Methods</div><div class="tl-desc">Display payment method cards</div></div>
+                <label class="toggle"><input type="checkbox" id="feeShowPay" checked/><span class="toggle-track"></span></label>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">✅ Saved</div>
+
+<script>
+var API_BASE = '';
+
+function uid(p) { return p + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6); }
+function esc(v) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function setVal(id, v) { var el = document.getElementById(id); if (el) el.value = v ?? ''; }
+
+async function resolveApi() {
+  if (API_BASE) return API_BASE;
+  var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+  var candidates = [
+    sessionStorage.getItem('loretto_api_base') || '',
+    localStorage.getItem('loretto_api_base') || '',
+    defaultRemoteApi,
+    window.location.origin + '/api',
+    'http://localhost:3000/api',
+    'http://127.0.0.1:3000/api'
+  ].filter(function (value, index, list) { return value && list.indexOf(value) === index; });
+  for (var i = 0; i < candidates.length; i += 1) {
+    try {
+      var r = await fetch(candidates[i] + '/health', { method: 'GET' });
+      if (r.ok) {
+        var d = await r.json();
+        if (d.service === 'loretto-backend') {
+          API_BASE = candidates[i];
+          return API_BASE;
+        }
+      }
+    } catch (e) {}
+  }
+  API_BASE = defaultRemoteApi;
+  return API_BASE;
+}
+
+function apiH(extra) {
+  var h = Object.assign({}, extra || {});
+  if (window.ADMIN_TOKEN) h['x-admin-token'] = window.ADMIN_TOKEN;
+  if (window.apiHeaders) return window.apiHeaders(h);
+  return h;
+}
+
+async function apiGet(path) {
+  var base = await resolveApi();
+  var res = await fetch(base + path, { cache: 'no-store', headers: apiH() });
+  if (!res.ok) throw new Error('GET ' + path + ' failed');
+  return res.json();
+}
+
+async function apiPost(path, data) {
+  var base = await resolveApi();
+  var res = await fetch(base + path, { method: 'POST', headers: apiH({ 'Content-Type': 'application/json' }), body: JSON.stringify(data) });
+  var body = await res.json().catch(function () { return {}; });
+  if (!res.ok) throw new Error(body.error || 'POST failed');
+  return body;
+}
+
+async function uploadFile(file) {
+  var fd = new FormData();
+  fd.append('file', file);
+  var base = await resolveApi();
+  var res = await fetch(base + '/upload', { method: 'POST', headers: apiH(), body: fd });
+  var data = await res.json().catch(function () { return {}; });
+  if (!res.ok || !data.url) throw new Error(data.error || 'Upload failed');
+  return data;
+}
+
+async function deleteCloudinary(publicId, resourceType, type) {
+  var base = await resolveApi();
+  var res = await fetch(base + '/upload/delete', { 
+    method: 'POST', 
+    headers: apiH({ 'Content-Type': 'application/json' }), 
+    body: JSON.stringify({ publicId: publicId, resourceType: resourceType || 'raw', type: type || 'upload' }) 
+  });
+  var data = await res.json().catch(function () { return {}; });
+  if (!res.ok || !data.ok) throw new Error(data.error || 'Delete failed');
+  return data;
+}
+
+function showToast(msg, err) {
+  var t = document.getElementById('toast');
+  t.textContent = (err ? '❌ ' : '✅ ') + (msg || 'Saved');
+  t.style.borderLeftColor = err ? 'var(--red)' : 'var(--gold-light)';
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(function () { t.classList.remove('show'); }, 3200);
+}
+
+async function checkApi() {
+  try {
+    await resolveApi();
+    var okEl = document.getElementById('apiStatus');
+    okEl.innerHTML = '<span class="api-dot"></span> API Connected';
+    okEl.className = 'api-status';
+  } catch (e) {
+    var errEl = document.getElementById('apiStatus');
+    errEl.innerHTML = '<span class="api-dot"></span> API Offline';
+    errEl.className = 'api-status err';
+  }
+}
+
+var TAB_META = {
+  overview: { title: 'Admissions — Overview', sub: 'admissions/1-admissions.html · Key: admissions-overview', preview: '../admissions/1-admissions.html' },
+  enquiry:  { title: 'Admission Enquiry', sub: 'admissions/2-admission-enquiry.html · Key: admissions-enquiry', preview: '../admissions/2-admission-enquiry.html' },
+  tc:       { title: 'Transfer Certificate Format', sub: 'admissions/3-transfer-certificate.html · Key: admissions-tc', preview: '../admissions/3-transfer-certificate.html' },
+  fee:      { title: 'Fee Structure', sub: 'admissions/4-fee-structure.html · Key: admissions-fee', preview: '../admissions/4-fee-structure.html' }
+};
+
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('.sb-lnk[data-side-tab]').forEach(function (l) { l.classList.remove('active'); });
+  document.getElementById('panel-' + tab).classList.add('active');
+  var tabBtn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+  var sideBtn = document.querySelector('.sb-lnk[data-side-tab="' + tab + '"]');
+  if (tabBtn) tabBtn.classList.add('active');
+  if (sideBtn) sideBtn.classList.add('active');
+  var meta = TAB_META[tab];
+  document.getElementById('topbarTitle').childNodes[0].textContent = meta.title + ' ';
+  document.getElementById('topbarSub').textContent = meta.sub;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function previewCurrent() {
+  var active = document.querySelector('.panel.active');
+  var id = active ? active.id.replace('panel-', '') : 'overview';
+  window.open(TAB_META[id].preview, '_blank');
+}
+
+function saveCurrentPanel() {
+  var active = document.querySelector('.panel.active');
+  var id = active ? active.id.replace('panel-', '') : 'overview';
+  if (id === 'overview') saveOverview();
+  else if (id === 'enquiry') saveEnquiry();
+  else if (id === 'tc') saveTC();
+  else if (id === 'fee') saveFee();
+}
+
+var overviewState = {
+  highlights: [
+    { id: uid('h'), title: 'CBSE Affiliated', description: 'Fully affiliated to CBSE, New Delhi (Affiliation No. 831368), offering LKG to Class X education.' },
+    { id: uid('h'), title: 'All Are Welcome', description: 'Open to boys and girls of all communities - irrespective of caste, creed, or social status.' },
+    { id: uid('h'), title: 'Simple Process', description: 'Download the application form, fill it with the required documents, and submit to the school office.' }
+  ],
+  forms: [
+    { id: uid('f'), title: 'Application for Play School Admission', description: 'For children applying to the Play School (Pre-Nursery) programme.', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-play-school-admission.pdf', publicId: '', resourceType: 'raw', size: '', originalFilename: 'application-for-play-school-admission.pdf' },
+    { id: uid('f'), title: 'Application for Kindergarten Admission', description: 'For children applying to LKG or UKG (Kindergarten) classes.', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-kindergarten-school-admission.pdf', publicId: '', resourceType: 'raw', size: '', originalFilename: 'application-for-kindergarten-school-admission.pdf' },
+    { id: uid('f'), title: 'Application for Class 1-8 Admission', description: 'For students applying to Classes 1 through 8.', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-1-8-admission.pdf', publicId: '', resourceType: 'raw', size: '', originalFilename: 'application-for-1-8-admission.pdf' }
+  ],
+  steps: [
+    { id: uid('s'), number: '1', title: 'Download Form', description: 'Download the relevant application form from this page or collect it from the school office.' },
+    { id: uid('s'), number: '2', title: 'Fill & Prepare', description: 'Complete the form with accurate details. Gather required documents: TC, birth certificate, photos, etc.' },
+    { id: uid('s'), number: '3', title: 'Submit at Office', description: 'Submit the filled form with all documents at the school office during working hours.' },
+    { id: uid('s'), number: '4', title: 'Confirmation', description: 'Pay the prescribed fees upon confirmation. Fee payment can be done in instalments as permitted.' }
+  ]
+};
+
+function renderHighlights() {
+  var root = document.getElementById('highlightsList');
+  if (!root) return;
+  root.innerHTML = overviewState.highlights.map(function (item, i) {
+    return '<div class="item"><div class="item-head"><div class="item-num">' + (i + 1) + '</div><div class="item-title">Highlight Card ' + (i + 1) + '</div><button class="btn rd btn-sm" type="button" onclick="removeHighlight(\'' + item.id + '\')">✕ Delete</button></div><div class="fg"><div class="f"><label>Title</label><input type="text" value="' + esc(item.title) + '" oninput="updateHighlight(\'' + item.id + '\',\'title\',this.value)"/></div><div class="f"><label>Description</label><textarea oninput="updateHighlight(\'' + item.id + '\',\'description\',this.value)">' + esc(item.description) + '</textarea></div></div></div>';
+  }).join('');
+  document.getElementById('highlightCount').textContent = overviewState.highlights.length;
+  document.getElementById('statHighlights').textContent = overviewState.highlights.length;
+}
+
+function renderForms() {
+  var root = document.getElementById('formsList');
+  if (!root) return;
+  root.innerHTML = overviewState.forms.map(function (item, i) {
+    return '<div class="item"><div class="item-head"><div class="item-num">' + (i + 1) + '</div><div class="item-title">Download Form ' + (i + 1) + '</div><button class="btn rd btn-sm" type="button" onclick="removeForm(\'' + item.id + '\')">✕ Delete</button></div><div class="fg"><div class="f"><label>Form Title</label><input type="text" value="' + esc(item.title) + '" oninput="updateForm(\'' + item.id + '\',\'title\',this.value)"/></div><div class="f"><label>Description</label><textarea oninput="updateForm(\'' + item.id + '\',\'description\',this.value)">' + esc(item.description) + '</textarea></div><div class="f"><label>PDF URL</label><div class="upload-row"><input type="url" value="' + esc(item.url) + '" oninput="updateForm(\'' + item.id + '\',\'url\',this.value)" placeholder="https://..."/><button class="btn out btn-sm" type="button" onclick="document.getElementById(\'fupload-' + item.id + '\').click()">📤 Upload PDF</button>' + (item.publicId ? '<button class="btn rd btn-sm" type="button" onclick="deleteFormFile(\'' + item.id + '\')">🗑️</button>' : '') + '</div><input id="fupload-' + item.id + '" type="file" accept="application/pdf" style="display:none" onchange="uploadFormFile(\'' + item.id + '\',this)"/>' + (item.originalFilename ? '<div class="file-mini">Name: ' + esc(item.originalFilename) + '</div>' : '') + (item.url ? '<div class="file-pill">📎 ' + esc(item.url.split('/').pop()) + '</div>' : '') + (item.size ? '<div class="file-mini">Size: ' + esc(item.size) + '</div>' : '') + '</div></div></div>';
+  }).join('');
+  document.getElementById('formsCount').textContent = overviewState.forms.length;
+  document.getElementById('statForms').textContent = overviewState.forms.length;
+}
+
+function renderSteps() {
+  var root = document.getElementById('stepsList');
+  if (!root) return;
+  root.innerHTML = overviewState.steps.map(function (item, i) {
+    return '<div class="item"><div class="item-head"><div class="item-num">' + (i + 1) + '</div><div class="item-title">Step ' + (i + 1) + '</div><button class="btn rd btn-sm" type="button" onclick="removeStep(\'' + item.id + '\')">✕ Delete</button></div><div class="fg"><div class="fg c2"><div class="f"><label>Step Number</label><input type="text" value="' + esc(item.number) + '" oninput="updateStep(\'' + item.id + '\',\'number\',this.value)"/></div><div class="f"><label>Title</label><input type="text" value="' + esc(item.title) + '" oninput="updateStep(\'' + item.id + '\',\'title\',this.value)"/></div></div><div class="f"><label>Description</label><textarea oninput="updateStep(\'' + item.id + '\',\'description\',this.value)">' + esc(item.description) + '</textarea></div></div></div>';
+  }).join('');
+  document.getElementById('stepsCount').textContent = overviewState.steps.length;
+  document.getElementById('statSteps').textContent = overviewState.steps.length;
+}
+
+function addHighlight() { overviewState.highlights.push({ id: uid('h'), title: '', description: '' }); renderHighlights(); }
+function removeHighlight(id) { overviewState.highlights = overviewState.highlights.filter(function (x) { return x.id !== id; }); renderHighlights(); }
+function updateHighlight(id, field, value) { overviewState.highlights = overviewState.highlights.map(function (x) { return x.id === id ? Object.assign({}, x, field === 'title' ? { title: value } : { description: value }) : x; }); }
+function addForm() { overviewState.forms.push({ id: uid('f'), title: '', description: '', url: '', publicId: '', resourceType: 'raw', size: '', originalFilename: '' }); renderForms(); }
+
+function removeForm(id) {
+  if (!confirm('Delete this application form? This cannot be undone.')) return;
+  var item = overviewState.forms.find(function (x) { return x.id === id; });
+  if (item && item.publicId) deleteCloudinary(item.publicId, item.resourceType).catch(function () {});
+  overviewState.forms = overviewState.forms.filter(function (x) { return x.id !== id; });
+  renderForms();
+  saveOverview('Form deleted!');
+}
+
+function updateForm(id, field, value) {
+  overviewState.forms = overviewState.forms.map(function (x) {
+    if (x.id !== id) return x;
+    var next = Object.assign({}, x);
+    next[field] = value;
+    if (field === 'url' && value !== x.url) {
+      next.publicId = '';
+      next.resourceType = 'raw';
+      next.size = '';
+      next.originalFilename = '';
+    }
+    return next;
+  });
+}
+
+async function uploadFormFile(id, input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  try {
+    showToast('Uploading PDF…');
+    var up = await uploadFile(file);
+    overviewState.forms = overviewState.forms.map(function (x) {
+      return x.id === id ? Object.assign({}, x, { url: up.url, publicId: up.publicId || '', resourceType: up.resourceType || 'raw', type: up.type || 'upload', size: bytesLabel(up.bytes), originalFilename: up.originalFilename || up.storedFilename || '' }) : x;
+    });
+    renderForms();
+    showToast('PDF uploaded!');
+  } catch (e) {
+    showToast(e.message, true);
+  } finally {
+    input.value = '';
+  }
+}
+
+async function deleteFormFile(id) {
+  var item = overviewState.forms.find(function (x) { return x.id === id; });
+  if (!item || !item.publicId) return;
+  if (!confirm('Delete PDF from Cloudinary?')) return;
+  try {
+    await deleteCloudinary(item.publicId, item.resourceType, item.type);
+    overviewState.forms = overviewState.forms.map(function (x) {
+      return x.id === id ? Object.assign({}, x, { url: '', publicId: '', resourceType: 'raw', size: '', originalFilename: '' }) : x;
+    });
+    renderForms();
+    showToast('PDF deleted from Cloudinary');
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+function addStep() { overviewState.steps.push({ id: uid('s'), number: String(overviewState.steps.length + 1), title: '', description: '' }); renderSteps(); }
+function removeStep(id) { overviewState.steps = overviewState.steps.filter(function (x) { return x.id !== id; }); renderSteps(); }
+function updateStep(id, field, value) { overviewState.steps = overviewState.steps.map(function (x) { return x.id === id ? Object.assign({}, x, field === 'number' ? { number: value } : field === 'title' ? { title: value } : { description: value }) : x; }); }
+
+async function saveOverview(msg) {
+  try {
+    var data = {
+      heroTitle: val('heroTitle'),
+      heroSubtitle: val('heroSubtitle'),
+      highlights: overviewState.highlights,
+      formsHeading: val('formsHeading'),
+      formsIntroShort: val('formsIntroShort'),
+      formsIntro: val('formsIntro'),
+      forms: overviewState.forms,
+      stepsHeading: val('stepsHeading'),
+      steps: overviewState.steps,
+      ctaTitle: val('ctaTitle'),
+      ctaText: val('ctaText'),
+      ctaButtonText: val('ctaBtnText'),
+      ctaButtonLink: val('ctaBtnLink')
+    };
+    await apiPost('/content/admissions-overview', { data: data });
+    showToast(msg || 'Admissions overview saved!');
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+async function loadOverview() {
+  try {
+    var item = await apiGet('/content/admissions-overview');
+    var d = item && item.data ? item.data : {};
+    if (d.heroTitle) setVal('heroTitle', d.heroTitle);
+    if (d.heroSubtitle) setVal('heroSubtitle', d.heroSubtitle);
+    if (d.formsHeading) setVal('formsHeading', d.formsHeading);
+    if (d.formsIntroShort) setVal('formsIntroShort', d.formsIntroShort);
+    if (d.formsIntro) setVal('formsIntro', d.formsIntro);
+    if (d.stepsHeading) setVal('stepsHeading', d.stepsHeading);
+    if (d.ctaTitle) setVal('ctaTitle', d.ctaTitle);
+    if (d.ctaText) setVal('ctaText', d.ctaText);
+    if (d.ctaButtonText) setVal('ctaBtnText', d.ctaButtonText);
+    if (d.ctaButtonLink) setVal('ctaBtnLink', d.ctaButtonLink);
+    if (Array.isArray(d.highlights) && d.highlights.length) overviewState.highlights = d.highlights.map(function (x) { return { id: x.id || uid('h'), title: x.title || '', description: x.description || '' }; });
+    if (Array.isArray(d.forms) && d.forms.length) overviewState.forms = d.forms.map(function (x) { return { id: x.id || uid('f'), title: x.title || '', description: x.description || '', url: x.url || '', publicId: x.publicId || '', resourceType: x.resourceType || 'raw', type: x.type || 'upload', size: x.size || '', originalFilename: x.originalFilename || '' }; });
+    if (Array.isArray(d.steps) && d.steps.length) overviewState.steps = d.steps.map(function (x) { return { id: x.id || uid('s'), number: x.number || '', title: x.title || '', description: x.description || '' }; });
+  } catch (e) {}
+  renderHighlights();
+  renderForms();
+  renderSteps();
+}
+
+var enquiryState = {
+  rules: [
+    { id: uid('r'), text: 'The school, which mainly runs for the Christian minority community, is also open for admission to boys and girls irrespective of caste, creed, or social status.' },
+    { id: uid('r'), text: 'The child should complete the age prescribed by the Government to be admitted to the 1st standard.' },
+    { id: uid('r'), text: 'Every student for admission and withdrawal from the school must be introduced by letter or in person by someone responsible to the Head of the School.' },
+    { id: uid('r'), text: 'Application for admission should be made in the prescribed form, which can be obtained from the office, and must be submitted along with the Transfer Certificate from the school previously attended.' },
+    { id: uid('r'), text: 'Every pupil on admission shall pay the prescribed fees. No fees shall be refunded for any cause.' },
+    { id: uid('r'), text: 'The payment may be made in instalments as prescribed by the school management. The entire fee is to be remitted by February end.' },
+    { id: uid('r'), text: 'Pupils coming from secondary or primary schools should produce a Transfer Certificate and Conduct Certificate issued by the Head of the School concerned.' },
+    { id: uid('r'), text: 'Pupils coming from schools outside Dakshina Kannada district or outside Karnataka State will be admitted on production of a Transfer Certificate duly countersigned by the concerned authorities.' },
+    { id: uid('r'), text: 'In the case of admission of pupils coming from primary or secondary schools, the date of birth furnished in the Transfer Certificate will be taken as correct.' },
+    { id: uid('r'), text: 'The admission application must be signed by the father or mother or, in their absence, by the guardian who has been authorized by the parents.' }
+  ],
+  docs: [
+    { id: uid('d'), text: 'Completed Application Form (downloaded and filled)' },
+    { id: uid('d'), text: 'Transfer Certificate (TC) from previous school (for Classes 1–8)' },
+    { id: uid('d'), text: 'Conduct Certificate from previous school (where applicable)' },
+    { id: uid('d'), text: 'Original Birth Certificate of the child' },
+    { id: uid('d'), text: 'Recent passport-size photographs of the student (2–4 copies)' },
+    { id: uid('d'), text: 'Aadhar Card copy of student and parent/guardian' },
+    { id: uid('d'), text: 'Caste Certificate / Community Certificate (if applicable)' },
+    { id: uid('d'), text: 'Previous academic records / report card' }
+  ],
+  sidebarLinks: [
+    { id: uid('sl'), name: 'Kindergarten Admission', type: 'PDF · Application Form', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-kindergarten-school-admission-1.pdf' },
+    { id: uid('sl'), name: 'Play School Admission', type: 'PDF · Application Form', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-play-school-admission-1.pdf' },
+    { id: uid('sl'), name: 'Class 1–8 Admission', type: 'PDF · Application Form', url: 'https://school.edu/wp-content/uploads/2025/02/application-for-1-8-admission-1.pdf' }
+  ],
+  tips: [
+    { id: uid('t'), text: 'Collect or download forms in advance' },
+    { id: uid('t'), text: 'Fill all fields accurately and completely' },
+    { id: uid('t'), text: 'Keep original documents ready for verification' },
+    { id: uid('t'), text: 'Submit during office working hours only' },
+    { id: uid('t'), text: 'Fees once paid are non-refundable' }
+  ]
+};
+
+function renderRules() {
+  var root = document.getElementById('rulesList');
+  if (!root) return;
+  root.innerHTML = enquiryState.rules.map(function (item, i) {
+    return '<div class="item" style="padding:10px 12px;"><div style="display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:flex-start;"><div class="item-num">' + (i + 1) + '</div><div class="f"><textarea style="min-height:60px;" oninput="updateRule(\'' + item.id + '\',this.value)">' + esc(item.text) + '</textarea></div><button class="btn rd btn-sm" type="button" style="align-self:flex-start;margin-top:2px;" onclick="removeRule(\'' + item.id + '\')">✕</button></div></div>';
+  }).join('');
+  document.getElementById('rulesCount').textContent = enquiryState.rules.length;
+}
+
+function renderDocs() {
+  var root = document.getElementById('docsList');
+  if (!root) return;
+  root.innerHTML = enquiryState.docs.map(function (item) {
+    return '<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;"><div class="f"><input type="text" value="' + esc(item.text) + '" oninput="updateDoc(\'' + item.id + '\',this.value)" placeholder="Document name…"/></div><button class="btn rd btn-sm" type="button" onclick="removeDoc(\'' + item.id + '\')">✕</button></div>';
+  }).join('');
+  document.getElementById('docsCount').textContent = enquiryState.docs.length;
+}
+
+function renderSidebarLinks() {
+  var root = document.getElementById('sidebarLinksList');
+  if (!root) return;
+  root.innerHTML = enquiryState.sidebarLinks.map(function (item, i) {
+    return '<div class="item"><div class="item-head"><div class="item-num">' + (i + 1) + '</div><div class="item-title">Download Link ' + (i + 1) + '</div><button class="btn rd btn-sm" type="button" onclick="removeSidebarLink(\'' + item.id + '\')">✕</button></div><div class="fg"><div class="fg c2"><div class="f"><label>Display Name</label><input type="text" value="' + esc(item.name) + '" oninput="updateSidebarLink(\'' + item.id + '\',\'name\',this.value)"/></div><div class="f"><label>Sub-label</label><input type="text" value="' + esc(item.type) + '" oninput="updateSidebarLink(\'' + item.id + '\',\'type\',this.value)"/></div></div><div class="f"><label>PDF URL</label><input type="url" value="' + esc(item.url) + '" oninput="updateSidebarLink(\'' + item.id + '\',\'url\',this.value)"/></div></div></div>';
+  }).join('');
+}
+
+function renderTips() {
+  var root = document.getElementById('tipsList');
+  if (!root) return;
+  root.innerHTML = enquiryState.tips.map(function (item) {
+    return '<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;"><div class="f"><input type="text" value="' + esc(item.text) + '" oninput="updateTip(\'' + item.id + '\',this.value)" placeholder="Tip text…"/></div><button class="btn rd btn-sm" type="button" onclick="removeTip(\'' + item.id + '\')">✕</button></div>';
+  }).join('');
+}
+
+function addRule() { enquiryState.rules.push({ id: uid('r'), text: '' }); renderRules(); }
+function removeRule(id) { enquiryState.rules = enquiryState.rules.filter(function (x) { return x.id !== id; }); renderRules(); }
+function updateRule(id, value) { enquiryState.rules = enquiryState.rules.map(function (x) { return x.id === id ? Object.assign({}, x, { text: value }) : x; }); }
+function addDoc() { enquiryState.docs.push({ id: uid('d'), text: '' }); renderDocs(); }
+function removeDoc(id) { enquiryState.docs = enquiryState.docs.filter(function (x) { return x.id !== id; }); renderDocs(); }
+function updateDoc(id, value) { enquiryState.docs = enquiryState.docs.map(function (x) { return x.id === id ? Object.assign({}, x, { text: value }) : x; }); }
+function addSidebarLink() { enquiryState.sidebarLinks.push({ id: uid('sl'), name: '', type: 'PDF · Application Form', url: '' }); renderSidebarLinks(); }
+function removeSidebarLink(id) { enquiryState.sidebarLinks = enquiryState.sidebarLinks.filter(function (x) { return x.id !== id; }); renderSidebarLinks(); }
+function updateSidebarLink(id, field, value) { enquiryState.sidebarLinks = enquiryState.sidebarLinks.map(function (x) { return x.id === id ? Object.assign({}, x, field === 'name' ? { name: value } : field === 'type' ? { type: value } : { url: value }) : x; }); }
+function addTip() { enquiryState.tips.push({ id: uid('t'), text: '' }); renderTips(); }
+function removeTip(id) { enquiryState.tips = enquiryState.tips.filter(function (x) { return x.id !== id; }); renderTips(); }
+function updateTip(id, value) { enquiryState.tips = enquiryState.tips.map(function (x) { return x.id === id ? Object.assign({}, x, { text: value }) : x; }); }
+
+async function saveEnquiry() {
+  try {
+    var data = {
+      intro: val('enquiryIntro'),
+      rules: enquiryState.rules,
+      docs: enquiryState.docs,
+      sidebarLinks: enquiryState.sidebarLinks,
+      officeAddress: val('officeAddress'),
+      officeHours: val('officeHours'),
+      officeWebsite: val('officeWebsite'),
+      tips: enquiryState.tips
+    };
+    await apiPost('/content/admissions-enquiry', { data: data });
+    showToast('Admission Enquiry page saved!');
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+async function loadEnquiry() {
+  try {
+    var item = await apiGet('/content/admissions-enquiry');
+    var d = item && item.data ? item.data : {};
+    if (d.intro) setVal('enquiryIntro', d.intro);
+    if (d.officeAddress) setVal('officeAddress', d.officeAddress);
+    if (d.officeHours) setVal('officeHours', d.officeHours);
+    if (d.officeWebsite) setVal('officeWebsite', d.officeWebsite);
+    if (Array.isArray(d.rules) && d.rules.length) enquiryState.rules = d.rules.map(function (x) { return { id: x.id || uid('r'), text: x.text || '' }; });
+    if (Array.isArray(d.docs) && d.docs.length) enquiryState.docs = d.docs.map(function (x) { return { id: x.id || uid('d'), text: x.text || '' }; });
+    if (Array.isArray(d.sidebarLinks) && d.sidebarLinks.length) enquiryState.sidebarLinks = d.sidebarLinks.map(function (x) { return { id: x.id || uid('sl'), name: x.name || '', type: x.type || '', url: x.url || '' }; });
+    if (Array.isArray(d.tips) && d.tips.length) enquiryState.tips = d.tips.map(function (x) { return { id: x.id || uid('t'), text: x.text || '' }; });
+  } catch (e) {}
+  renderRules();
+  renderDocs();
+  renderSidebarLinks();
+  renderTips();
+}
+
+var tcState = {
+  fields: [
+    { id: uid('tf'), label: 'TC No.' },
+    { id: uid('tf'), label: 'Date of Issue' },
+    { id: uid('tf'), label: "Student's Name" },
+    { id: uid('tf'), label: "Father's Name" },
+    { id: uid('tf'), label: "Mother's Name" },
+    { id: uid('tf'), label: 'Date of Birth' },
+    { id: uid('tf'), label: 'Nationality' },
+    { id: uid('tf'), label: 'Religion' },
+    { id: uid('tf'), label: 'Category' },
+    { id: uid('tf'), label: 'Admission No.' },
+    { id: uid('tf'), label: 'Class Last Studied' },
+    { id: uid('tf'), label: 'Class in which Admitted' },
+    { id: uid('tf'), label: 'Date of Admission' },
+    { id: uid('tf'), label: 'Date of Leaving' },
+    { id: uid('tf'), label: 'Reason for Leaving' },
+    { id: uid('tf'), label: 'General Conduct' },
+    { id: uid('tf'), label: 'Fees Paid Up To' },
+    { id: uid('tf'), label: 'Whether Qualified for Promotion' }
+  ]
+};
+
+function renderTcFields() {
+  var root = document.getElementById('tcFieldsList');
+  if (!root) return;
+  root.innerHTML = tcState.fields.map(function (item, i) {
+    return '<div style="display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-bottom:5px;"><div class="item-num" style="width:22px;height:22px;font-size:.65rem;">' + (i + 1) + '</div><div class="f"><input type="text" value="' + esc(item.label) + '" oninput="updateTcField(\'' + item.id + '\',this.value)" placeholder="Field label…"/></div><button class="btn rd btn-sm" type="button" onclick="removeTcField(\'' + item.id + '\')">✕</button></div>';
+  }).join('');
+  document.getElementById('tcFieldCount').textContent = tcState.fields.length;
+}
+
+function addTcField() { tcState.fields.push({ id: uid('tf'), label: '' }); renderTcFields(); }
+function removeTcField(id) { tcState.fields = tcState.fields.filter(function (x) { return x.id !== id; }); renderTcFields(); }
+function updateTcField(id, value) { tcState.fields = tcState.fields.map(function (x) { return x.id === id ? Object.assign({}, x, { label: value }) : x; }); }
+
+async function uploadTcPdf(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  try {
+    showToast('Uploading TC PDF…');
+    var up = await uploadFile(file);
+    setVal('tcDlUrl', up.url);
+    setVal('tcDlPublicId', up.publicId || '');
+    setVal('tcDlResourceType', up.resourceType || 'raw');
+    setVal('tcDlType', up.type || 'upload');
+    document.getElementById('tcDlUrlPreview').textContent = up.url;
+    if (up.originalFilename || up.storedFilename) document.getElementById('tcDlUrlPreview').textContent = (up.originalFilename || up.storedFilename) + ' · ' + up.url;
+    showToast('TC PDF uploaded!');
+  } catch (e) {
+    showToast(e.message, true);
+  } finally {
+    input.value = '';
+  }
+}
+
+async function saveTC() {
+  try {
+    var data = {
+      schoolName: val('tcSchoolName'),
+      schoolAddr: val('tcSchoolAddr'),
+      docTitle: val('tcDocTitle'),
+      fields: tcState.fields,
+      sig1: val('tcSig1'),
+      sig2: val('tcSig2'),
+      footerNote: val('tcFooterNote'),
+      dlTitle: val('tcDlTitle'),
+      dlDesc: val('tcDlDesc'),
+      dlUrl: val('tcDlUrl'),
+      dlPublicId: val('tcDlPublicId'),
+      dlResourceType: val('tcDlResourceType'),
+      dlType: val('tcDlType'),
+      dlOriginalFilename: (document.getElementById('tcDlUrlPreview').textContent.split(' · ')[0] || '').trim(),
+      dlBtnText: val('tcDlBtnText'),
+      showPreview: document.getElementById('tcShowPreview').checked,
+      showDownload: document.getElementById('tcShowDownload').checked
+    };
+    await apiPost('/content/admissions-tc', { data: data });
+    showToast('Transfer Certificate page saved!');
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+async function loadTC() {
+  try {
+    var item = await apiGet('/content/admissions-tc');
+    var d = item && item.data ? item.data : {};
+    if (d.schoolName) setVal('tcSchoolName', d.schoolName);
+    if (d.schoolAddr) setVal('tcSchoolAddr', d.schoolAddr);
+    if (d.docTitle) setVal('tcDocTitle', d.docTitle);
+    if (d.sig1) setVal('tcSig1', d.sig1);
+    if (d.sig2) setVal('tcSig2', d.sig2);
+    if (d.footerNote) setVal('tcFooterNote', d.footerNote);
+    if (d.dlTitle) setVal('tcDlTitle', d.dlTitle);
+    if (d.dlDesc) setVal('tcDlDesc', d.dlDesc);
+    if (d.dlUrl) setVal('tcDlUrl', d.dlUrl);
+    if (d.dlPublicId) setVal('tcDlPublicId', d.dlPublicId);
+    if (d.dlResourceType) setVal('tcDlResourceType', d.dlResourceType);
+    if (d.dlType) setVal('tcDlType', d.dlType);
+    if (d.dlOriginalFilename) document.getElementById('tcDlUrlPreview').textContent = d.dlOriginalFilename + ' · ' + (d.dlUrl || '');
+    else if (d.dlUrl) document.getElementById('tcDlUrlPreview').textContent = d.dlUrl;
+    if (d.dlBtnText) setVal('tcDlBtnText', d.dlBtnText);
+    if (Array.isArray(d.fields) && d.fields.length) tcState.fields = d.fields.map(function (x) { return { id: x.id || uid('tf'), label: x.label || '' }; });
+    if (typeof d.showPreview === 'boolean') document.getElementById('tcShowPreview').checked = d.showPreview;
+    if (typeof d.showDownload === 'boolean') document.getElementById('tcShowDownload').checked = d.showDownload;
+  } catch (e) {}
+  renderTcFields();
+}
+
+var feeState = {
+  rows: [
+    { id: uid('fr'), category: 'Tuition Fee', description: 'Core academic instruction charges', frequency: 'Annual / Term', amount: '' },
+    { id: uid('fr'), category: 'Admission / Registration Fee', description: 'One-time fee at the time of new admission', frequency: 'One-time', amount: '' },
+    { id: uid('fr'), category: 'Development Fee', description: 'Infrastructure and facility development', frequency: 'Annual', amount: '' },
+    { id: uid('fr'), category: 'Library Fee', description: 'Access to school library and reading resources', frequency: 'Annual', amount: '' },
+    { id: uid('fr'), category: 'Laboratory Fee', description: 'Science / Computer lab usage charges', frequency: 'Annual', amount: '' },
+    { id: uid('fr'), category: 'Sports & Activities Fee', description: 'Co-curricular and sports activities', frequency: 'Annual', amount: '' },
+    { id: uid('fr'), category: 'Examination Fee', description: 'Internal and CBSE board examination charges', frequency: 'Annual', amount: '' }
+  ],
+  notes: [
+    { id: uid('fn'), text: 'The entire fee for the academic year is to be remitted by the end of February.' },
+    { id: uid('fn'), text: 'Fee payment may be made in instalments as prescribed by the school management.' },
+    { id: uid('fn'), text: 'No fees shall be refunded for any cause once paid.' },
+    { id: uid('fn'), text: 'Every pupil on admission shall pay the prescribed admission fees before commencement of classes.' },
+    { id: uid('fn'), text: 'Online fee payment is available. Please visit the Online Fees Payment section for details.' },
+    { id: uid('fn'), text: 'For fee-related queries, kindly contact the school office during working hours.' },
+    { id: uid('fn'), text: 'Fee structure is subject to revision by the management for subsequent academic years.' }
+  ],
+  payMethods: [
+    { id: uid('pm'), title: 'School Office (Cash / DD)', desc: 'Pay in person at the school accounts office during working hours. Demand Drafts are also accepted.', linkText: '', linkUrl: '' },
+    { id: uid('pm'), title: 'Online Payment', desc: 'Pay conveniently through our online payment portal. Secure and instant.', linkText: 'Pay Online →', linkUrl: 'https://school.edu/online-fees-payment/' },
+    { id: uid('pm'), title: 'NEFT / Bank Transfer', desc: 'Bank transfer via NEFT/IMPS. Contact the school office for bank account details.', linkText: '', linkUrl: '' }
+  ]
+};
+
+function renderFeeTable() {
+  var tbody = document.getElementById('feeTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = feeState.rows.map(function (item) {
+    return '<tr><td><input type="text" value="' + esc(item.category) + '" oninput="updateFeeRow(\'' + item.id + '\',\'category\',this.value)" placeholder="Fee category…"/></td><td><input type="text" value="' + esc(item.description) + '" oninput="updateFeeRow(\'' + item.id + '\',\'description\',this.value)" placeholder="Description…"/></td><td><select onchange="updateFeeRow(\'' + item.id + '\',\'frequency\',this.value)">' + ['Annual / Term','Annual','One-time','Term','Monthly'].map(function (o) { return '<option' + (o === item.frequency ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></td><td><input type="text" value="' + esc(item.amount) + '" oninput="updateFeeRow(\'' + item.id + '\',\'amount\',this.value)" placeholder="As applicable"/></td><td><button class="btn rd btn-sm" type="button" onclick="removeFeeRow(\'' + item.id + '\')">✕</button></td></tr>';
+  }).join('');
+  document.getElementById('feeRowCount').textContent = feeState.rows.length;
+}
+
+function renderFeeNotes() {
+  var root = document.getElementById('feeNotesList');
+  if (!root) return;
+  root.innerHTML = feeState.notes.map(function (item, i) {
+    return '<div style="display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-bottom:6px;"><div style="width:22px;height:22px;border-radius:50%;background:var(--gold-pale);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:var(--gold);margin-top:2px;">' + (i + 1) + '</div><div class="f"><textarea style="min-height:50px;" oninput="updateFeeNote(\'' + item.id + '\',this.value)">' + esc(item.text) + '</textarea></div><button class="btn rd btn-sm" type="button" style="align-self:flex-start;margin-top:2px;" onclick="removeFeeNote(\'' + item.id + '\')">✕</button></div>';
+  }).join('');
+  document.getElementById('feeNotesCount').textContent = feeState.notes.length;
+}
+
+function renderPayMethods() {
+  var root = document.getElementById('payMethodsList');
+  if (!root) return;
+  root.innerHTML = feeState.payMethods.map(function (item, i) {
+    return '<div class="item"><div class="item-head"><div class="item-num">' + (i + 1) + '</div><div class="item-title">Payment Method ' + (i + 1) + '</div><button class="btn rd btn-sm" type="button" onclick="removePayMethod(\'' + item.id + '\')">✕</button></div><div class="fg"><div class="f"><label>Title</label><input type="text" value="' + esc(item.title) + '" oninput="updatePayMethod(\'' + item.id + '\',\'title\',this.value)"/></div><div class="f"><label>Description</label><textarea oninput="updatePayMethod(\'' + item.id + '\',\'desc\',this.value)">' + esc(item.desc) + '</textarea></div><div class="fg c2"><div class="f"><label>Button Text (optional)</label><input type="text" value="' + esc(item.linkText) + '" oninput="updatePayMethod(\'' + item.id + '\',\'linkText\',this.value)" placeholder="e.g. Pay Online →"/></div><div class="f"><label>Button URL (optional)</label><input type="url" value="' + esc(item.linkUrl) + '" oninput="updatePayMethod(\'' + item.id + '\',\'linkUrl\',this.value)" placeholder="https://…"/></div></div></div></div>';
+  }).join('');
+  document.getElementById('payMethodCount').textContent = feeState.payMethods.length;
+}
+
+function addFeeRow() { feeState.rows.push({ id: uid('fr'), category: '', description: '', frequency: 'Annual', amount: '' }); renderFeeTable(); }
+function removeFeeRow(id) { feeState.rows = feeState.rows.filter(function (x) { return x.id !== id; }); renderFeeTable(); }
+function updateFeeRow(id, field, value) { feeState.rows = feeState.rows.map(function (x) { return x.id === id ? Object.assign({}, x, field === 'category' ? { category: value } : field === 'description' ? { description: value } : field === 'frequency' ? { frequency: value } : { amount: value }) : x; }); }
+function addFeeNote() { feeState.notes.push({ id: uid('fn'), text: '' }); renderFeeNotes(); }
+function removeFeeNote(id) { feeState.notes = feeState.notes.filter(function (x) { return x.id !== id; }); renderFeeNotes(); }
+function updateFeeNote(id, value) { feeState.notes = feeState.notes.map(function (x) { return x.id === id ? Object.assign({}, x, { text: value }) : x; }); }
+function addPayMethod() { feeState.payMethods.push({ id: uid('pm'), title: '', desc: '', linkText: '', linkUrl: '' }); renderPayMethods(); }
+function removePayMethod(id) { feeState.payMethods = feeState.payMethods.filter(function (x) { return x.id !== id; }); renderPayMethods(); }
+function updatePayMethod(id, field, value) { feeState.payMethods = feeState.payMethods.map(function (x) { return x.id === id ? Object.assign({}, x, field === 'title' ? { title: value } : field === 'desc' ? { desc: value } : field === 'linkText' ? { linkText: value } : { linkUrl: value }) : x; }); }
+
+async function uploadFeePdf(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  try {
+    showToast('Uploading Fee PDF…');
+    var up = await uploadFile(file);
+    setVal('feeDlUrl', up.url);
+    setVal('feeDlPublicId', up.publicId || '');
+    setVal('feeDlResourceType', up.resourceType || 'raw');
+    setVal('feeDlType', up.type || 'upload');
+    document.getElementById('feeDlUrlPreview').textContent = up.url;
+    if (up.originalFilename || up.storedFilename) document.getElementById('feeDlUrlPreview').textContent = (up.originalFilename || up.storedFilename) + ' · ' + up.url;
+    showToast('Fee PDF uploaded!');
+  } catch (e) {
+    showToast(e.message, true);
+  } finally {
+    input.value = '';
+  }
+}
+
+async function saveFee() {
+  try {
+    var data = {
+      acYear: val('feeAcYear'),
+      pageHeading: val('feePageHeading'),
+      rows: feeState.rows,
+      totalLabel: val('feeTotalLabel'),
+      totalAmount: val('feeTotalAmount'),
+      dlTitle: val('feeDlTitle'),
+      dlDesc: val('feeDlDesc'),
+      dlUrl: val('feeDlUrl'),
+      dlPublicId: val('feeDlPublicId'),
+      dlResourceType: val('feeDlResourceType'),
+      dlType: val('feeDlType'),
+      dlOriginalFilename: (document.getElementById('feeDlUrlPreview').textContent.split(' · ')[0] || '').trim(),
+      dlBtnText: val('feeDlBtnText'),
+      notes: feeState.notes,
+      payMethods: feeState.payMethods,
+      showTable: document.getElementById('feeShowTable').checked,
+      showDl: document.getElementById('feeShowDl').checked,
+      showPay: document.getElementById('feeShowPay').checked
+    };
+    await apiPost('/content/admissions-fee', { data: data });
+    showToast('Fee Structure page saved!');
+  } catch (e) {
+    showToast(e.message, true);
+  }
+}
+
+async function loadFee() {
+  try {
+    var item = await apiGet('/content/admissions-fee');
+    var d = item && item.data ? item.data : {};
+    if (d.acYear) setVal('feeAcYear', d.acYear);
+    if (d.pageHeading) setVal('feePageHeading', d.pageHeading);
+    if (d.totalLabel) setVal('feeTotalLabel', d.totalLabel);
+    if (d.totalAmount) setVal('feeTotalAmount', d.totalAmount);
+    if (d.dlTitle) setVal('feeDlTitle', d.dlTitle);
+    if (d.dlDesc) setVal('feeDlDesc', d.dlDesc);
+    if (d.dlUrl) setVal('feeDlUrl', d.dlUrl);
+    if (d.dlPublicId) setVal('feeDlPublicId', d.dlPublicId);
+    if (d.dlResourceType) setVal('feeDlResourceType', d.dlResourceType);
+    if (d.dlType) setVal('feeDlType', d.dlType);
+    if (d.dlOriginalFilename) document.getElementById('feeDlUrlPreview').textContent = d.dlOriginalFilename + ' · ' + (d.dlUrl || '');
+    else if (d.dlUrl) document.getElementById('feeDlUrlPreview').textContent = d.dlUrl;
+    if (d.dlBtnText) setVal('feeDlBtnText', d.dlBtnText);
+    if (Array.isArray(d.rows) && d.rows.length) feeState.rows = d.rows.map(function (x) { return { id: x.id || uid('fr'), category: x.category || '', description: x.description || '', frequency: x.frequency || '', amount: x.amount || '' }; });
+    if (Array.isArray(d.notes) && d.notes.length) feeState.notes = d.notes.map(function (x) { return { id: x.id || uid('fn'), text: x.text || '' }; });
+    if (Array.isArray(d.payMethods) && d.payMethods.length) feeState.payMethods = d.payMethods.map(function (x) { return { id: x.id || uid('pm'), title: x.title || '', desc: x.desc || '', linkText: x.linkText || '', linkUrl: x.linkUrl || '' }; });
+    if (typeof d.showTable === 'boolean') document.getElementById('feeShowTable').checked = d.showTable;
+    if (typeof d.showDl === 'boolean') document.getElementById('feeShowDl').checked = d.showDl;
+    if (typeof d.showPay === 'boolean') document.getElementById('feeShowPay').checked = d.showPay;
+  } catch (e) {}
+  renderFeeTable();
+  renderFeeNotes();
+  renderPayMethods();
+}
+
+function bytesLabel(bytes) {
+  var v = Number(bytes || 0);
+  if (!v) return '';
+  if (v < 1024) return v + ' B';
+  if (v < 1024 * 1024) return (v / 1024).toFixed(1).replace(/\.0$/, '') + ' KB';
+  return (v / (1024 * 1024)).toFixed(1).replace(/\.0$/, '') + ' MB';
+}
+
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveCurrentPanel();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', async function () {
+  checkApi();
+  await Promise.allSettled([loadOverview(), loadEnquiry(), loadTC(), loadFee()]);
+});
+</script>
+<script src="adminnavbar.js"></script>
+</body>
+</html>

@@ -1,204 +1,820 @@
 <!DOCTYPE html>
 <html lang="en">
-<head></head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Loretto Central School</title>
+  <meta name="description" content="Get in touch with Loretto Central School. Send us a message, call, or visit our campus in Loretto Padavu, Bantwal." />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy: #0e6b6b; --navy-dark: #094f4f; --gold: #c8960c; --gold-light: #e8b020; --gold-pale: #f5e6c0; --white: #ffffff; --light-bg: #f9f6ef; --text: #1a2e2e; --text-muted: #5a6e6e; --border: #e2d5b0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Nunito', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    .contact-hero {
+      background: linear-gradient(135deg, #062e2e 0%, #094f4f 30%, #0e6b6b 60%, #127a7a 100%);
+      padding: 90px 0 80px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(200,150,12,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(14,107,107,0.20) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%);
+    }
+    .contact-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(200,150,12,0.15), transparent 70%);
+    }
+    .hero-orb-1 { width: 300px; height: 300px; top: -80px; right: -60px; animation: orbFloat 8s ease-in-out infinite; }
+    .hero-orb-2 { width: 200px; height: 200px; bottom: -40px; left: -30px; animation: orbFloat 6s 1s ease-in-out infinite reverse; }
+    .hero-orb-3 { width: 120px; height: 120px; top: 40%; left: 15%; animation: orbFloat 10s 2s ease-in-out infinite; background: radial-gradient(circle, rgba(14,107,107,0.12), transparent 70%); }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(15px, -20px) scale(1.05); }
+      50% { transform: translate(-10px, 15px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,150,12,0.15);
+      border: 1px solid rgba(200,150,12,0.35);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.6s ease-out both;
+      backdrop-filter: blur(10px);
+    }
+    .hero-badge i { animation: pulse 2s ease-in-out infinite; }
+    .contact-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.15;
+      animation: fadeInUp 0.6s 0.15s ease-out both;
+    }
+    .contact-hero .hero-desc {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.80);
+      max-width: 550px;
+      margin: 0 auto 24px;
+      line-height: 1.7;
+      animation: fadeInUp 0.6s 0.3s ease-out both;
+    }
+    .breadcrumb {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.65);
+      animation: fadeInUp 0.6s 0.45s ease-out both;
+    }
+    .breadcrumb a { color: var(--gold-light); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: #fff; }
+    .breadcrumb span { color: rgba(255,255,255,0.35); }
+
+    .quick-strip { background: var(--white); margin-top: -40px; position: relative; z-index: 10; }
+    .quick-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(14,107,107,0.08);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .qs-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 30px;
+      border-right: 1px solid var(--border);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .qs-item:last-child { border-right: none; }
+    .qs-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(14,107,107,0.04), rgba(200,150,12,0.04));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .qs-item:hover::before { opacity: 1; }
+    .qs-item:hover { transform: translateY(-3px); }
+    .qs-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--gold-light);
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s;
+    }
+    .qs-item:hover .qs-icon {
+      transform: scale(1.12) rotate(-8deg);
+      box-shadow: 0 6px 20px rgba(14,107,107,0.25);
+    }
+    .qs-label { font-size: 0.7rem; color: var(--gold); font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+    .qs-value { font-size: 0.92rem; color: var(--text); font-weight: 600; line-height: 1.5; }
+    .qs-value a { color: var(--navy); text-decoration: none; transition: color 0.2s; }
+    .qs-value a:hover { color: var(--gold); }
+
+    .contact-main { padding: 72px 0; }
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .contact-sidebar { display: flex; flex-direction: column; gap: 24px; }
+    .detail-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(14,107,107,0.06);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .detail-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold), var(--navy));
+      border-radius: 4px 0 0 4px;
+      transition: width 0.3s;
+    }
+    .detail-card:hover { box-shadow: 0 12px 40px rgba(14,107,107,0.12); transform: translateY(-4px); }
+    .detail-card:hover::before { width: 6px; }
+    .detail-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--navy);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .detail-card h3 i { color: var(--gold); font-size: 1rem; }
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(226,213,176,0.5);
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(14,107,107,0.08), rgba(200,150,12,0.08));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .detail-item:hover .detail-item-icon {
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      color: var(--gold-light);
+      transform: scale(1.1);
+    }
+    .detail-item-label { font-size: 0.68rem; color: var(--gold); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+    .detail-item-value { font-size: 0.92rem; color: var(--text); line-height: 1.6; margin-top: 3px; }
+    .detail-item-value a { color: var(--navy); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+    .detail-item-value a:hover { color: var(--gold); }
+
+    .hours-card {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+      border-radius: 16px;
+      padding: 28px 32px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hours-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,150,12,0.12), transparent 70%);
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+    .hours-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hours-card h3 i { animation: pulse 2s ease-in-out infinite; }
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.88rem;
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-day { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .hours-time { color: var(--gold-light); font-weight: 700; text-align: right; }
+    .hours-time.closed { color: rgba(255,255,255,0.40); }
+
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px;
+      box-shadow: 0 8px 40px rgba(14,107,107,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--navy), var(--gold), var(--gold-light), var(--navy));
+      background-size: 300% 100%;
+      animation: gradientSlide 4s ease infinite;
+    }
+    .form-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,150,12,0.06), transparent 70%);
+    }
+    @keyframes gradientSlide {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .form-card-header { text-align: center; margin-bottom: 36px; position: relative; z-index: 1; }
+    .form-card-header .form-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      box-shadow: 0 6px 20px rgba(14,107,107,0.20);
+      animation: iconBounce 3s ease-in-out infinite;
+    }
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .form-card-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--navy);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .form-card-header p { font-size: 0.92rem; color: var(--text-muted); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-field { position: relative; margin-bottom: 24px; }
+    .form-field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+    .form-field label .req { color: #dc2626; }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      background: var(--light-bg);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: #b0a88a; }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(14,107,107,0.08), 0 6px 20px rgba(14,107,107,0.06);
+      transform: translateY(-2px);
+    }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .field-line {
+      position: absolute;
+      bottom: 0;
+      left: 18px;
+      right: 18px;
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--navy), var(--gold));
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .form-field input:focus ~ .field-line,
+    .form-field textarea:focus ~ .field-line,
+    .form-field select:focus ~ .field-line { transform: scaleX(1); }
+    .form-submit-btn {
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      color: var(--white);
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .form-submit-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+    .form-submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(14,107,107,0.30), 0 0 0 2px rgba(200,150,12,0.20);
+    }
+    .form-submit-btn:hover::before { transform: translateX(100%); }
+    .form-submit-btn:hover i { animation: sendWiggle 0.5s ease; }
+    .form-submit-btn:active { transform: translateY(0); }
+    .form-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    @keyframes sendWiggle {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      25% { transform: translateX(4px) rotate(10deg); }
+      50% { transform: translateX(-2px) rotate(-5deg); }
+      75% { transform: translateX(3px) rotate(5deg); }
+    }
+    .form-message {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      display: none;
+      font-weight: 700;
+      text-align: center;
+      font-size: 0.92rem;
+      animation: fadeInUp 0.4s ease-out;
+    }
+    .form-message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+    .form-message.error { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; display: block; }
+
+    .map-section { padding: 72px 0; background: var(--light-bg); }
+    .map-header { text-align: center; margin-bottom: 32px; }
+    .map-header h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--navy); font-weight: 700; margin-bottom: 6px; }
+    .map-header p { color: var(--text-muted); font-size: 0.95rem; }
+    .map-header .gold-line {
+      width: 60px;
+      height: 3px;
+      margin: 12px auto 0;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 2px;
+    }
+    .map-container {
+      background: var(--white);
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .map-container iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 14px;
+      display: block;
+    }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+    .reveal.from-left { transform: translateX(-50px) translateY(0); }
+    .reveal.from-right { transform: translateX(50px) translateY(0); }
+    .reveal.scale-up { transform: scale(0.92) translateY(20px); }
+    .reveal.visible { opacity: 1; transform: translate(0, 0) scale(1); }
+    .qs-item.reveal:nth-child(1) { transition-delay: 0s; }
+    .qs-item.reveal:nth-child(2) { transition-delay: 0.12s; }
+    .qs-item.reveal:nth-child(3) { transition-delay: 0.24s; }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+    @media (max-width: 960px) {
+      .contact-layout { grid-template-columns: 1fr; }
+      .quick-strip-inner { grid-template-columns: 1fr; }
+      .qs-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .qs-item:last-child { border-bottom: none; }
+    }
+    @media (max-width: 768px) {
+      .contact-hero { padding: 60px 0 55px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 28px 22px; }
+    }
+    @media (max-width: 600px) {
+      .map-container iframe { height: 280px; }
+    }
+  </style>
+</head>
 <body>
 
-<!-- TOP BAR -->
-
-<section style="padding: 80px 0; background: var(--light-bg);">
-  <div class="container" style="max-width: 1200px;">
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px;">
-      
-      <!-- Contact Information -->
-      <div>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--navy); margin-bottom: 30px; font-weight: 700;">Contact Information</h2>
-        
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 25px;">
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-            <div style="width: 50px; height: 50px; background: var(--gold-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📍</div>
-            <div style="flex: 1;">
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Address</p>
-              <p style="color: var(--text); line-height: 1.6; font-size: 1rem;">Loretto Central School<br>Loretto, Amtady Village<br>Bantwal, Dakshina Kannada<br>Karnataka - 574211, India</p>
-            </div>
-          </div>
-        </div>
-
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 25px;">
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-            <div style="width: 50px; height: 50px; background: var(--gold-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📞</div>
-            <div style="flex: 1;">
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Phone</p>
-              <p style="color: var(--text); font-size: 1.1rem; font-weight: 600;"><a href="tel:+919480663011" style="color: var(--navy); text-decoration: none;">+91 9480663011</a></p>
-            </div>
-          </div>
-        </div>
-
-        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-            <div style="width: 50px; height: 50px; background: var(--gold-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">✉️</div>
-            <div style="flex: 1;">
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Email</p>
-              <p style="color: var(--text); font-size: 1rem; margin-bottom: 5px;"><a href="mailto:lorettocentralschool@gmail.com" style="color: var(--navy); text-decoration: none;">lorettocentralschool@gmail.com</a></p>
-              <p style="color: var(--text); font-size: 1rem;"><a href="mailto:schoolloreto@gmail.com" style="color: var(--navy); text-decoration: none;">schoolloreto@gmail.com</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Contact Form -->
-      <div>
-        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--navy); margin-bottom: 30px; font-weight: 700;">Send Us a Message</h2>
-        
-        <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-          <form id="contactForm">
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--navy); font-size: 0.95rem;">Name <span style="color: #dc2626;">*</span></label>
-              <input type="text" id="name" required style="width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: 'Nunito', sans-serif; transition: border-color 0.3s;">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--navy); font-size: 0.95rem;">Email <span style="color: #dc2626;">*</span></label>
-              <input type="email" id="email" required style="width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: 'Nunito', sans-serif; transition: border-color 0.3s;">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--navy); font-size: 0.95rem;">Phone</label>
-              <input type="tel" id="phone" style="width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: 'Nunito', sans-serif; transition: border-color 0.3s;">
-            </div>
-
-            <div style="margin-bottom: 25px;">
-              <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--navy); font-size: 0.95rem;">Message <span style="color: #dc2626;">*</span></label>
-              <textarea id="message" required rows="5" style="width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: 'Nunito', sans-serif; resize: vertical; transition: border-color 0.3s;"></textarea>
-            </div>
-
-            <button type="submit" style="width: 100%; padding: 15px; background: var(--navy); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Nunito', sans-serif;">
-              Send Message
-            </button>
-          </form>
-
-          <div id="formMessage" style="margin-top: 20px; padding: 15px; border-radius: 8px; display: none;"></div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Map Section -->
-    <div style="margin-top: 50px;">
-      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--navy); margin-bottom: 30px; font-weight: 700; text-align: center;">📍 Find Us on Map</h2>
-      
-      <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.0!2d75.038002!3d12.924451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU1JzI4LjAiTiA3NcKwMDInMTYuOCJF!5e0!3m2!1sen!2sin!4v1234567890"
-          width="100%" 
-          height="450" 
-          style="border:0; border-radius: 8px;" 
-          allowfullscreen="" 
-          loading="lazy">
-        </iframe>
+<section class="contact-hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge" id="contactHeroBadge"><i class="fas fa-envelope"></i> We're Here For You</div>
+      <h1 id="contactHeroTitle">Get In Touch With Us</h1>
+      <p class="hero-desc" id="contactHeroDesc">Have a question, need information, or want to visit our campus? We'd love to hear from you. Reach out through any channel below.</p>
+      <div class="breadcrumb">
+        <a href="index.html">Home</a><span>›</span>
+        <span style="color:rgba(255,255,255,0.9)">Contact Us</span>
       </div>
     </div>
-
   </div>
 </section>
 
-<style>
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--gold);
-}
+<div class="quick-strip">
+  <div class="container">
+    <div class="quick-strip-inner">
+      <div class="qs-item reveal scale-up">
+        <div class="qs-icon"><i class="fas fa-phone-alt"></i></div>
+        <div>
+          <div class="qs-label">Call Us</div>
+          <div class="qs-value"><a id="contactQuickPhone" href="tel:+919480663011">+91 9480663011</a></div>
+        </div>
+      </div>
+      <div class="qs-item reveal scale-up">
+        <div class="qs-icon"><i class="fas fa-envelope"></i></div>
+        <div>
+          <div class="qs-label">Email Us</div>
+          <div class="qs-value"><a id="contactQuickEmail" href="mailto:lorettocentralschool@gmail.com">lorettocentralschool@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="qs-item reveal scale-up">
+        <div class="qs-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div>
+          <div class="qs-label">Visit Us</div>
+          <div class="qs-value" id="contactQuickAddress">Loretto Padavu, Bantwal<br>Dakshina Kannada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-button:hover {
-  background: var(--navy-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
+<section class="contact-main">
+  <div class="container">
+    <div class="contact-layout">
+      <div class="contact-sidebar">
+        <div class="detail-card reveal from-left">
+          <h3><i class="fas fa-school"></i> School Information</h3>
+          <div class="detail-item">
+            <div class="detail-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="detail-item-label">Address</div>
+              <div class="detail-item-value" id="contactAddressDisplay">
+                Loretto Central School<br>
+                Loretto, Amtady Village<br>
+                Bantwal, Dakshina Kannada<br>
+                Karnataka – 574211, India
+              </div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-item-icon"><i class="fas fa-phone-alt"></i></div>
+            <div>
+              <div class="detail-item-label">Phone</div>
+              <div class="detail-item-value" id="contactPhonesDisplay">
+                <a href="tel:+919480663011">+91 9480663011</a>
+              </div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-item-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <div class="detail-item-label">Email</div>
+              <div class="detail-item-value" id="contactEmailsDisplay">
+                <a href="mailto:lorettocentralschool@gmail.com">lorettocentralschool@gmail.com</a><br>
+                <a href="mailto:schoolloreto@gmail.com">schoolloreto@gmail.com</a>
+              </div>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-item-icon"><i class="fas fa-globe"></i></div>
+            <div>
+              <div class="detail-item-label">Website</div>
+              <div class="detail-item-value"><a id="contactWebsiteDisplay" href="https://lorettocentralschool.edu.in" target="_blank" rel="noopener">lorettocentralschool.edu.in</a></div>
+            </div>
+          </div>
+        </div>
 
-@media (max-width: 768px) {
-  div[style*="grid-template-columns: 1fr 1fr"] {
-    grid-template-columns: 1fr !important;
-  }
-}
-</style>
+        <div class="hours-card reveal from-left">
+          <h3><i class="fas fa-clock"></i> Working Hours</h3>
+          <div class="hours-row">
+            <span class="hours-day" id="contactHoursLabel1">Office Hours</span>
+            <span class="hours-time" id="contactHoursValue1">8:00 AM – 4:00 PM</span>
+          </div>
+          <div class="hours-row">
+            <span class="hours-day" id="contactHoursLabel2">Sunday / Holiday</span>
+            <span class="hours-time closed" id="contactHoursValue2">Closed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card reveal from-right" id="contactFormCard">
+        <div class="form-card-header">
+          <div class="form-icon"><i class="fas fa-paper-plane"></i></div>
+          <h2 id="contactFormTitleDisplay">Send Us a Message</h2>
+          <p id="contactFormSubtitleDisplay">Fill in the form and we'll get back to you shortly</p>
+        </div>
+
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="name" placeholder="Your full name" required />
+              <div class="field-line"></div>
+            </div>
+            <div class="form-field">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="your@email.com" required />
+              <div class="field-line"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Phone Number</label>
+              <input type="tel" id="phone" placeholder="+91 XXXXX XXXXX" />
+              <div class="field-line"></div>
+            </div>
+            <div class="form-field">
+              <label>Subject</label>
+              <input type="text" id="subject" value="General Enquiry" />
+              <div class="field-line"></div>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Your Message <span class="req">*</span></label>
+            <textarea id="message" placeholder="Write your message here..." required></textarea>
+            <div class="field-line"></div>
+          </div>
+          <button type="submit" class="form-submit-btn" id="contactSubmitBtn">
+            <span>Send Message</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+          <div id="formMessage" class="form-message"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="map-section">
+  <div class="container">
+    <div class="map-header reveal">
+      <h2>Find Us on the Map</h2>
+      <p>Visit our beautiful campus nestled in the heart of Bantwal</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="map-container reveal scale-up">
+      <iframe
+        id="contactMapFrame"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.0!2d75.038002!3d12.924451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU1JzI4LjAiTiA3NcKwMDInMTYuOCJF!5e0!3m2!1sen!2sin!4v1234567890"
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<script src="components/Navbar.js"></script>
+<script src="components/Footer.js"></script>
+<script src="shared-data-loader.js"></script>
 
 <script>
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const formMessage = document.getElementById('formMessage');
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const phone = document.getElementById('phone').value;
-  const message = document.getElementById('message').value;
-  
-  // Show success message
-  formMessage.style.display = 'block';
-  formMessage.style.background = '#d4edda';
-  formMessage.style.color = '#155724';
-  formMessage.style.border = '1px solid #c3e6cb';
-  formMessage.innerHTML = '✅ Thank you for your message! We will get back to you soon.';
-  
-  // Clear form
-  document.getElementById('contactForm').reset();
-  
-  // Hide message after 5 seconds
-  setTimeout(() => {
-    formMessage.style.display = 'none';
-  }, 5000);
-  
-  // In a real implementation, you would send this data to a server
-  console.log('Form submitted:', { name, email, phone, message });
-});
+  (function () {
+    const reveals = document.querySelectorAll('.reveal');
+    if (!reveals.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  })();
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"]/g, function (char) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char];
+    });
+  }
+
+  function renderAddress(value) {
+    return escapeHtml(String(value || '')).replace(/\n/g, '<br>');
+  }
+
+  function renderLinks(items, type) {
+    return items.map(function (item) {
+      var safe = String(item || '').trim();
+      if (!safe) return '';
+      var href = type === 'email' ? 'mailto:' + safe : 'tel:' + safe.replace(/\s+/g, '');
+      return '<a href="' + href + '">' + escapeHtml(safe) + '</a>';
+    }).filter(Boolean).join('<br>');
+  }
+
+  var API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? window.location.origin
+    : 'https://loretto-cbse-school.onrender.com';
+
+  window.addEventListener('DOMContentLoaded', async function () {
+    if (typeof loadContactData !== 'function') return;
+    const contact = await loadContactData();
+    if (!contact) return;
+
+    var heroBadge = document.getElementById('contactHeroBadge');
+    var heroTitle = document.getElementById('contactHeroTitle');
+    var heroDesc = document.getElementById('contactHeroDesc');
+    var quickPhone = document.getElementById('contactQuickPhone');
+    var quickEmail = document.getElementById('contactQuickEmail');
+    var quickAddress = document.getElementById('contactQuickAddress');
+    var address = document.getElementById('contactAddressDisplay');
+    var phones = document.getElementById('contactPhonesDisplay');
+    var emails = document.getElementById('contactEmailsDisplay');
+    var website = document.getElementById('contactWebsiteDisplay');
+    var hours1 = document.getElementById('contactHoursValue1');
+    var hours2 = document.getElementById('contactHoursValue2');
+    var formCard = document.getElementById('contactFormCard');
+    var formTitle = document.getElementById('contactFormTitleDisplay');
+    var formSubtitle = document.getElementById('contactFormSubtitleDisplay');
+    var mapFrame = document.getElementById('contactMapFrame');
+
+    if (heroBadge && contact.leftTag) heroBadge.innerHTML = '<i class="fas fa-envelope"></i> ' + escapeHtml(contact.leftTag);
+    if (heroTitle && contact.heading) heroTitle.textContent = contact.heading;
+    if (heroDesc && contact.intro) heroDesc.textContent = contact.intro;
+    if (quickAddress && contact.address) quickAddress.innerHTML = renderAddress(contact.address);
+    if (address && contact.address) address.innerHTML = renderAddress(contact.address);
+
+    if (Array.isArray(contact.phones) && contact.phones.length) {
+      if (quickPhone) {
+        quickPhone.href = 'tel:' + contact.phones[0].replace(/\s+/g, '');
+        quickPhone.textContent = contact.phones[0];
+      }
+      if (phones) phones.innerHTML = renderLinks(contact.phones, 'phone');
+    }
+
+    if (Array.isArray(contact.emails) && contact.emails.length) {
+      if (quickEmail) {
+        quickEmail.href = 'mailto:' + contact.emails[0];
+        quickEmail.textContent = contact.emails[0];
+      }
+      if (emails) emails.innerHTML = renderLinks(contact.emails, 'email');
+    }
+
+    if (website && contact.website) {
+      var href = /^https?:\/\//i.test(contact.website) ? contact.website : 'https://' + contact.website;
+      website.href = href;
+      website.textContent = contact.website.replace(/^https?:\/\//i, '');
+    }
+
+    if (hours1 && contact.officeHours) hours1.textContent = contact.officeHours;
+    if (hours2 && contact.sundayHours) {
+      hours2.textContent = contact.sundayHours;
+      hours2.classList.toggle('closed', /closed/i.test(contact.sundayHours));
+    }
+
+    if (formCard) formCard.style.display = contact.enableForm === false ? 'none' : '';
+    if (formTitle && contact.formTitle) formTitle.textContent = contact.formTitle;
+    if (formSubtitle && contact.formSubtitle) formSubtitle.textContent = contact.formSubtitle;
+    if (mapFrame && contact.mapEmbedUrl) mapFrame.src = contact.mapEmbedUrl;
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const form = this;
+    const msg = document.getElementById('formMessage');
+    const btn = document.getElementById('contactSubmitBtn');
+
+    const payload = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      subject: document.getElementById('subject').value.trim() || 'General Enquiry',
+      message: document.getElementById('message').value.trim()
+    };
+
+    btn.disabled = true;
+    btn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+    msg.className = 'form-message';
+    msg.innerHTML = '';
+    msg.style.display = '';
+
+    try {
+      const res = await fetch(API_BASE + '/api/contact/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Could not send message');
+
+      msg.classList.add('success');
+      msg.innerHTML = '<i class="fas fa-check-circle"></i> ' + (data.message || 'Thank you! We will get back to you soon.');
+      form.reset();
+      setTimeout(function () { msg.style.display = 'none'; }, 5000);
+    } catch (error) {
+      msg.classList.add('error');
+      msg.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (error.message || 'Something went wrong. Please try again.');
+      setTimeout(function () { msg.style.display = 'none'; }, 5000);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Send Message</span> <i class="fas fa-paper-plane"></i>';
+    }
+  });
 </script>
 
-<!-- FOOTER -->
-
-  <script src="/components/Navbar.js"></script>
-  <script src="/components/Footer.js"></script>
-  <script src="/shared-data-loader.js"></script>
-  <script>
-    window.addEventListener('DOMContentLoaded', async () => {
-      const contact = await loadContactData();
-      if (contact) {
-        if (contact.address) {
-          // Update address display
-          const addrEl = document.querySelector('p[style*="font-size: 1rem"]');
-          if (addrEl && addrEl.innerHTML.includes('Loretto Central School')) {
-            addrEl.textContent = contact.address;
-          }
-        }
-        if (contact.phone) {
-          const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
-          phoneLinks.forEach(link => {
-            link.href = `tel:${contact.phone.replace(/\s+/g, '')}`;
-            link.textContent = contact.phone;
-          });
-        }
-        if (contact.email) {
-          const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
-          emailLinks.forEach(link => {
-            link.href = `mailto:${contact.email}`;
-            // If it's the primary email link, update text
-            if (link.textContent.includes('gmail.com') || link.textContent.includes('school.edu')) {
-               link.textContent = contact.email;
-            }
-          });
-        }
-      }
-    });
-
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Form message logic stays same
-      const formMessage = document.getElementById('formMessage');
-      formMessage.style.display = 'block';
-      formMessage.style.background = '#d4edda';
-      formMessage.style.color = '#155724';
-      formMessage.style.border = '1px solid #c3e6cb';
-      formMessage.innerHTML = '✅ Thank you for your message! We will get back to you soon.';
-      document.getElementById('contactForm').reset();
-      setTimeout(() => { formMessage.style.display = 'none'; }, 5000);
-    });
-  </script>
 </body>
 </html>

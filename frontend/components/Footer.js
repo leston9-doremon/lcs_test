@@ -1,5 +1,7 @@
 // ============================================================
 //  Loretto Central School — Footer Component
+//  Desktop: original full-width grid
+//  Mobile:  Floating dark card (ported from lens-frontend)
 //  Drop this script at the end of <body> in every HTML page.
 //  Auto-detects depth for correct relative paths.
 // ============================================================
@@ -15,22 +17,103 @@
   }
 
   var R = getRootPrefix();
+  var FOOTER_SETTINGS_CACHE_KEY = 'loretto_settings_footer_cache';
+  var GENERAL_SETTINGS_CACHE_KEY = 'loretto_settings_general_cache';
+  var CONTACT_CONTENT_CACHE_KEY = 'loretto_homepage_contact_cache';
+  var DEFAULT_REMOTE_API = 'https://loretto-cbse-school.onrender.com/api';
+  var DEFAULT_FOOTER_SETTINGS = {
+    description: 'Loretto Central School has been shaping young minds for over three decades. We are committed to delivering excellence in education with values, innovation, and care.',
+    copyrightText: '© Loretto Central School. All rights reserved.',
+    social: {
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      youtube: ''
+    },
+    links: [
+      { text: 'Home', url: R + 'index.html' },
+      { text: 'About Us', url: R + 'about-us/1-school-profile.html' },
+      { text: 'Admissions', url: R + 'admissions/1-admissions.html' }
+    ]
+  };
+  var DEFAULT_GENERAL_SETTINGS = {
+    schoolName: 'Loretto Central School',
+    affiliation: 'CBSE Affiliated',
+    logo: R + 'logo.png'
+  };
+  var DEFAULT_CONTACT_SETTINGS = {
+    address: 'Main Road, Bantwal, Karnataka',
+    phones: '+91 98765 43210',
+    emails: 'info@school.edu',
+    officeHours: 'Mon-Sat: 8:00 AM - 4:00 PM'
+  };
+
+  async function fetchJson(path) {
+    try {
+      var base = localStorage.getItem('loretto_api_base') || '';
+      if (!base) {
+        base = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+          ? (window.location.origin + '/api')
+          : DEFAULT_REMOTE_API;
+      }
+      const apiUrl = new URL(path.replace(/^\//, ''), base.replace(/\/+$/, '') + '/').toString();
+      const res = await fetch(apiUrl, { cache: 'no-store' });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    return null;
+  }
 
   async function loadContact() {
+    var contact = await fetchJson('/api/homepage/contact');
+    if (contact && contact.data && typeof contact.data === 'object' && Object.keys(contact.data).length) {
+      return contact.data;
+    }
     try {
-      const res = await fetch(R + 'api/contact');
-      if (res.ok) return await res.json();
-    } catch(e) {}
-    return null;
+      var cached = JSON.parse(localStorage.getItem(CONTACT_CONTENT_CACHE_KEY) || '{}');
+      if (cached && typeof cached === 'object' && Object.keys(cached).length) return cached;
+    } catch (e) {}
+    return DEFAULT_CONTACT_SETTINGS;
+  }
+
+  async function loadFooterSettings() {
+    var payload = await fetchJson('/api/settings/footer');
+    if (payload && payload.data && typeof payload.data === 'object') {
+      try { localStorage.setItem(FOOTER_SETTINGS_CACHE_KEY, JSON.stringify(payload.data)); } catch (e) {}
+      return Object.assign({}, DEFAULT_FOOTER_SETTINGS, payload.data);
+    }
+    try {
+      var cached = JSON.parse(localStorage.getItem(FOOTER_SETTINGS_CACHE_KEY) || '{}');
+      if (cached && typeof cached === 'object' && Object.keys(cached).length) {
+        return Object.assign({}, DEFAULT_FOOTER_SETTINGS, cached);
+      }
+    } catch (e) {}
+    return DEFAULT_FOOTER_SETTINGS;
+  }
+
+  async function loadGeneralSettings() {
+    var payload = await fetchJson('/api/settings/general');
+    if (payload && payload.data && typeof payload.data === 'object') {
+      try { localStorage.setItem(GENERAL_SETTINGS_CACHE_KEY, JSON.stringify(payload.data)); } catch (e) {}
+      return Object.assign({}, DEFAULT_GENERAL_SETTINGS, payload.data);
+    }
+    try {
+      var cached = JSON.parse(localStorage.getItem(GENERAL_SETTINGS_CACHE_KEY) || '{}');
+      if (cached && typeof cached === 'object' && Object.keys(cached).length) {
+        return Object.assign({}, DEFAULT_GENERAL_SETTINGS, cached);
+      }
+    } catch (e) {}
+    return DEFAULT_GENERAL_SETTINGS;
   }
 
   /* ── HTML ── */
   var FOOTER_HTML = [
     '<footer id="lcs-footer">',
-    '  <div class="container">',
-    '    <div class="footer-main">',
+    '  <div class="lcs-ft-inner">',
 
-    '      <!-- Brand -->',
+    '    <div class="lcs-ft-desktop">',
+    '      <div class="container">',
+    '      <div class="footer-main">',
+
     '      <div class="footer-brand">',
     '        <a class="footer-logo-wrap" href="' + R + 'index.html">',
     '          <img src="' + R + 'logo.png" alt="Loretto Central School Crest" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;" />',
@@ -41,22 +124,13 @@
     '        </a>',
     '        <p>Loretto Central School has been shaping young minds for over three decades. We are committed to delivering excellence in education with values, innovation, and care.</p>',
     '        <div class="social-links">',
-    '          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener">',
-    '            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
-    '          </a>',
-    '          <a class="social-link" href="#" aria-label="Instagram" target="_blank" rel="noopener">',
-    '            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
-    '          </a>',
-    '          <a class="social-link" href="#" aria-label="Twitter" target="_blank" rel="noopener">',
-    '            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-    '          </a>',
-    '          <a class="social-link" href="#" aria-label="YouTube" target="_blank" rel="noopener">',
-    '            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0a3535"/></svg>',
-    '          </a>',
+    '          <a class="social-link" href="#" aria-label="Facebook" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>',
+    '          <a class="social-link" href="#" aria-label="Instagram" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>',
+    '          <a class="social-link" href="#" aria-label="Twitter" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>',
+    '          <a class="social-link" href="#" aria-label="YouTube" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0a3535"/></svg></a>',
     '        </div>',
     '      </div>',
 
-    '      <!-- Quick Links -->',
     '      <div class="footer-col">',
     '        <h4>Quick Links</h4>',
     '        <ul>',
@@ -70,7 +144,6 @@
     '        </ul>',
     '      </div>',
 
-    '      <!-- Academics -->',
     '      <div class="footer-col">',
     '        <h4>Academics</h4>',
     '        <ul>',
@@ -83,84 +156,172 @@
     '        </ul>',
     '      </div>',
 
-    '      <!-- Contact -->',
     '      <div class="footer-col">',
     '        <h4>Contact</h4>',
-    '        <ul>',
-    '          <li><a href="#">&#128205; Main Road, Bantwal, Karnataka</a></li>',
-    '          <li><a href="tel:+919876543210">&#128222; +91 98765 43210</a></li>',
-    '          <li><a href="mailto:info@school.edu">&#9993;&#65039; info@school.edu</a></li>',
-    '          <li><a href="#">&#128336; Mon&#8211;Sat: 8:00 AM &#8211; 4:00 PM</a></li>',
-    '          <li><a href="' + R + 'login/parent-login.html">&#128106; Parent Login Portal</a></li>',
+    '        <ul class="footer-contact-list">',
+    '          <li><span>&#128205;</span> Main Road, Bantwal, Karnataka</li>',
+    '          <li><a href="tel:+919876543210"><span>&#128222;</span> +91 98765 43210</a></li>',
+    '          <li><a href="mailto:info@school.edu"><span>&#9993;&#65039;</span> info@school.edu</a></li>',
+    '          <li><span>&#128336;</span> Mon&#8211;Sat: 8:00 AM &#8211; 4:00 PM</li>',
+    '          <li class="footer-login-link"><a href="' + R + 'login/parent-login.html">&#128106; Parent Login Portal</a></li>',
     '        </ul>',
     '      </div>',
 
     '    </div>',
 
-    '    <!-- Bottom bar -->',
     '    <div class="footer-bottom">',
-    '      <span>&#169; <span id="lcs-footer-year"></span> Loretto Central School, Bantwal. All rights reserved. &nbsp;&#183;&nbsp; CBSE Affiliation No. 831368</span>',
-    '      <div style="display:flex;gap:16px;flex-wrap:wrap;">',
+    '      <span>&#169; <span class="lcs-ft-yr"></span> Loretto Central School, Bantwal. All rights reserved. &nbsp;&#183;&nbsp; CBSE Affiliation No. 831368</span>',
+    '      <div class="footer-bottom-links">',
     '        <a href="' + R + 'school-information/9-website-privacy-policy.html">Privacy Policy</a>',
     '        <a href="' + R + 'mandatory-disclosure.html">Mandatory Disclosure</a>',
     '      </div>',
     '    </div>',
 
-    '    <!-- Credits -->',
     '    <div class="footer-credits">',
     '      <span class="footer-credits-dev">Developed by <a href="https://appvertex.in" target="_blank" rel="noopener" class="footer-credits-brand">AppVertex</a></span>',
-    '      <span class="footer-credits-built">Built by <strong>Leston</strong> &amp; <strong>Lenstar</strong></span>',
+    '      <span class="footer-credits-built">Built by <strong>Leston</strong> &amp; <strong>Lenstar</strong> &nbsp;&#183;&nbsp; <a class="footer-admin-link" href="' + R + 'admin/admin-login.html" aria-label="Admin login"></a></span>',
+    '    </div>',
+
+    '      </div>',
+    '    </div>',
+
+    '    <div class="lcs-ft-mobile">',
+    '      <div class="mob-ft-base">',
+    '        <div class="mob-ft-card">',
+
+    '          <div class="mob-ft-row1">',
+    '            <div class="mob-ft-brand">',
+    '              <div class="mob-ft-logo"><img src="' + R + 'logo.png" alt="Loretto Central School" /></div>',
+    '              <div>',
+    '                <div class="mob-ft-name">Loretto Central School</div>',
+    '                <div class="mob-ft-sub">Bantwal, Dakshina Kannada</div>',
+    '              </div>',
+    '            </div>',
+    '            <a href="' + R + 'contact.html" class="mob-ft-cta">Contact Us &#8250;</a>',
+    '          </div>',
+
+    '          <div class="mob-ft-links">',
+    '            <a href="' + R + 'index.html" class="mob-ft-link">Home</a>',
+    '            <a href="' + R + 'about-us/1-school-profile.html" class="mob-ft-link">About</a>',
+    '            <a href="' + R + 'admissions/1-admissions.html" class="mob-ft-link">Admissions</a>',
+    '            <a href="' + R + 'school-information/6-facilities.html" class="mob-ft-link">Facilities</a>',
+    '            <a href="' + R + 'news.html" class="mob-ft-link">News</a>',
+    '            <a href="' + R + 'login/parent-login.html" class="mob-ft-link mob-ft-link--gold">Parent Login</a>',
+    '          </div>',
+
+    '          <div class="mob-ft-rule"></div>',
+
+    '          <div class="mob-ft-contact">',
+    '            <a href="tel:+919876543210" class="mob-ft-contact-item">',
+    '              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.54a16 16 0 0 0 5.55 5.55l1.61-1.61a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    '              +91 98765 43210',
+    '            </a>',
+    '            <a href="mailto:info@school.edu" class="mob-ft-contact-item">',
+    '              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    '              info@school.edu',
+    '            </a>',
+    '          </div>',
+
+    '          <div class="mob-ft-rule"></div>',
+
+    '          <div class="mob-ft-bottom">',
+    '            <span class="mob-ft-copy">&#169; <span class="lcs-ft-yr"></span> Loretto Central School</span>',
+    '            <span class="mob-ft-cbse">CBSE No. 831368</span>',
+    '          </div>',
+
+    '        </div>',
+
+    '        <div class="mob-ft-credits">',
+    '          Developed by <a href="https://appvertex.in" target="_blank" rel="noopener">AppVertex</a>',
+    '          &nbsp;&#183;&nbsp; Built by <strong>Leston</strong> &amp; <strong>Lenstar</strong>',
+    '        </div>',
+
+    '      </div>',
     '    </div>',
 
     '  </div>',
-    '</footer>'
+    '</footer>',
+
+    '<button id="lcs-scroll-top" aria-label="Scroll to top" title="Scroll to top">',
+    '  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>',
+    '</button>'
+
   ].join('\n');
 
   /* ── CSS ── */
   var FOOTER_CSS = [
     '<style id="lcs-footer-styles">',
-    'footer#lcs-footer{background:#0a3535;color:rgba(255,255,255,0.7);}',
+
+    'footer#lcs-footer{font-family:\'Nunito\',sans-serif;border-top:4px solid var(--gold,#c8960c);}',
+
+    '.lcs-ft-desktop{display:block;}',
+    '.lcs-ft-mobile{display:none;}',
+    'footer#lcs-footer .lcs-ft-desktop{background:#0a3535;color:rgba(255,255,255,0.7);}',
     '.footer-main{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding:60px 0 40px;}',
     '.footer-logo-wrap{display:flex;align-items:center;text-decoration:none;margin-bottom:16px;}',
     '.footer-brand p{font-size:0.85rem;line-height:1.7;color:rgba(255,255,255,0.6);margin-bottom:20px;}',
     '.social-links{display:flex;gap:10px;}',
     '.social-link{width:36px;height:36px;background:rgba(255,255,255,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;transition:background 0.2s,color 0.2s;}',
-    '.social-link:hover{background:var(--gold);color:#054040;}',
-    '.footer-col h4{color:var(--gold-light);font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;border-bottom:1px solid rgba(200,150,12,0.25);padding-bottom:8px;}',
+    '.social-link:hover{background:var(--gold,#c8960c);color:#054040;}',
+    '.footer-col h4{color:var(--gold-light,#e8b020);font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;border-bottom:1px solid rgba(200,150,12,0.25);padding-bottom:8px;}',
     '.footer-col ul{list-style:none;}',
     '.footer-col ul li{margin-bottom:10px;}',
     '.footer-col ul li a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.85rem;transition:color 0.2s;}',
-    '.footer-col ul li a:hover{color:var(--gold);}',
+    '.footer-col ul li a:hover{color:var(--gold,#c8960c);}',
+    '.footer-contact-list li{display:flex;gap:10px;align-items:flex-start;color:rgba(255,255,255,0.75);}',
+    '.footer-contact-list li span{color:var(--gold-light,#e8b020);flex-shrink:0;}',
+    '.footer-login-link{margin-top:15px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);}',
+    '.footer-login-link a{font-weight:700;color:var(--gold-light,#e8b020)!important;}',
     '.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding:20px 0 10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:0.8rem;}',
-    '.footer-bottom a{color:var(--gold);text-decoration:none;font-size:0.8rem;transition:color 0.2s;}',
+    '.footer-bottom a{color:var(--gold,#c8960c);text-decoration:none;font-size:0.8rem;transition:color 0.2s;}',
     '.footer-bottom a:hover{color:#fff;}',
+    '.footer-bottom-links{display:flex;gap:20px;}',
+    '.footer-credits{padding:24px 0 32px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;}',
+    '.footer-credits-dev,.footer-credits-built{font-family:\'Nunito\',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.12em;color:rgba(255,255,255,0.4);text-transform:uppercase;}',
+    '.footer-credits-brand{color:var(--gold-light,#e8b020)!important;text-decoration:none;transition:color 0.3s;margin-left:4px;border-bottom:1px solid rgba(232,176,32,0.2);padding-bottom:1px;}',
+    '.footer-credits-brand:hover{color:#fff!important;border-bottom-color:#fff;}',
+    '.footer-credits-built strong{color:rgba(255,255,255,0.7);font-weight:800;}',
+    '.footer-admin-link{display:inline-flex;width:6px;height:6px;background:rgba(255,255,255,0.1);border-radius:50%;margin-left:8px;transition:all 0.3s;border:none;flex-shrink:0;}',
+    '.footer-admin-link:hover{background:var(--gold-light);transform:scale(1.2);}',
 
-    /* Credits row - centered and stacked */
-    '.footer-credits{padding:12px 0 24px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:0.78rem;color:rgba(255,255,255,0.45);font-family:\'Courier New\',monospace;letter-spacing:0.03em;text-align:center;}',
-    '.footer-credits-dev{color:rgba(255,255,255,0.6);}',
-    '.footer-credits-brand{color:var(--gold-light);font-weight:700;text-decoration:none;transition:color 0.2s;}',
-    '.footer-credits-brand:hover{color:#fff;}',
-    '.footer-credits-built{color:rgba(255,255,255,0.6);}',
-    '.footer-credits-built strong{color:rgba(255,255,255,0.75);font-weight:700;}',
-
-    /* Responsive - improved mobile layout */
-    '@media(max-width:900px){.footer-main{grid-template-columns:repeat(2,1fr);gap:24px;padding:40px 0 30px;}}',
-    '@media(max-width:600px){',
-    '.footer-main{grid-template-columns:1fr;gap:24px;padding:30px 0 20px;}',
-    '.footer-brand{grid-column:1;}',
-    '.footer-col:nth-child(2),.footer-col:nth-child(3){display:none;}',
-    '.footer-brand p{font-size:0.8rem;margin-bottom:16px;}',
-    '.footer-col h4{font-size:0.8rem;margin-bottom:12px;padding-bottom:6px;}',
-    '.footer-col ul li{margin-bottom:8px;}',
-    '.footer-col ul li a{font-size:0.8rem;}',
-    '.footer-bottom{flex-direction:column;align-items:center;gap:10px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.08);}',
-    '.footer-bottom span,.footer-bottom div{width:100%;text-align:center;}',
-    '.footer-bottom div{display:flex;flex-direction:column;gap:8px;}',
-    '.footer-credits{padding:8px 0 16px;gap:4px;}',
-    '.social-links{gap:8px;}',
-    '.social-link{width:32px;height:32px;}',
-    '.social-link svg{width:13px;height:13px;}',
+    '@media(max-width:1100px){.footer-main{grid-template-columns:repeat(3,1fr);gap:30px;}}',
+    '@media(max-width:768px){',
+    '  .lcs-ft-desktop{display:none!important;}',
+    '  .lcs-ft-mobile{display:block!important;}',
     '}',
+
+    '.mob-ft-base{background:#0e6b6b;padding:16px 14px 20px;}',
+    '.mob-ft-card{background:#094f4f;border:0.5px solid rgba(200,150,12,0.28);border-radius:16px;padding:18px 16px 14px;box-shadow:0 4px 24px rgba(0,0,0,0.22);}',
+    '.mob-ft-row1{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;}',
+    '.mob-ft-brand{display:flex;align-items:center;gap:10px;min-width:0;}',
+    '.mob-ft-logo{width:36px;height:36px;border-radius:50%;border:1.5px solid #c8960c;overflow:hidden;flex-shrink:0;}',
+    '.mob-ft-logo img{width:100%;height:100%;object-fit:cover;display:block;}',
+    '.mob-ft-name{font-family:\'Playfair Display\',serif;font-size:0.82rem;font-weight:700;color:#fff;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+    '.mob-ft-sub{font-size:0.68rem;color:#e8b020;margin-top:2px;white-space:nowrap;}',
+    '.mob-ft-cta{flex-shrink:0;font-size:0.68rem;font-weight:700;color:#e8b020;border:0.5px solid rgba(232,176,32,0.5);border-radius:50px;padding:6px 12px;text-decoration:none;white-space:nowrap;letter-spacing:0.02em;transition:background 0.2s,color 0.2s;}',
+    '.mob-ft-cta:hover{background:#c8960c;color:#094f4f;}',
+    '.mob-ft-links{display:flex;flex-wrap:wrap;gap:4px 0;margin-bottom:14px;}',
+    '.mob-ft-link{font-size:0.75rem;color:rgba(255,255,255,0.62);text-decoration:none;padding:2px 8px 2px 0;transition:color 0.18s;}',
+    '.mob-ft-link:not(:last-child)::after{content:"·";margin-left:8px;color:rgba(255,255,255,0.22);}',
+    '.mob-ft-link:hover{color:#e8b020;}',
+    '.mob-ft-link--gold{color:#e8b020!important;font-weight:700;}',
+    '.mob-ft-rule{border:none;border-top:0.5px solid rgba(200,150,12,0.2);margin:0 0 12px;}',
+    '.mob-ft-contact{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}',
+    '.mob-ft-contact-item{display:flex;align-items:center;gap:7px;font-size:0.72rem;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.18s;word-break:break-all;}',
+    '.mob-ft-contact-item svg{stroke:#e8b020;flex-shrink:0;}',
+    '.mob-ft-contact-item:hover{color:#e8b020;}',
+    '.mob-ft-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;}',
+    '.mob-ft-copy{font-size:0.68rem;color:rgba(255,255,255,0.32);}',
+    '.mob-ft-cbse{font-size:0.66rem;color:rgba(200,150,12,0.7);border:0.5px solid rgba(200,150,12,0.28);border-radius:4px;padding:3px 7px;flex-shrink:0;}',
+    '.mob-ft-credits{padding:16px 0 8px;text-align:center;font-family:\'Nunito\',sans-serif;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);line-height:1.6;}',
+    '.mob-ft-credits a{color:var(--gold-light);text-decoration:none;font-weight:800;border-bottom:0.5px solid rgba(232,176,32,0.3);}',
+    '.mob-ft-credits strong{color:rgba(255,255,255,0.6);font-weight:800;}',
+
+    '#lcs-scroll-top{position:fixed;bottom:25px;right:25px;width:48px;height:48px;background:var(--gold,#c8960c);color:#094f4f;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(20px);transition:all 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:0 6px 20px rgba(0,0,0,0.3);z-index:99990;}',
+    '#lcs-scroll-top.show{opacity:1;visibility:visible;transform:translateY(0);}',
+    '#lcs-scroll-top:hover{background:var(--gold-light,#e8b020);transform:translateY(-4px);box-shadow:0 8px 25px rgba(0,0,0,0.4);}',
+    '@media(max-width:768px){#lcs-scroll-top{bottom:20px;right:20px;width:42px;height:42px;}}',
+
     '</style>'
   ].join('\n');
 
@@ -169,26 +330,108 @@
     document.head.insertAdjacentHTML('beforeend', FOOTER_CSS);
   }
 
-  async function injectHTML() {
-    if (document.getElementById('lcs-footer')) return;
-    const contact = await loadContact();
-    
-    // Replace placeholders in FOOTER_HTML if contact data exists
-    let html = FOOTER_HTML;
-    if (contact) {
-      if (contact.address) html = html.replace('Main Road, Bantwal, Karnataka', contact.address);
-      if (contact.phone) html = html.replace('+91 98765 43210', contact.phone);
-      if (contact.email) html = html.replace('info@school.edu', contact.email);
+  function applyFooterContent(footer, general, contact) {
+    var schoolName = general.schoolName || DEFAULT_GENERAL_SETTINGS.schoolName;
+    var logo = general.logo || DEFAULT_GENERAL_SETTINGS.logo;
+    var affiliation = general.affiliation || DEFAULT_GENERAL_SETTINGS.affiliation;
+    var social = Object.assign({}, DEFAULT_FOOTER_SETTINGS.social, footer.social || {});
+    var links = Array.isArray(footer.links) && footer.links.length ? footer.links : DEFAULT_FOOTER_SETTINGS.links;
+    var phones = String(contact.phones || contact.phone || DEFAULT_CONTACT_SETTINGS.phones).split('|')[0].trim();
+    var emails = String(contact.emails || contact.email || DEFAULT_CONTACT_SETTINGS.emails).split(',')[0].trim();
+
+    document.querySelectorAll('.footer-logo-wrap img, .mob-ft-logo img').forEach(function (img) {
+      img.src = logo;
+      img.alt = schoolName;
+    });
+    document.querySelectorAll('.footer-logo-wrap div div:first-child, .mob-ft-name').forEach(function (el) {
+      el.textContent = schoolName;
+    });
+    document.querySelectorAll('.footer-logo-wrap div div:last-child').forEach(function (el) {
+      el.textContent = affiliation;
+    });
+
+    var brandText = document.querySelector('.footer-brand p');
+    if (brandText) brandText.textContent = footer.description || DEFAULT_FOOTER_SETTINGS.description;
+
+    var desktopQuickLinks = document.querySelectorAll('.footer-col ul')[0];
+    if (desktopQuickLinks) {
+      desktopQuickLinks.innerHTML = links.map(function (link) {
+        return '<li><a href="' + link.url + '">' + link.text + '</a></li>';
+      }).join('');
     }
 
-    document.body.insertAdjacentHTML('beforeend', html);
-    var yr = document.getElementById('lcs-footer-year');
-    if (yr) yr.textContent = new Date().getFullYear();
+    var mobileLinks = document.querySelector('.mob-ft-links');
+    if (mobileLinks) {
+      mobileLinks.innerHTML = links.slice(0, 6).map(function (link, index) {
+        return '<a href="' + link.url + '" class="mob-ft-link' + (index === links.length - 1 ? ' mob-ft-link--gold' : '') + '">' + link.text + '</a>';
+      }).join('');
+    }
+
+    var socialMap = {
+      Facebook: social.facebook,
+      Instagram: social.instagram,
+      Twitter: social.twitter,
+      YouTube: social.youtube
+    };
+    document.querySelectorAll('.social-link').forEach(function (linkEl) {
+      var label = linkEl.getAttribute('aria-label');
+      var href = socialMap[label] || '#';
+      linkEl.href = href;
+      if (href === '#') {
+        linkEl.setAttribute('tabindex', '-1');
+      } else {
+        linkEl.removeAttribute('tabindex');
+      }
+    });
+
+    var contactItems = document.querySelectorAll('.footer-contact-list li');
+    if (contactItems[0]) contactItems[0].innerHTML = '<span>&#128205;</span> ' + (contact.address || DEFAULT_CONTACT_SETTINGS.address);
+    if (contactItems[1]) contactItems[1].innerHTML = '<a href="tel:' + phones.replace(/\s+/g, '') + '"><span>&#128222;</span> ' + phones + '</a>';
+    if (contactItems[2]) contactItems[2].innerHTML = '<a href="mailto:' + emails + '"><span>&#9993;&#65039;</span> ' + emails + '</a>';
+    if (contactItems[3]) contactItems[3].innerHTML = '<span>&#128336;</span> ' + (contact.officeHours || DEFAULT_CONTACT_SETTINGS.officeHours);
+
+    var mobilePhone = document.querySelector('.mob-ft-contact a[href^="tel:"]');
+    if (mobilePhone) {
+      mobilePhone.href = 'tel:' + phones.replace(/\s+/g, '');
+      mobilePhone.lastChild.textContent = '\n              ' + phones + '\n            ';
+    }
+    var mobileEmail = document.querySelector('.mob-ft-contact a[href^="mailto:"]');
+    if (mobileEmail) {
+      mobileEmail.href = 'mailto:' + emails;
+      mobileEmail.lastChild.textContent = '\n              ' + emails + '\n            ';
+    }
+
+    var copyright = document.querySelector('.footer-bottom > span');
+    if (copyright) copyright.textContent = footer.copyrightText || DEFAULT_FOOTER_SETTINGS.copyrightText;
+    var mobileCopy = document.querySelector('.mob-ft-copy');
+    if (mobileCopy) mobileCopy.textContent = footer.copyrightText || DEFAULT_FOOTER_SETTINGS.copyrightText;
+  }
+
+  async function injectHTML() {
+    if (!document.getElementById('lcs-footer')) {
+      var html = FOOTER_HTML;
+      document.body.insertAdjacentHTML('beforeend', html);
+      var yr = new Date().getFullYear();
+      document.querySelectorAll('.lcs-ft-yr').forEach(function (el) { el.textContent = yr; });
+    }
+
+    var results = await Promise.all([loadFooterSettings(), loadGeneralSettings(), loadContact()]);
+    applyFooterContent(results[0], results[1], results[2]);
   }
 
   async function boot() {
     injectStyles();
     await injectHTML();
+
+    var btn = document.getElementById('lcs-scroll-top');
+    if (btn) {
+      window.addEventListener('scroll', function () {
+        btn.classList.toggle('show', window.scrollY > 400);
+      }, { passive: true });
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -196,6 +439,21 @@
   } else {
     boot();
   }
+
+  window.addEventListener('storage', function (event) {
+    if (
+      event.key === FOOTER_SETTINGS_CACHE_KEY ||
+      event.key === GENERAL_SETTINGS_CACHE_KEY ||
+      event.key === CONTACT_CONTENT_CACHE_KEY ||
+      event.key === 'loretto_site_settings_last_updated'
+    ) {
+      boot();
+    }
+  });
+
+  window.addEventListener('focus', function () {
+    boot();
+  });
 
   window.LCSFooter = { init: boot };
 })();

@@ -345,47 +345,30 @@
       <div class="content-card">
         <h2>Transfer Certificate Format</h2>
         <p>The Transfer Certificate (TC) is an official document issued by a school to a student upon leaving, confirming their enrollment details, academic standing, and conduct. A TC from the previous school is mandatory for admission to Loretto Central School for students transferring from other institutions.</p>
-        <p>The following CBSE-standard Transfer Certificate format is in use for our CBSE-affiliated school:</p>
+        <p id="tcIntroText">The following CBSE-standard Transfer Certificate format is in use for our CBSE-affiliated school:</p>
 
         <!-- TC Preview -->
-        <div class="tc-preview">
+        <div class="tc-preview" id="tcPreviewBlock">
           <div class="tc-school-header">
-            <div class="tc-school-name">LORETTO CENTRAL SCHOOL</div>
-            <div class="tc-school-addr">Loretto Padavu, Bantwal, Dakshina Kannada – 574219 | CBSE Affiliation No.: 831368</div>
+            <div class="tc-school-name" id="tcSchoolNameDisplay">LORETTO CENTRAL SCHOOL</div>
+            <div class="tc-school-addr" id="tcSchoolAddrDisplay">Loretto Padavu, Bantwal, Dakshina Kannada – 574219 | CBSE Affiliation No.: 831368</div>
           </div>
-          <div class="tc-title">Transfer Certificate</div>
-          <div class="tc-field">
+          <div class="tc-title" id="tcDocTitleDisplay">Transfer Certificate</div>
+          <div class="tc-field" id="tcFieldsDisplay">
             <div class="tc-row"><div class="tc-label">TC No.</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Date of Issue</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Student's Name</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Father's Name</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Mother's Name</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Date of Birth</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Nationality</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Religion</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Category</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Admission No.</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Class Last Studied</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Class in which Admitted</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Date of Admission</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Date of Leaving</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Reason for Leaving</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">General Conduct</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Fees Paid Up To</div><div class="tc-value"><span class="tc-blank"></span></div></div>
-            <div class="tc-row"><div class="tc-label">Whether Qualified for Promotion</div><div class="tc-value"><span class="tc-blank"></span></div></div>
           </div>
-          <div class="tc-footer">
+          <div class="tc-footer" id="tcFooterDisplay">
             <span>Prepared by: _______________</span>
             <span>Checked by: _______________</span>
             <span>Principal's Signature &amp; Seal</span>
           </div>
         </div>
 
-        <div class="download-feature-card">
-          <div class="dfc-icon">📄</div>
-          <h3>Download Official TC Format</h3>
-          <p>Download the official CBSE-standard Transfer Certificate format used by Loretto Central School.</p>
-          <a href="https://school.edu/wp-content/uploads/2023/08/transfer-certificate.pdf" class="download-feature-btn" target="_blank">📥 Download TC Format (PDF)</a>
+        <div class="download-feature-card" id="tcDownloadCard">
+          <div class="dfc-icon"></div>
+          <h3 id="tcDownloadTitle">Download Official TC Format</h3>
+          <p id="tcDownloadDesc">Download the official CBSE-standard Transfer Certificate format used by Loretto Central School.</p>
+          <a href="https://school.edu/wp-content/uploads/2023/08/transfer-certificate.pdf" class="download-feature-btn" target="_blank" id="tcDownloadBtn"> Download TC Format (PDF)</a>
         </div>
       </div>
 
@@ -393,7 +376,7 @@
       <div class="sidebar">
 
         <div class="sidebar-card">
-          <h4>📌 When is TC Required?</h4>
+          <h4> When is TC Required?</h4>
           <ul class="info-steps">
             <li><div class="step-n">1</div>Transferring from any other school to Loretto Central School for Classes 1–8</li>
             <li><div class="step-n">2</div>Students coming from schools outside Dakshina Kannada district</li>
@@ -403,15 +386,15 @@
         </div>
 
         <div class="sidebar-card">
-          <h4>🔍 Important Notes</h4>
+          <h4> Important Notes</h4>
           <div class="warn-box">
-            <p>📌 The date of birth mentioned in the Transfer Certificate from the previous school will be taken as final and correct for admission purposes.</p>
+            <p> The date of birth mentioned in the Transfer Certificate from the previous school will be taken as final and correct for admission purposes.</p>
           </div>
           <p style="margin-top:14px;">Students from outside Karnataka must have their TC countersigned by the concerned District Education Officer (DEO) before submission.</p>
         </div>
 
         <div class="sidebar-card">
-          <h4>🔗 Related Pages</h4>
+          <h4> Related Pages</h4>
           <ul class="info-steps">
             <li><div class="step-n">→</div><a href="2-admission-enquiry.html" style="color:var(--navy); font-weight:600;">Admission Rules &amp; Enquiry</a></li>
             <li><div class="step-n">→</div><a href="4-fee-structure.html" style="color:var(--navy); font-weight:600;">Fee Structure 2025–26</a></li>
@@ -426,5 +409,69 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function initTransferCertificatePage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+      function resolveApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [localStorage.getItem('loretto_api_base') || '', defaultRemoteApi, window.location.origin + '/api', 'http://localhost:3000/api', 'http://127.0.0.1:3000/api'].filter(function (value, index, list) { return value && list.indexOf(value) === index; });
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health').then(function (res) { return res.ok ? res.json() : null; }).then(function (data) { return data && data.service === 'loretto-backend' ? base : null; }).catch(function () { return null; });
+          });
+        });
+        return attempt.then(function (found) { return found || defaultRemoteApi; });
+      }
+      function forceDownloadUrl(url, filename) {
+        var value = String(url || '');
+        if (!value) return '#';
+        if (value.indexOf('res.cloudinary.com/') !== -1 && (/\.pdf(?:$|[?#])/i.test(value) || value.indexOf('/raw/') !== -1)) {
+          var proxyBase = localStorage.getItem('loretto_api_base');
+          if (!proxyBase || proxyBase.indexOf('http') !== 0 || proxyBase.indexOf(window.location.host) !== -1) {
+            if (window.location.port === '5500' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+              proxyBase = 'http://localhost:3000/api';
+            } else {
+              proxyBase = defaultRemoteApi;
+            }
+          }
+          var downloadUrl = proxyBase + '/upload/download?url=' + encodeURIComponent(value) + '&filename=' + encodeURIComponent(filename || 'transfer-certificate.pdf');
+          console.log('[Download Proxy] Target:', value, '-> Link:', downloadUrl);
+          return downloadUrl;
+        }
+        return value;
+      }
+      function render(data) {
+        if (data.schoolName) document.getElementById('tcSchoolNameDisplay').textContent = data.schoolName;
+        if (data.schoolAddr) document.getElementById('tcSchoolAddrDisplay').textContent = data.schoolAddr;
+        if (data.docTitle) document.getElementById('tcDocTitleDisplay').textContent = data.docTitle;
+        if (Array.isArray(data.fields) && data.fields.length) {
+          document.getElementById('tcFieldsDisplay').innerHTML = data.fields.map(function (item) {
+            return '<div class="tc-row"><div class="tc-label">' + escapeHtml(item.label || '') + '</div><div class="tc-value"><span class="tc-blank"></span></div></div>';
+          }).join('');
+        }
+        if (data.sig1 || data.sig2) {
+          document.getElementById('tcFooterDisplay').innerHTML =
+            '<span>' + escapeHtml((data.sig1 || 'Prepared by') + ': _______________') + '</span>' +
+            '<span>' + escapeHtml((data.sig2 || 'Checked by') + ': _______________') + '</span>' +
+            '<span>' + escapeHtml('Principal\'s Signature & Seal') + '</span>';
+        }
+        if (typeof data.showPreview === 'boolean') document.getElementById('tcPreviewBlock').style.display = data.showPreview ? '' : 'none';
+        if (typeof data.showDownload === 'boolean') document.getElementById('tcDownloadCard').style.display = data.showDownload ? '' : 'none';
+        if (data.dlTitle) document.getElementById('tcDownloadTitle').textContent = data.dlTitle;
+        if (data.dlDesc) document.getElementById('tcDownloadDesc').textContent = data.dlDesc;
+        if (data.dlUrl) document.getElementById('tcDownloadBtn').href = forceDownloadUrl(data.dlUrl, data.dlOriginalFilename || 'transfer-certificate.pdf');
+        if (data.dlOriginalFilename) document.getElementById('tcDownloadBtn').setAttribute('download', data.dlOriginalFilename);
+        if (data.dlBtnText) document.getElementById('tcDownloadBtn').textContent = ' ' + data.dlBtnText;
+      }
+      resolveApiBase().then(function (base) { return fetch(base + '/content/admissions-tc', { cache: 'no-store' }); }).then(function (res) { return res.json(); }).then(function (item) {
+        var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+        if (Object.keys(data).length) render(data);
+      }).catch(function () {});
+    })();
+  </script>
 </body>
 </html>
