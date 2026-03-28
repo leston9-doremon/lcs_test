@@ -7,8 +7,9 @@
   <title>Loretto Central School</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&family=Oswald:wght@600;700&family=Bebas+Neue&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     *,
     *::before,
@@ -328,6 +329,18 @@
       to {
         opacity: 1;
         transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
@@ -676,21 +689,11 @@
     .hero-bg-img {
       position: absolute;
       inset: 0;
-      background-image: url('IMGS/school%20img.webp');
+      background-image: url('https://lorettocentralschool.com/wp-content/uploads/2026/01/20240109_133751-2-1.jpg');
       background-size: cover;
       background-position: center;
       animation: heroImgZoom 18s ease-in-out infinite;
     }
-
-    /* Dark overlay for better text contrast */
-    .hero-bg-img::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(5, 26, 26, 0.4), rgba(5, 26, 26, 0.7));
-      z-index: 1;
-    }
-
 
     /* Deep layered overlay */
     .hero-bg-pattern {
@@ -852,19 +855,34 @@
       padding: 130px 0 100px;
       max-width: 860px;
       margin: 0 auto;
+      perspective: 1200px;
+      transform-style: preserve-3d;
     }
 
     .hero-text {
       color: var(--white);
       width: 100%;
+      animation: heroContentFade 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes heroContentFade {
+      from {
+        opacity: 0;
+        transform: translateZ(-30px) translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateZ(0) translateY(0);
+      }
     }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(200, 150, 12, 0.15);
-      border: 1px solid rgba(200, 150, 12, 0.5);
+      background: rgba(200, 150, 12, 0.2);
+      border: 1.5px solid rgba(200, 150, 12, 0.6);
       color: var(--gold-light);
       font-size: 0.72rem;
       font-weight: 800;
@@ -874,9 +892,17 @@
       border-radius: 30px;
       margin-bottom: 24px;
       animation: badgePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 20px rgba(200, 150, 12, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .hero-badge:hover {
+      background: rgba(200, 150, 12, 0.25);
+      box-shadow: 0 0 30px rgba(200, 150, 12, 0.35), inset 0 0 20px rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
     }
 
     .hero-badge::before {
@@ -912,7 +938,21 @@
       line-height: 1.15;
       margin: 0;
       display: inline;
-      text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(200, 150, 12, 0.2);
+      letter-spacing: -0.5px;
+      animation: titlePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes titlePulse {
+
+      0%,
+      100% {
+        text-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(200, 150, 12, 0.2);
+      }
+
+      50% {
+        text-shadow: 0 12px 50px rgba(0, 0, 0, 0.7), 0 8px 30px rgba(200, 150, 12, 0.3);
+      }
     }
 
     .typewriter-heading em {
@@ -923,6 +963,7 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 3s linear infinite;
+      text-shadow: none;
     }
 
     .tw-cursor {
@@ -941,6 +982,7 @@
       gap: 8px;
       justify-content: center;
       margin-top: 16px;
+      animation: fadeInUp 0.8s ease-out 0.5s both;
     }
 
     .twdot {
@@ -948,15 +990,23 @@
       height: 8px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       cursor: pointer;
       padding: 0;
-      transition: background 0.3s, transform 0.3s;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 0 10px rgba(200, 150, 12, 0);
+    }
+
+    .twdot:hover {
+      background: rgba(200, 150, 12, 0.4);
+      box-shadow: 0 0 15px rgba(200, 150, 12, 0.3);
+      transform: scale(1.3);
     }
 
     .twdot.on {
       background: var(--gold-light);
-      transform: scale(1.4);
+      transform: scale(1.5);
+      box-shadow: 0 0 20px rgba(200, 150, 12, 0.6), 0 0 40px rgba(200, 150, 12, 0.3);
     }
 
     .hero-accent-line {
@@ -966,7 +1016,8 @@
       background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
       border-radius: 2px;
       transform-origin: center;
-      animation: lineGrow 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both;
+      animation: lineGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s both;
+      box-shadow: 0 0 20px rgba(200, 150, 12, 0.4);
     }
 
     .hero-text p {
@@ -986,6 +1037,7 @@
       flex-wrap: wrap;
       justify-content: center;
       animation: heroFadeUp 0.8s ease both 0.6s;
+      perspective: 1000px;
     }
 
     .btn-primary {
@@ -999,14 +1051,19 @@
       padding: 14px 32px;
       border-radius: 50px;
       text-decoration: none;
-      box-shadow: 0 6px 30px rgba(200, 150, 12, 0.5), 0 2px 8px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      box-shadow: 0 8px 35px rgba(200, 150, 12, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.3);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
       animation: btnShine 3s linear infinite;
+      transform-style: preserve-3d;
     }
 
     .btn-primary:hover {
-      transform: translateY(-3px) scale(1.04);
-      box-shadow: 0 12px 40px rgba(200, 150, 12, 0.65), 0 4px 16px rgba(0, 0, 0, 0.3);
+      transform: translateY(-5px) scale(1.06) rotateX(-2deg) rotateY(2deg);
+      box-shadow: 0 16px 50px rgba(200, 150, 12, 0.7), 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(-2px) scale(0.99);
     }
 
     .btn-primary::after {
@@ -1034,15 +1091,21 @@
       border-radius: 50px;
       text-decoration: none;
       backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.08);
+      transform-style: preserve-3d;
     }
 
     .btn-outline:hover {
       border-color: var(--gold-light);
-      background: rgba(200, 150, 12, 0.15);
+      background: rgba(200, 150, 12, 0.18);
       color: var(--gold-light);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(200, 150, 12, 0.25);
+      transform: translateY(-5px) scale(1.06) rotateX(-2deg) rotateY(-2deg);
+      box-shadow: 0 16px 50px rgba(200, 150, 12, 0.35), 0 8px 25px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-outline:active {
+      transform: translateY(-2px) scale(0.99);
     }
 
     .hero-stats {
@@ -1090,11 +1153,12 @@
     }
 
     .stat .num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      font-weight: 800;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 400;
       color: var(--gold-light);
       line-height: 1;
+      letter-spacing: 0.05em;
       text-shadow: 0 0 20px rgba(200, 150, 12, 0.4);
     }
 
@@ -1144,205 +1208,50 @@
       animation: particleRise 1.5s ease-in-out infinite;
     }
 
-    /* ── RESPONSIVE CONSOLIDATION (Unified Breakpoints) ── */
-
-    /* TABLET (max-width: 1024px) */
-    @media (max-width: 1024px) {
-      .container {
-        max-width: 960px;
-        padding: 0 20px;
-      }
-
-      .about-grid {
-        gap: 40px;
-      }
-
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
       .hero-rings {
         display: none;
       }
     }
 
-    /* SMALL TABLET / PHABLET (max-width: 768px) */
-    @media (max-width: 768px) {
-      .container {
-        padding: 0 16px;
-      }
-
-      .top-bar-row {
-        flex-direction: column;
-        padding: 12px 0;
-        gap: 10px;
-        text-align: center;
-      }
-
-      .top-bar-brand {
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .top-bar-brand .tb-logo {
-        width: 56px;
-        height: 56px;
-      }
-
-      .top-bar-brand .tb-text {
-        text-align: center;
-      }
-
-      .top-bar-brand .tb-name {
-        font-size: 1.25rem;
-      }
-
-      .top-bar-login {
-        display: none;
-      }
-
-      header {
-        border-bottom-width: 2px;
+    @media (max-width: 600px) {
+      .why-us {
+        padding: 50px 0;
       }
 
       .hero {
-        min-height: 80vh;
-        padding: 80px 0;
-        text-align: center;
+        min-height: 100svh;
       }
 
-      .hero-content {
-        padding: 40px 16px;
-        width: 100%;
-      }
-
-      .typewriter-heading {
-        font-size: clamp(1.8rem, 8vw, 2.5rem);
-        margin-bottom: 20px;
-      }
-
-      .hero-stats {
-        margin-top: 30px;
-        gap: 10px;
-        justify-content: center;
-      }
-
-      .stat {
-        padding: 10px 14px;
-        min-width: 80px;
-      }
-
-      .stat .num {
-        font-size: 1.5rem;
-      }
-
-      .about {
-        padding: 60px 0;
-      }
-
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .about-img-ring,
-      .about-img-ring-2,
-      .about-orbit-dot {
+      .hero-rings {
         display: none;
       }
 
-      .about-img-placeholder {
-        height: 320px;
-      }
-
-      .section-title {
-        margin-bottom: 30px;
-      }
-
-      .section-title h2 {
-        font-size: 1.8rem;
-      }
-
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .gal-item {
-        height: 180px;
-      }
-
-      .gal-item.wide,
-      .gal-item.tall {
-        grid-column: auto;
-        grid-row: auto;
-      }
-
-      .admissions-cta {
-        padding: 60px 0;
-      }
-
-      .admissions-cta h2 {
-        font-size: 1.6rem;
-      }
-
-      .cta-btns {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .btn-primary,
-      .btn-outline {
-        width: 100%;
-        text-align: center;
-        padding: 12px 20px;
-      }
-    }
-
-    /* MOBILE (max-width: 480px) */
-    @media (max-width: 480px) {
-      .top-bar-brand .tb-name {
-        font-size: 1.1rem;
-      }
-
       .typewriter-heading {
-        font-size: 1.7rem;
+        font-size: clamp(1.9rem, 7.5vw, 2.8rem);
+      }
+
+      .hero-content {
+        padding: 110px 16px 90px;
       }
 
       .hero-stats {
-        grid-template-columns: repeat(2, 1fr);
-        display: grid;
+        gap: 12px;
+        margin-top: 36px;
       }
 
       .stat {
-        width: 100%;
-        min-width: 0;
+        padding: 12px 16px;
+        min-width: 90px;
       }
 
-      .gallery-grid {
-        grid-template-columns: 1fr;
+      .stat .num {
+        font-size: 1.6rem;
       }
 
-      .gallery-counter {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-main {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .footer-logo-wrap {
-        justify-content: center;
-      }
-
-      .social-links {
-        justify-content: center;
+      .hero-grid-floor {
+        height: 35%;
       }
     }
 
@@ -1690,12 +1599,15 @@
       position: relative;
       overflow: hidden;
       animation: aboutImgFloat 7s ease-in-out infinite;
-      box-shadow: 0 32px 80px rgba(14, 107, 107, 0.28), 0 8px 24px rgba(0, 0, 0, 0.15);
-      transition: transform 0.5s ease;
+      box-shadow: 0 32px 80px rgba(14, 107, 107, 0.28), 0 8px 24px rgba(0, 0, 0, 0.15), inset 0 0 40px rgba(200, 150, 12, 0.08);
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      perspective: 1000px;
+      transform-style: preserve-3d;
     }
 
     .about-img-placeholder:hover {
-      transform: rotateY(4deg) rotateX(-2deg) scale(1.02);
+      transform: rotateY(6deg) rotateX(-3deg) scale(1.04);
+      box-shadow: 0 48px 100px rgba(14, 107, 107, 0.35), 0 12px 36px rgba(200, 150, 12, 0.2), inset 0 0 40px rgba(200, 150, 12, 0.12);
     }
 
     .about-img-placeholder::before {
@@ -1839,6 +1751,8 @@
       margin-bottom: 6px;
       line-height: 1.25;
       animation: glitchTitle 8s ease-in-out infinite;
+      text-shadow: 0 4px 20px rgba(14, 107, 107, 0.15);
+      letter-spacing: -0.3px;
     }
 
     .about-h2-line {
@@ -1848,7 +1762,8 @@
       background: linear-gradient(90deg, var(--gold), var(--gold-light));
       border-radius: 2px;
       margin-bottom: 22px;
-      animation: lineExpandA 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.5s;
+      animation: lineExpandA 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.6s;
+      box-shadow: 0 0 15px rgba(200, 150, 12, 0.4);
     }
 
     .about-text p {
@@ -1856,6 +1771,7 @@
       line-height: 1.8;
       margin-bottom: 16px;
       font-size: 0.97rem;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
     }
 
     .about-features {
@@ -2031,80 +1947,25 @@
       color: var(--gold);
     }
 
-    /* ── WHY US ── */
-    .why-us {
-      padding: 80px 0;
-      background: #094f4f;
-    }
 
-    .why-us .section-title h2 {
-      color: var(--white);
-    }
 
-    .why-us .section-title .tag {
-      color: var(--gold-light);
-    }
+    /* Mobile */
+    @media (max-width: 600px) {
+      .why-us {
+        padding: 60px 0 56px;
+      }
 
-    .why-us .section-title p {
-      color: rgba(255, 255, 255, 0.65);
-    }
+      .why-us::before {
+        width: 400px;
+        height: 400px;
+      }
 
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
+      .why-us::after {
+        width: 350px;
+        height: 350px;
+      }
 
-    .why-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 28px 22px;
-      text-align: center;
-      transition: all 0.25s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
 
-    .why-card:hover {
-      background: rgba(200, 150, 12, 0.14);
-      border-color: var(--gold-light);
-      transform: translateY(-4px);
-    }
-
-    .why-icon {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 14px;
-      background: rgba(200, 150, 12, 0.2);
-      border-radius: 12px;
-      border: 2px solid rgba(200, 150, 12, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gold);
-      overflow: hidden;
-    }
-
-    .why-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .why-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      color: var(--white);
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .why-card p {
-      font-size: 0.82rem;
-      color: rgba(255, 255, 255, 0.6);
-      line-height: 1.6;
     }
 
     /* ── ACHIEVEMENTS ── */
@@ -2153,15 +2014,33 @@
       border-radius: 14px;
       overflow: hidden;
       border: 1px solid var(--border);
-      transition: box-shadow 0.25s, transform 0.25s;
+      transition: box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       display: flex;
       flex-direction: column;
       background: var(--white);
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      position: relative;
     }
 
     .news-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(14, 107, 107, 0.13);
+      transform: translateY(-8px) rotateX(2deg) rotateY(-3deg) scale(1.02);
+      box-shadow: 0 28px 60px rgba(14, 107, 107, 0.22), 0 8px 24px rgba(200, 150, 12, 0.15);
+    }
+
+    .news-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200, 150, 12, 0.08) 0%, rgba(14, 107, 107, 0.08) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .news-card:hover::before {
+      opacity: 1;
     }
 
     .news-thumb {
@@ -2169,6 +2048,11 @@
       height: 190px;
       object-fit: cover;
       display: block;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .news-card:hover .news-thumb {
+      transform: scale(1.08);
     }
 
     .news-thumb-placeholder {
@@ -2177,6 +2061,26 @@
       align-items: center;
       justify-content: center;
       font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .news-card:hover .news-thumb-placeholder {
+      transform: scale(1.08);
+    }
+
+    .news-thumb-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200, 150, 12, 0.15) 0%, transparent 50%, rgba(14, 107, 107, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .news-card:hover .news-thumb-placeholder::after {
+      opacity: 1;
     }
 
     .news-thumb-placeholder.n1 {
@@ -2449,181 +2353,322 @@
       color: #fff;
     }
 
-    /* ── TESTIMONIALS ── */
+    /* ── TESTIMONIALS — POLAROID WALL ── */
     .testimonials {
-      padding: 80px 0;
-      background: var(--light-bg);
-    }
-
-    .test-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .test-card {
-      background: var(--white);
-      border-radius: 16px;
-      padding: 28px;
-      border: 1px solid var(--border);
+      padding: 80px 0 100px;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, #072d2d 50%, #053737 100%);
       position: relative;
+      overflow: hidden;
     }
 
-    .test-quote {
-      font-size: 2.5rem;
-      color: var(--gold);
-      line-height: 0.8;
-      margin-bottom: 12px;
-      font-family: Georgia;
+    .testimonials::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 20% 50%, rgba(200, 150, 12, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 30%, rgba(14, 107, 107, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 100% 80%, rgba(232, 176, 32, 0.06) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .test-card p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      font-style: italic;
-      margin-bottom: 20px;
+    .testimonials::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        linear-gradient(45deg, transparent 45%, rgba(200, 150, 12, 0.03) 45%, rgba(200, 150, 12, 0.03) 55%, transparent 55%);
+      background-size: 60px 60px;
+      pointer-events: none;
+      opacity: 0.5;
     }
 
-    .test-author {
+    /* Override section-title colours for dark bg */
+    .testimonials .section-title .tag {
+      background: linear-gradient(135deg, rgba(200, 150, 12, 0.2), rgba(232, 176, 32, 0.15));
+      color: var(--gold-light);
+      border-color: rgba(200, 150, 12, 0.4);
+      box-shadow: 0 4px 12px rgba(200, 150, 12, 0.15);
+    }
+
+    .testimonials .section-title h2 {
+      color: #094f4f;
+      font-size: 2.6rem;
+      letter-spacing: 0.5px;
+    }
+
+    .testimonials .section-title p {
+      color: rgba(232, 176, 32, 0.9);
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .testimonials .divider {
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 20%, var(--gold) 80%, transparent 100%);
+      opacity: 0.7;
+    }
+
+    /* Polaroid grid */
+    .polaroid-wall {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 40px 0 20px;
     }
 
-    .test-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+    @keyframes polaroidFloat {
+
+      0%,
+      100% {
+        transform: var(--pol-rotate) translateY(0);
+      }
+
+      50% {
+        transform: var(--pol-rotate) translateY(-10px);
+      }
+    }
+
+    @keyframes starTwinkle {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+      }
+    }
+
+    .pol-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f6f2 100%);
+      padding: 16px 16px 60px;
+      width: 240px;
+      min-height: 360px;
+      box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.18),
+        0 8px 20px rgba(0, 0, 0, 0.12),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+      position: relative;
+      flex-shrink: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+      cursor: default;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .pol-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      opacity: 0.8;
+    }
+
+    .pol-card:nth-child(1) {
+      --pol-rotate: rotate(-5deg);
+      transform: var(--pol-rotate) translateY(10px);
+      animation: polaroidFloat 6s ease-in-out infinite;
+      border-left: 4px solid #ff6b6b;
+    }
+
+    .pol-card:nth-child(2) {
+      --pol-rotate: rotate(3deg);
+      transform: var(--pol-rotate) translateY(-6px);
+      animation: polaroidFloat 7s ease-in-out infinite 0.8s;
+      border-left: 4px solid #4ecdc4;
+    }
+
+    .pol-card:nth-child(3) {
+      --pol-rotate: rotate(-2deg);
+      transform: var(--pol-rotate) translateY(12px);
+      animation: polaroidFloat 5.5s ease-in-out infinite 1.5s;
+      border-left: 4px solid #95e1d3;
+    }
+
+    .pol-card:nth-child(4) {
+      --pol-rotate: rotate(4.5deg);
+      transform: var(--pol-rotate) translateY(0px);
+      animation: polaroidFloat 6.5s ease-in-out infinite 0.4s;
+      border-left: 4px solid #f38181;
+    }
+
+    .pol-card:hover {
+      transform: rotate(0deg) translateY(-22px) scale(1.06) !important;
+      box-shadow:
+        0 32px 72px rgba(0, 0, 0, 0.22),
+        0 12px 28px rgba(0, 0, 0, 0.16),
+        inset 0 0 0 1px rgba(200, 150, 12, 0.3);
+      z-index: 10;
+      animation-play-state: paused;
+    }
+
+    /* Tape strip */
+    .pol-tape {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 52px;
+      height: 24px;
+      background: linear-gradient(90deg, rgba(255, 225, 120, 0.75), rgba(232, 176, 32, 0.65));
+      border: 1.5px solid rgba(200, 150, 12, 0.35);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+      border-radius: 2px;
+    }
+
+    .pol-tape::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-top: 1.5px dashed rgba(200, 150, 12, 0.4);
+      border-bottom: 1.5px dashed rgba(200, 150, 12, 0.4);
+    }
+
+    /* Photo placeholder area — MODERN CIRCULAR PROFILES */
+    .pol-photo {
+      width: 95px;
+      height: 95px;
+      margin: 0 auto 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
+      font-size: 2.4rem;
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 4px solid var(--white);
+      box-shadow:
+        0 0 0 2px var(--gold),
+        0 12px 24px rgba(0, 0, 0, 0.12);
+      z-index: 2;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      background: var(--light-bg);
     }
 
-    .test-avatar.a1 {
-      background: #e8ecf8;
+    .pol-card:hover .pol-photo {
+      transform: scale(1.1) translateY(-5px) rotate(3deg);
+      box-shadow:
+        0 0 0 3px var(--gold-light),
+        0 20px 40px rgba(0, 0, 0, 0.18);
     }
 
-    .test-avatar.a2 {
-      background: #e8f4ee;
+    .pol-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      transition: transform 0.6s ease;
     }
 
-    .test-avatar.a3 {
-      background: #f8f0e8;
+    .pol-card:hover .pol-photo img {
+      transform: scale(1.08);
     }
 
-    .test-name {
-      font-weight: 700;
-      color: var(--navy);
-      font-size: 0.9rem;
+    /* Keep the card-specific gradients as fallbacks for emoji avatars */
+    .pol-card:nth-child(1) .pol-photo {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
     }
 
-    .test-role {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    .pol-card:nth-child(2) .pol-photo {
+      background: linear-gradient(135deg, #4ecdc4 0%, #2d968e 100%);
     }
 
-    .stars {
+    .pol-card:nth-child(3) .pol-photo {
+      background: linear-gradient(135deg, #95e1d3 0%, #6dbfb5 100%);
+    }
+
+    .pol-card:nth-child(4) .pol-photo {
+      background: linear-gradient(135deg, #f38181 0%, #f5aaaa 100%);
+    }
+
+    .pol-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Stars inside card */
+    .pol-stars {
       color: var(--gold);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       margin-bottom: 10px;
+      letter-spacing: 2px;
+      font-weight: 600;
+      display: inline-block;
+      animation: starTwinkle 2s ease-in-out infinite;
     }
 
-    /* ── GALLERY ── */
-    /* ══════════════════════════════════════
-       GALLERY — 3D CINEMATIC EDITION
-    ══════════════════════════════════════ */
-    @keyframes galReveal {
-      from {
-        opacity: 0;
-        transform: scale(0.85) rotateX(12deg)
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1) rotateX(0)
-      }
+    /* Quote text */
+    .pol-quote {
+      font-size: 0.8rem;
+      color: #2a3e3e;
+      font-style: italic;
+      line-height: 1.8;
+      margin-bottom: 0;
+      font-weight: 500;
     }
 
-    @keyframes galShimmer {
-      0% {
-        background-position: -200% 0
-      }
-
-      100% {
-        background-position: 200% 0
-      }
+    /* Name on bottom strip */
+    .pol-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(14, 107, 107, 0.08) 0%, rgba(14, 107, 107, 0.04) 100%);
+      border-top: 2px solid rgba(200, 150, 12, 0.2);
     }
 
-    @keyframes galIconFloat {
-
-      0%,
-      100% {
-        transform: translateY(0) scale(1) rotate(0deg)
-      }
-
-      50% {
-        transform: translateY(-10px) scale(1.1) rotate(5deg)
-      }
+    .pol-name-text {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--navy);
+      font-family: 'Nunito', sans-serif;
+      text-align: center;
+      letter-spacing: 0.5px;
     }
 
-    @keyframes galLabelUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
+    .pol-role-text {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 2px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
     }
 
-    @keyframes galBorderRun {
-      0% {
-        background-position: 0% 50%
-      }
-
-      100% {
-        background-position: 200% 50%
-      }
+    /* Pin shadow on wall */
+    .pol-card::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 85%;
+      height: 20px;
+      background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 75%);
+      filter: blur(5px);
+      pointer-events: none;
     }
 
-    @keyframes galTiltHover {
-      from {
-        transform: perspective(500px) rotateX(0) rotateY(0)
-      }
-
-      to {
-        transform: perspective(500px) rotateX(4deg) rotateY(-4deg)
-      }
-    }
-
-    @keyframes galPulseGlow {
-
-      0%,
-      100% {
-        box-shadow: 0 0 0 0 rgba(200, 150, 12, 0)
-      }
-
-      50% {
-        box-shadow: 0 0 30px 6px rgba(200, 150, 12, 0.25)
-      }
-    }
-
-    @keyframes countUpGal {
-      from {
-        opacity: 0;
-        transform: scale(0.5)
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1)
-      }
-    }
+    /* ── GALLERY — ORBITAL SPREAD ── */
 
     @keyframes sectionTagSlide {
       from {
@@ -2637,187 +2682,372 @@
       }
     }
 
-    .gallery {
-      padding: 100px 0;
-      background: linear-gradient(180deg, #f9f6ef 0%, #ffffff 40%, #f2efe6 100%);
-      position: relative;
-      overflow: hidden;
+    @keyframes galOrbFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-22px) scale(1.04);
+      }
     }
 
+    @keyframes galCardShine {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 130%;
+      }
+    }
+
+    @keyframes galIconPulse {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-10px) scale(1.12) rotate(4deg);
+      }
+    }
+
+    @keyframes galBgShimmer {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes galCounterIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Section wrapper */
+    .gallery {
+      padding: 110px 0 90px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f9f6ef 0%, #f4faf9 35%, #f9f6ef 70%, #fff8ee 100%);
+      background-size: 300% 300%;
+      animation: galBgShimmer 14s ease infinite;
+    }
+
+    /* Top gold rule */
     .gallery::before {
       content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
-    }
-
-    /* Floating bg orbs */
-    .gallery::after {
-      content: '';
-      position: absolute;
-      top: -60px;
-      left: -60px;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(14, 107, 107, 0.07) 0%, transparent 70%);
-      pointer-events: none;
-      animation: floatOrbA 14s ease-in-out infinite;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 200px;
-      gap: 16px;
-      perspective: 1200px;
-    }
-
-    .gal-item {
-      border-radius: 18px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-      cursor: pointer;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    .gal-item:hover {
-      transform: scale(1.06) translateY(-8px) rotateX(4deg);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22), 0 0 0 2px rgba(200, 150, 12, 0.4);
-      z-index: 10;
-    }
-
-    /* Animated shimmer overlay */
-    .gal-item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.18) 50%, transparent 60%);
-      background-size: 200% 100%;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-
-    .gal-item:hover::before {
-      opacity: 1;
-      animation: galShimmer 1s ease forwards;
-    }
-
-    /* Dark label overlay on hover */
-    .gal-item::after {
-      content: attr(data-label);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 14px 16px 12px;
-      background: linear-gradient(to top, rgba(5, 26, 26, 0.88) 0%, transparent 100%);
-      color: rgba(255, 255, 255, 0.92);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
-
-    .gal-item:hover::after {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Icon inside */
-    .gal-item .gal-icon {
-      position: relative;
-      z-index: 2;
-      filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.3));
-      animation: galIconFloat var(--fd, 5s) ease-in-out infinite var(--fdelay, 0s);
-      transition: transform 0.4s ease;
-    }
-
-    .gal-item:hover .gal-icon {
-      transform: scale(1.25) rotate(-5deg);
-    }
-
-    /* Top accent bar */
-    .gal-item .gal-top-bar {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-      background-size: 200% 100%;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s ease;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
     }
 
-    .gal-item:hover .gal-top-bar {
-      transform: scaleX(1);
+    /* Ambient glow orb - top right */
+    .gallery::after {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(200, 150, 12, 0.10) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .gal-item.tall {
-      grid-row: span 2;
+    /* ── Orbital stack container ── */
+    .gallery-orbital {
+      position: relative;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1600px;
+      margin: 3rem 0 1rem;
     }
 
-    .gal-item.wide {
-      grid-column: span 2;
+    /* Subtle ambient glow behind the stack */
+    .gallery-orbital::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(14, 107, 107, 0.07) 0%, transparent 70%);
+      pointer-events: none;
     }
 
-    .gal-item.g1 {
-      background: linear-gradient(145deg, #062f2f 0%, #0e6b6b 60%, #c8960c 100%);
+    /* ── Individual orbital card ── */
+    .orb-card {
+      position: absolute;
+      width: 290px;
+      height: 360px;
+      border-radius: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 28px 24px;
+      cursor: pointer;
+      color: #fff;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18), 0 0 30px rgba(200, 150, 12, 0.15);
+      transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+      transform-style: preserve-3d;
+      perspective: 1000px;
     }
 
-    .gal-item.g2 {
-      background: linear-gradient(145deg, #0a4040 0%, #0e7575 60%, #e8b020 100%);
+    /* Animated gradient background */
+    .orb-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%, rgba(200, 150, 12, 0.05) 100%);
+      animation: cardGradientShift 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 4;
     }
 
-    .gal-item.g3 {
-      background: linear-gradient(145deg, #051f1f 0%, #0a5555 60%, #a07008 100%);
+    @keyframes cardGradientShift {
+
+      0%,
+      100% {
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%, rgba(200, 150, 12, 0.05) 100%);
+      }
+
+      50% {
+        background: linear-gradient(225deg, rgba(255, 255, 255, 0.12) 0%, transparent 50%, rgba(200, 150, 12, 0.08) 100%);
+      }
     }
 
-    .gal-item.g4 {
-      background: linear-gradient(145deg, #083535 0%, #0c6060 60%, #b5840a 100%);
+    /* Shine sweep on hover */
+    .orb-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: none;
+      pointer-events: none;
+      z-index: 5;
     }
 
-    .gal-item.g5 {
-      background: linear-gradient(145deg, #062a2a 0%, #0a5858 60%, #c49010 100%);
+    .orb-card:hover::before {
+      animation: galCardShineEnhanced 0.7s ease forwards;
     }
 
-    .gal-item.g6 {
-      background: linear-gradient(145deg, #093a3a 0%, #0e6e6e 60%, #d4a014 100%);
+    @keyframes galCardShineEnhanced {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
     }
 
-    .gal-item.g7 {
-      background: linear-gradient(145deg, #042020 0%, #083838 60%, #906005 100%);
+    /* Dark gradient overlay at bottom */
+    .orb-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65%;
+      background: linear-gradient(to top, rgba(3, 18, 18, 0.80) 0%, transparent 100%);
+      border-radius: 0 0 22px 22px;
+      pointer-events: none;
     }
 
-    .gal-item.g8 {
-      background: linear-gradient(145deg, #073030 0%, #0c6262 60%, #daa016 100%);
+    /* Big emoji / icon */
+    .orb-card-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -65%);
+      font-size: 4rem;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
+      z-index: 2;
+      animation: galIconPulse var(--oi-d, 5.5s) ease-in-out infinite var(--oi-dl, 0s), galIconFloat 3s ease-in-out infinite;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    /* Animated border glow ring on tall card */
-    .gal-item.tall {
-      animation: galPulseGlow 4s ease-in-out infinite;
+    /* Image in gallery card - fit to card */
+    .orb-card-icon[src$=".jpg"],
+    .orb-card-icon[src$=".webp"],
+    .orb-card-icon[src$=".png"],
+    .orb-card-icon[src*="IMGS/"] {
+      position: absolute;
+      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: none;
+      font-size: inherit;
+      filter: brightness(0.95) contrast(1.05);
+      animation: none;
+      transition: filter 0.4s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 1;
     }
 
-    /* Gallery counter bar */
+    .orb-card:hover .orb-card-icon[src$=".jpg"],
+    .orb-card:hover .orb-card-icon[src$=".webp"],
+    .orb-card:hover .orb-card-icon[src$=".png"],
+    .orb-card:hover .orb-card-icon[src*="IMGS/"] {
+      filter: brightness(1) contrast(1.1);
+      transform: scale(1.08);
+    }
+
+    /* Content block */
+    .orb-card-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+    }
+
+    .orb-card-tag {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      background: rgba(200, 150, 12, 0.18);
+      border: 1px solid rgba(200, 150, 12, 0.3);
+      border-radius: 20px;
+      padding: 3px 11px;
+      margin-bottom: 8px;
+    }
+
+    .orb-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+      color: #fff;
+    }
+
+    .orb-card p {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.55;
+      max-width: 230px;
+      margin: 0 auto;
+    }
+
+    /* ── Card 1 — left, tilted back ── */
+    /* ── Card 1 — far left ── */
+    .orb-card:nth-child(1) {
+      background: linear-gradient(145deg, #062f2f 0%, #0e6b6b 55%, #c8960c 100%);
+      transform: translateX(-370px) translateY(30px) rotateZ(-20deg) rotateY(30deg) scale(0.82);
+      z-index: 1;
+      opacity: 0.72;
+    }
+
+    /* ── Card 2 — near left ── */
+    .orb-card:nth-child(2) {
+      background: linear-gradient(145deg, #0a4545 0%, #0e7a7a 55%, #e8b020 100%);
+      transform: translateX(-185px) translateY(12px) rotateZ(-10deg) rotateY(16deg) scale(0.92);
+      z-index: 3;
+      opacity: 0.88;
+    }
+
+    /* ── Card 3 — centre hero ── */
+    .orb-card:nth-child(3) {
+      background: linear-gradient(145deg, #083535 0%, #0c6464 55%, #d4a014 100%);
+      transform: translateX(0) translateY(0) rotateZ(0deg) rotateY(0deg) scale(1);
+      z-index: 5;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.26), 0 0 0 1.5px rgba(200, 150, 12, 0.3);
+    }
+
+    /* ── Card 4 — near right ── */
+    .orb-card:nth-child(4) {
+      background: linear-gradient(145deg, #042020 0%, #083838 55%, #906005 100%);
+      transform: translateX(185px) translateY(12px) rotateZ(10deg) rotateY(-16deg) scale(0.92);
+      z-index: 3;
+      opacity: 0.88;
+    }
+
+    /* ── Card 5 — far right ── */
+    .orb-card:nth-child(5) {
+      background: linear-gradient(145deg, #073030 0%, #0c5858 55%, #b5840a 100%);
+      transform: translateX(370px) translateY(30px) rotateZ(20deg) rotateY(-30deg) scale(0.82);
+      z-index: 1;
+      opacity: 0.72;
+    }
+
+    /* ── HOVER ON THE CONTAINER — orbital spread ── */
+    .gallery-orbital:hover .orb-card:nth-child(1) {
+      transform: translateX(-490px) translateY(40px) rotateZ(-28deg) rotateY(40deg) scale(0.76);
+      opacity: 0.50;
+    }
+
+    .gallery-orbital:hover .orb-card:nth-child(2) {
+      transform: translateX(-250px) translateY(-16px) rotateZ(-16deg) rotateY(26deg) scale(0.87);
+      opacity: 0.75;
+    }
+
+    .gallery-orbital:hover .orb-card:nth-child(3) {
+      transform: translateX(0) translateY(-44px) rotateZ(0) rotateY(0) scale(1.07);
+      box-shadow: 0 48px 100px rgba(0, 0, 0, 0.32), 0 0 0 2px rgba(200, 150, 12, 0.45);
+      z-index: 10;
+    }
+
+    .gallery-orbital:hover .orb-card:nth-child(4) {
+      transform: translateX(250px) translateY(-16px) rotateZ(16deg) rotateY(-26deg) scale(0.87);
+      opacity: 0.75;
+    }
+
+    .gallery-orbital:hover .orb-card:nth-child(5) {
+      transform: translateX(490px) translateY(40px) rotateZ(28deg) rotateY(-40deg) scale(0.76);
+      opacity: 0.50;
+    }
+
+    /* Allow individual card hover to lift it to hero */
+    .orb-card:hover {
+      transform: translateX(0) translateY(-40px) rotateZ(0) rotateY(0) scale(1.06) !important;
+      z-index: 20 !important;
+      opacity: 1 !important;
+      box-shadow: 0 44px 90px rgba(0, 0, 0, 0.30), 0 0 0 2px rgba(200, 150, 12, 0.45) !important;
+    }
+
+    /* ── Gallery counter bar ── */
     .gallery-counter {
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-top: 32px;
+      margin-top: 28px;
       flex-wrap: wrap;
     }
 
@@ -2846,6 +3076,111 @@
       font-weight: 800;
     }
 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .gallery-orbital {
+        height: 420px;
+      }
+
+      .orb-card {
+        width: 210px;
+        height: 275px;
+      }
+
+      .orb-card:nth-child(1) {
+        transform: translateX(-260px) translateY(24px) rotateZ(-18deg) rotateY(26deg) scale(0.80);
+        opacity: 0.65;
+      }
+
+      .orb-card:nth-child(2) {
+        transform: translateX(-130px) translateY(10px) rotateZ(-8deg) rotateY(14deg) scale(0.90);
+      }
+
+      .orb-card:nth-child(4) {
+        transform: translateX(130px) translateY(10px) rotateZ(8deg) rotateY(-14deg) scale(0.90);
+      }
+
+      .orb-card:nth-child(5) {
+        transform: translateX(260px) translateY(24px) rotateZ(18deg) rotateY(-26deg) scale(0.80);
+        opacity: 0.65;
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(1) {
+        transform: translateX(-340px) translateY(36px) rotateZ(-26deg) rotateY(36deg) scale(0.74);
+        opacity: 0.45;
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(2) {
+        transform: translateX(-175px) translateY(-12px) rotateZ(-14deg) rotateY(22deg) scale(0.85);
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(4) {
+        transform: translateX(175px) translateY(-12px) rotateZ(14deg) rotateY(-22deg) scale(0.85);
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(5) {
+        transform: translateX(340px) translateY(36px) rotateZ(26deg) rotateY(-36deg) scale(0.74);
+        opacity: 0.45;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .gallery-orbital {
+        height: 320px;
+        perspective: 900px;
+      }
+
+      .orb-card {
+        width: 160px;
+        height: 220px;
+        padding: 16px 12px;
+      }
+
+      .orb-card-icon {
+        font-size: 2.4rem;
+      }
+
+      .orb-card h3 {
+        font-size: 0.85rem;
+      }
+
+      .orb-card p {
+        font-size: 0.65rem;
+      }
+
+      /* Hide cards 1 & 5 — show only cards 2, 3, 4 */
+      .orb-card:nth-child(1),
+      .orb-card:nth-child(5) {
+        display: none;
+      }
+
+      /* Reposition the 3 visible cards */
+      .orb-card:nth-child(2) {
+        transform: translateX(-110px) translateY(10px) rotateZ(-8deg) rotateY(14deg) scale(0.88);
+      }
+
+      .orb-card:nth-child(3) {
+        transform: translateX(0px) translateY(0px) rotateZ(0deg) scale(1);
+      }
+
+      .orb-card:nth-child(4) {
+        transform: translateX(110px) translateY(10px) rotateZ(8deg) rotateY(-14deg) scale(0.88);
+      }
+
+      /* Hover spread for 3-card layout */
+      .gallery-orbital:hover .orb-card:nth-child(2) {
+        transform: translateX(-145px) translateY(-10px) rotateZ(-13deg) rotateY(20deg) scale(0.82);
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(3) {
+        transform: translateX(0px) translateY(-14px) rotateZ(0deg) scale(1.04);
+      }
+
+      .gallery-orbital:hover .orb-card:nth-child(4) {
+        transform: translateX(145px) translateY(-10px) rotateZ(13deg) rotateY(-20deg) scale(0.82);
+      }
+    }
+
     /* ── ADMISSIONS CTA ── */
     .admissions-cta {
       padding: 80px 0;
@@ -2859,13 +3194,55 @@
       content: '';
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle at 30% 50%, rgba(200, 150, 12, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+      background-image: radial-gradient(circle at 30% 50%, rgba(200, 150, 12, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+      animation: admGradientShift 8s ease-in-out infinite;
+    }
+
+    @keyframes admGradientShift {
+
+      0%,
+      100% {
+        background-image: radial-gradient(circle at 30% 50%, rgba(200, 150, 12, 0.2) 0%, transparent 50%),
+          radial-gradient(circle at 70% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+      }
+
+      50% {
+        background-image: radial-gradient(circle at 35% 60%, rgba(200, 150, 12, 0.25) 0%, transparent 50%),
+          radial-gradient(circle at 65% 40%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+      }
+    }
+
+    /* Floating orbs in background */
+    .admissions-cta::after {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      animation: float 15s ease-in-out infinite;
     }
 
     .admissions-cta .inner {
       position: relative;
       z-index: 2;
+      animation: slideInUp 0.8s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .admissions-cta h2 {
@@ -2874,14 +3251,21 @@
       color: var(--white);
       font-weight: 700;
       margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
 
     .admissions-cta p {
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.85);
       max-width: 540px;
       margin: 0 auto 32px;
       font-size: 1rem;
       line-height: 1.7;
+      letter-spacing: 0.3px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
 
     .cta-btns {
@@ -2891,76 +3275,338 @@
       flex-wrap: wrap;
     }
 
-    /* ── CONTACT ── */
+    .cta-btns .btn-primary,
+    .cta-btns .btn-outline {
+      transform: translateY(0);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .cta-btns .btn-primary:hover,
+    .cta-btns .btn-outline:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(200, 150, 12, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ── CONTACT — DIAGONAL SPLIT + PARTICLE BURST ── */
     .contact {
-      padding: 80px 0;
-      background: var(--light-bg);
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
     }
 
-    .contact-grid {
+    /* ── keyframes ── */
+    @keyframes cPartRise {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-110px) scale(1.6);
+      }
+    }
+
+    @keyframes cOrbit {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes cGlowPulse {
+
+      0%,
+      100% {
+        opacity: 0.55;
+      }
+
+      50% {
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes cSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cInputShake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20% {
+        transform: translateX(-6px);
+      }
+
+      40% {
+        transform: translateX(6px);
+      }
+
+      60% {
+        transform: translateX(-4px);
+      }
+
+      80% {
+        transform: translateX(4px);
+      }
+    }
+
+    /* ── outer shell ── */
+    .contact-shell {
+      position: relative;
+      min-height: 600px;
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* Dark left half */
+    .contact-shell-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #d6eeee 0%, #e6f4f4 50%, #f0fafa 100%);
+      z-index: 0;
+    }
+
+    /* Diagonal frosted-glass panel on right */
+    .contact-shell-white {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 54%;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border-left: 1px solid rgba(255, 255, 255, 0.6);
+      clip-path: polygon(9% 0, 100% 0, 100% 100%, 0% 100%);
+      z-index: 0;
+      box-shadow: inset 0 0 60px rgba(14, 107, 107, 0.08);
+    }
+
+    /* Floating particles layer */
+    .contact-particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .contact-particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: cPartRise var(--pd, 5s) var(--pdl, 0s) ease-in-out infinite;
+    }
+
+    /* Ambient glow blobs */
+    .contact-glow {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: cGlowPulse 4s ease-in-out infinite;
+    }
+
+    .contact-glow-1 {
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(ellipse, rgba(14, 107, 107, 0.07) 0%, transparent 70%);
+      top: -100px;
+      left: -80px;
+    }
+
+    .contact-glow-2 {
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(ellipse, rgba(200, 150, 12, 0.06) 0%, transparent 70%);
+      bottom: -60px;
+      left: 30%;
+      animation-delay: -2s;
+    }
+
+    /* Orbiting ring decoration */
+    .contact-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(14, 107, 107, 0.1);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .contact-ring-1 {
+      width: 260px;
+      height: 260px;
+      top: -80px;
+      left: -80px;
+      animation: cOrbit 22s linear infinite;
+    }
+
+    .contact-ring-2 {
+      width: 180px;
+      height: 180px;
+      top: -40px;
+      left: -40px;
+      border-color: rgba(200, 150, 12, 0.12);
+      animation: cOrbit 16s linear infinite reverse;
+    }
+
+    /* Inner grid */
+    .contact-inner {
+      position: relative;
+      z-index: 2;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
+      grid-template-columns: 1fr 1.15fr;
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
-    .contact-info h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+    /* ── LEFT — info panel ── */
+    .contact-left {
+      padding: 72px 48px 72px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .contact-left-tag {
+      display: inline-block;
+      background: rgba(14, 107, 107, 0.08);
       color: var(--navy);
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(14, 107, 107, 0.18);
       margin-bottom: 20px;
+      width: fit-content;
+      animation: cSlideUp 0.7s ease both;
+    }
+
+    .contact-left h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      line-height: 1.25;
+      margin-bottom: 12px;
+      animation: cSlideUp 0.7s ease 0.1s both;
+    }
+
+    .contact-left h2 em {
+      color: var(--gold);
+      font-style: normal;
+    }
+
+    .contact-left>p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 36px;
+      animation: cSlideUp 0.7s ease 0.2s both;
+    }
+
+    /* contact items */
+    .contact-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: cSlideUp 0.7s ease 0.3s both;
     }
 
     .contact-item {
       display: flex;
-      gap: 14px;
-      margin-bottom: 20px;
       align-items: flex-start;
+      gap: 14px;
     }
 
     .contact-icon {
-      font-size: 1.4rem;
-      flex-shrink: 0;
       width: 42px;
       height: 42px;
-      background: var(--navy);
-      border-radius: 10px;
+      border-radius: 11px;
+      background: rgba(14, 107, 107, 0.08);
+      border: 1px solid rgba(14, 107, 107, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .contact-item:hover .contact-icon {
+      background: rgba(14, 107, 107, 0.14);
+      transform: scale(1.08);
     }
 
     .contact-item h4 {
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
       color: var(--gold);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
+      letter-spacing: 0.1em;
+      margin-bottom: 3px;
     }
 
     .contact-item p {
-      font-size: 0.9rem;
+      font-size: 0.83rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
 
-    .contact-form {
-      background: var(--white);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 4px 30px rgba(26, 42, 94, 0.08);
+    .contact-item p a {
+      color: var(--text-muted);
+      text-decoration: none;
     }
 
-    .contact-form h3 {
+    .contact-item p a:hover {
+      color: var(--gold-light);
+    }
+
+    /* ── RIGHT — form panel ── */
+    .contact-right {
+      padding: 72px 0 72px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .contact-right h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--navy);
+      font-size: 1.45rem;
       font-weight: 700;
-      margin-bottom: 24px;
+      color: var(--navy);
+      margin-bottom: 6px;
     }
 
+    .contact-right-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 26px;
+    }
+
+    /* form rows */
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -2974,9 +3620,11 @@
 
     .form-group label {
       display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--navy);
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       margin-bottom: 6px;
     }
 
@@ -2984,20 +3632,28 @@
     .form-group textarea,
     .form-group select {
       width: 100%;
-      padding: 11px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
       font-family: 'Nunito', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text);
       outline: none;
-      transition: border 0.2s;
       background: var(--white);
+      transition: border-color 0.3s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
     }
 
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
       border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(14, 107, 107, 0.15), 0 8px 20px rgba(14, 107, 107, 0.15);
+      transform: translateY(-2px) scale(1.01);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 250, 250, 1) 100%);
+    }
+
+    .form-group input {
+      perspective: 1000px;
     }
 
     .form-group textarea {
@@ -3005,23 +3661,89 @@
       resize: none;
     }
 
+    /* Submit button */
     .form-submit {
-      background: var(--navy);
-      color: var(--white);
+      width: 100%;
+      padding: 14px 32px;
       border: none;
-      padding: 13px 32px;
       border-radius: 30px;
       font-family: 'Nunito', sans-serif;
       font-size: 0.92rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      width: 100%;
-      transition: background 0.2s, transform 0.2s;
+      background: linear-gradient(135deg, var(--navy) 0%, #0a4545 100%);
+      color: var(--white);
+      letter-spacing: 0.04em;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 8px 25px rgba(14, 107, 107, 0.3), 0 0 0 0 rgba(200, 150, 12, 0.4);
+    }
+
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+    }
+
+    .form-submit:hover::before {
+      transform: translateX(100%);
     }
 
     .form-submit:hover {
-      background: var(--navy-dark);
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 40px rgba(14, 107, 107, 0.45), 0 0 25px rgba(200, 150, 12, 0.5);
+      background: linear-gradient(135deg, #0e6b6b 0%, #0a5555 100%);
+    }
+
+    .form-submit:active {
+      transform: translateY(-1px) scale(0.99);
+      box-shadow: 0 4px 12px rgba(14, 107, 107, 0.25);
+    }
+
+    /* Confetti particles (JS-spawned) */
+    .conf-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .contact-shell-white {
+        width: 100%;
+        clip-path: none;
+        top: 45%;
+      }
+
+      .contact-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-left {
+        padding: 56px 0 40px;
+      }
+
+      .contact-right {
+        padding: 36px 0 56px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-left h2 {
+        font-size: 1.6rem;
+      }
     }
 
     /* ── FOOTER ── */
@@ -3116,7 +3838,545 @@
       text-decoration: none;
     }
 
-    /* ── RESPONSIVE CONSOLIDATED ABOVE ── */
+    /* Contact mobile tab bar — hidden on desktop */
+    .contact-mob-tabs {
+      display: none;
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — TABLET  (≤ 900px)
+    ══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+
+      /* ── Container ── */
+      .container {
+        padding: 0 20px;
+      }
+
+      /* ── Top bar ── */
+      .top-bar-row {
+        flex-direction: column;
+        padding: 12px 0;
+        gap: 10px;
+      }
+
+      .top-bar-brand {
+        justify-content: center;
+      }
+
+      /* ── Section titles ── */
+      .section-title {
+        margin-bottom: 32px;
+      }
+
+      .section-title h2 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+      }
+
+      .section-title p {
+        font-size: 0.88rem;
+      }
+
+      /* ── About ── */
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .about-img-ring,
+      .about-img-ring-2,
+      .about-orbit-dot {
+        display: none;
+      }
+
+      .about-mini-1 {
+        top: 14px;
+        right: 8px;
+      }
+
+      .about-mini-2 {
+        display: none;
+      }
+
+      .about-badge-card {
+        bottom: -18px;
+        right: -8px;
+      }
+
+      .about-img-placeholder {
+        height: 280px;
+      }
+
+      .about-features {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      /* ── Programs ── */
+      .programs {
+        padding: 60px 0;
+      }
+
+      .programs-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* ── Why Us ── */
+      .why-us {
+        padding: 56px 0;
+      }
+
+      /* ── Achievements ── */
+      .achievements {
+        padding: 48px 0;
+      }
+
+      .achiev-inner {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      /* ── News ── */
+      .news-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* ── Testimonials ── */
+      .polaroid-wall {
+        gap: 24px;
+        padding: 24px 0 32px;
+      }
+
+      .pol-card {
+        width: 210px;
+        min-height: 340px;
+      }
+
+      /* ── Contact ── */
+      .contact-shell-white {
+        width: 100%;
+        clip-path: none;
+        top: 45%;
+      }
+
+      .contact-inner {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+      }
+
+      .contact-left {
+        padding: 48px 0 32px;
+      }
+
+      .contact-right {
+        padding: 28px 0 48px;
+      }
+
+      .contact-left h2 {
+        font-size: 1.8rem;
+      }
+
+      /* ── Footer ── */
+      .footer-main {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        padding: 48px 0 32px;
+      }
+
+      /* ── Nav ── */
+      nav {
+        flex-wrap: wrap;
+      }
+
+      .dropdown {
+        min-width: 160px;
+      }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — MOBILE  (≤ 600px)
+    ══════════════════════════════════════════ */
+    @media (max-width: 600px) {
+
+      /* ── Container ── */
+      .container {
+        padding: 0 16px;
+      }
+
+      /* ── Top bar ── */
+      .top-bar-login {
+        display: none;
+      }
+
+      .top-bar-brand .tb-name {
+        font-size: 1.2rem;
+      }
+
+      /* ── Section titles ── */
+      .section-title {
+        margin-bottom: 24px;
+      }
+
+      .section-title h2 {
+        font-size: clamp(1.35rem, 6vw, 1.8rem);
+      }
+
+      .section-title p {
+        font-size: 0.84rem;
+        padding: 0 4px;
+      }
+
+      /* ── About ── */
+      .about {
+        padding: 56px 0;
+      }
+
+      .about-grid {
+        gap: 36px;
+      }
+
+      .about-features {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .about-img-placeholder {
+        height: 240px;
+      }
+
+      .about-text h2 {
+        font-size: 1.6rem;
+      }
+
+      .about-text p {
+        font-size: 0.85rem;
+      }
+
+      .about-badge-card {
+        display: none;
+      }
+
+      /* ── Programs ── */
+      .programs {
+        padding: 48px 0;
+      }
+
+      .programs-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .prog-card {
+        border-radius: 12px;
+      }
+
+      .prog-thumb {
+        height: 160px;
+      }
+
+      /* ── Why Us ── */
+      .why-us {
+        padding: 44px 0;
+      }
+
+      /* ── Achievements ── */
+      .achievements {
+        padding: 40px 0;
+      }
+
+      .achiev-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .achiev-item .num {
+        font-size: 2.2rem;
+      }
+
+      .achiev-item .lbl {
+        font-size: 0.75rem;
+      }
+
+      /* ── News ── */
+      .news-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .news-card {
+        border-radius: 12px;
+      }
+
+      /* ── Testimonials ── */
+      .testimonials {
+        padding: 56px 0 72px;
+      }
+
+      .polaroid-wall {
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        padding: 20px 0 32px;
+      }
+
+      .pol-card {
+        width: 100%;
+        max-width: 340px;
+        transform: none !important;
+        animation: none !important;
+        min-height: 360px;
+      }
+
+      .pol-card:nth-child(1),
+      .pol-card:nth-child(2),
+      .pol-card:nth-child(3),
+      .pol-card:nth-child(4) {
+        transform: none !important;
+        animation: none !important;
+        border-left: 5px solid;
+      }
+
+      .pol-card:hover {
+        transform: scale(1.02) translateY(-8px) !important;
+        margin-bottom: 8px;
+      }
+
+      /* Show all cards on mobile */
+      .pol-card:nth-child(4) {
+        display: block;
+      }
+
+      .pol-quote {
+        font-size: 0.82rem;
+        line-height: 1.7;
+      }
+
+      .pol-photo {
+        height: 110px;
+        font-size: 2.4rem;
+      }
+
+      /* ── Gallery ── */
+      .gallery {
+        padding: 48px 0;
+      }
+
+      .gallery-counter {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      /* ── Contact — Tab Switcher ── */
+      .contact-shell {
+        min-height: auto;
+      }
+
+      .contact-shell-white {
+        display: none;
+      }
+
+      .contact-shell-bg {
+        background: #f0f9f9;
+      }
+
+      .contact-glow-1,
+      .contact-glow-2,
+      .contact-ring-1,
+      .contact-ring-2,
+      .contact-particles {
+        display: none;
+      }
+
+      .contact-inner {
+        display: block;
+        padding: 0 16px 32px;
+      }
+
+      /* Tab bar */
+      .contact-mob-tabs {
+        display: flex;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--navy);
+        margin: 24px 0 20px;
+      }
+
+      .contact-mob-tab {
+        flex: 1;
+        padding: 11px 8px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-align: center;
+        cursor: pointer;
+        background: #fff;
+        color: var(--navy);
+        border: none;
+        transition: all .2s;
+        letter-spacing: .02em;
+      }
+
+      .contact-mob-tab.active {
+        background: var(--navy);
+        color: #fff;
+      }
+
+      .contact-mob-tab:first-child {
+        border-right: 1px solid var(--navy);
+      }
+
+      /* Panel visibility */
+      .contact-left {
+        padding: 0;
+        display: none;
+      }
+
+      .contact-right {
+        padding: 0;
+        display: none;
+      }
+
+      .contact-left.mob-active,
+      .contact-right.mob-active {
+        display: flex;
+      }
+
+      /* Info panel on mobile */
+      .contact-left.mob-active {
+        flex-direction: column;
+        background: #fff;
+        border-radius: 14px;
+        padding: 20px 16px;
+        border: 1px solid var(--border);
+      }
+
+      .contact-left-tag {
+        margin-bottom: 12px;
+      }
+
+      .contact-left h2 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+      }
+
+      .contact-left>p {
+        font-size: 0.82rem;
+        margin-bottom: 18px;
+      }
+
+      .contact-items-list {
+        gap: 14px;
+      }
+
+      .contact-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+      }
+
+      /* Form panel on mobile */
+      .contact-right.mob-active {
+        flex-direction: column;
+        background: #fff;
+        border-radius: 14px;
+        padding: 20px 16px;
+        border: 1px solid var(--border);
+      }
+
+      .contact-right h3 {
+        font-size: 1.2rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        font-size: 0.84rem;
+        padding: 11px 12px;
+      }
+
+      .form-group textarea {
+        height: 88px;
+      }
+
+      /* ── Footer ── */
+      .footer-main {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 40px 0 24px;
+      }
+
+      .footer-brand p {
+        font-size: 0.82rem;
+      }
+
+      .footer-col h4 {
+        font-size: 0.82rem;
+      }
+
+      .footer-col ul li a {
+        font-size: 0.82rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+      }
+
+      .social-links {
+        justify-content: flex-start;
+      }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE — SMALL MOBILE  (≤ 400px)
+    ══════════════════════════════════════════ */
+    @media (max-width: 400px) {
+      .section-title h2 {
+        font-size: 1.25rem;
+      }
+
+      .achiev-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .achiev-item .num {
+        font-size: 1.9rem;
+      }
+
+      .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .stat {
+        min-width: 80px;
+        padding: 10px 12px;
+      }
+
+      .stat .num {
+        font-size: 1.4rem;
+      }
+
+      .why-marquee-item {
+        width: 120px;
+        padding: 14px 8px;
+      }
+
+      .pol-card {
+        max-width: 290px;
+      }
+
+      .contact-left h2 {
+        font-size: 1.3rem;
+      }
+    }
 
     /* ── ENHANCED TEAL + GOLD INSTITUTIONAL STYLING ── */
 
@@ -3160,31 +4420,10 @@
       border-bottom: 4px solid var(--gold);
     }
 
-    /* Contact icons — gold bg */
-    .contact-icon {
-      background: linear-gradient(135deg, var(--navy), var(--gold));
-    }
+    /* Contact icons — handled in diagonal split layout */
+    /* Form submit — handled in diagonal split layout */
 
-    /* Form submit — gold gradient */
-    .form-submit {
-      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-      border: 2px solid var(--gold);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .form-submit:hover {
-      background: linear-gradient(135deg, var(--gold), var(--gold-light));
-      transform: translateY(-2px);
-    }
-
-    /* Input focus: gold border */
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(200, 150, 12, 0.15);
-    }
+    /* Input focus: handled in diagonal split layout */
 
     /* Footer: gold heading accents */
     .footer-col h4 {
@@ -3226,11 +4465,6 @@
     /* Read more gold */
     .read-more:hover {
       color: var(--gold);
-    }
-
-    /* Why-us section: gold shimmer on why-card icons */
-    .why-icon {
-      filter: drop-shadow(0 2px 6px rgba(200, 150, 12, 0.3));
     }
 
     /* Light bg: warm cream instead of cool teal tint */
@@ -3433,11 +4667,10 @@
     /* ═══════════════════════════════════════════════════════════════════ */
     /* MOBILE RESPONSIV */
     /* ═══════════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════
+       MOBILE NAV + HERO  (≤ 768px)
+    ══════════════════════════════════════════ */
     @media (max-width: 768px) {
-      .why-us {
-        padding: 60px 0;
-      }
-
       .tb-search {
         display: none;
       }
@@ -3452,21 +4685,11 @@
 
       .header-inner {
         justify-content: space-between;
-        padding: 0 20px;
+        padding: 0 16px;
       }
 
-      .top-bar-row {
-        flex-direction: column;
-        padding: 15px 0;
-        gap: 15px;
-      }
-
-      .top-bar-brand {
-        justify-content: center;
-      }
-
-      .top-bar-login {
-        display: none;
+      .why-us {
+        padding: 48px 0 0;
       }
 
       .hero {
@@ -3507,26 +4730,14 @@
       .news-grid {
         grid-template-columns: 1fr;
       }
-
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 150px;
-      }
-
-      .gal-item.wide {
-        grid-column: span 2;
-      }
-
-      .gallery-counter {
-        gap: 8px;
-      }
-
-      .gal-counter-item {
-        font-size: 0.72rem;
-        padding: 6px 12px;
-      }
     }
 
+    @media (max-width: 480px) {
+      .mobile-menu {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
 
 
     /* ── MANDATORY DISCLOSURE FLYOUT (click-based) ── */
@@ -3686,12 +4897,11 @@
           <div class="hero-accent-line"></div>
           <div class="tw-dots" id="twDots"></div>
 
-          <p>Loretto Central School provides a world-class education rooted in values, discipline, and innovation. We
-            nurture young minds to achieve academic excellence and holistic development.</p>
+          <p>Loretto Central School provides a world-class education rooted in values, discipline, and innovation. We nurture young minds to achieve academic excellence and holistic development.</p>
 
           <div class="hero-btns">
             <a href="admissions/1-admissions.html" class="btn-primary">Apply for Admission</a>
-            <a href="#" class="btn-outline">Take a Virtual Tour</a>
+            <a href="https://www.youtube.com/@lcscbse" class="btn-outline">Take a Virtual Tour</a>
           </div>
 
           <div class="hero-stats">
@@ -3699,12 +4909,12 @@
               <div class="num" id="stat0">15+</div>
               <div class="lbl">Years of Excellence</div>
             </div>
-            <div class="stat" data-target="3500" data-suffix="+">
-              <div class="num" id="stat1">3500+</div>
+            <div class="stat" data-target="1000" data-suffix="+">
+              <div class="num" id="stat1">1000+</div>
               <div class="lbl">Happy Students</div>
             </div>
-            <div class="stat" data-target="30" data-suffix="+">
-              <div class="num" id="stat2">30+</div>
+            <div class="stat" data-target="25" data-suffix="+">
+              <div class="num" id="stat2">25+</div>
               <div class="lbl">Dedicated Faculty</div>
             </div>
             <div class="stat" data-target="100" data-suffix="%">
@@ -3717,13 +4927,6 @@
       </div>
     </div>
 
-    <!-- Scroll hint -->
-    <div class="hero-scroll-hint">
-      <span>Scroll</span>
-      <div class="scroll-mouse">
-        <div class="scroll-wheel"></div>
-      </div>
-    </div>
 
   </section>
 
@@ -3741,7 +4944,7 @@
           <div class="about-orbit-dot"></div>
 
           <div class="about-img-placeholder">
-            <img src="IMGS/school%20img.webp" alt="Loretto Central School Campus"
+            <img src="" alt="About section image"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
             <!-- Inner grid lines -->
             <div class="about-img-grid"></div>
@@ -3757,51 +4960,29 @@
 
           <!-- Floating mini info cards -->
           <div class="about-mini-card about-mini-1">
-            <span class="mc-icon">🏅</span> CBSE Affiliated
+            <span class="mc-icon"><i class="fa-solid fa-award"></i></span> CBSE Affiliated
           </div>
           <div class="about-mini-card about-mini-2">
-            <span class="mc-icon">👨‍🎓</span> 3500+ Students
+            <span class="mc-icon"><i class="fa-solid fa-user-graduate"></i></span> 3500+ Students
           </div>
         </div>
 
         <!-- TEXT SIDE -->
         <div class="about-text" id="aboutText">
-          <span class="tag">🏛️ About Our School</span>
-          <h2>A Legacy of Excellence &amp; Values</h2>
+          <span class="tag"> About Our School</span>
+          <h2>A Legacy of Excellence & Values</h2>
           <span class="about-h2-line"></span>
 
-          <p>Loretto Central School has been a beacon of quality education for over three decades. Founded on the
-            principles of academic rigour, character building, and holistic development, we are proud to serve thousands
-            of families.</p>
-          <p>Affiliated to CBSE, New Delhi, our school offers a comprehensive curriculum from Nursery to Class XII,
-            delivered by a team of highly qualified and passionate educators committed to bringing out the best in every
-            child.</p>
+          <p>Loretto Central School has been a beacon of quality education for over three decades. Founded on the principles of academic rigour, character building, and holistic development, we are proud to serve thousands of families.</p>
+          <p>Affiliated to CBSE, New Delhi, our school offers a comprehensive curriculum from Nursery to Class XII, delivered by a team of highly qualified and passionate educators committed to bringing out the best in every child.</p>
 
           <div class="about-features" id="aboutFeatures">
-            <div class="feat-item">
-              <div class="feat-icon">📚</div> CBSE Curriculum
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">🖥️</div> Smart Classrooms
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">⚽</div> Sports Facilities
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">🎨</div> Arts &amp; Crafts
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">🔬</div> Modern Labs
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">🚌</div> School Transport
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">📖</div> Library
-            </div>
-            <div class="feat-item">
-              <div class="feat-icon">🧘</div> Wellness &amp; Yoga
-            </div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> CBSE Curriculum</div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> Smart Classrooms</div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> Sports Facilities</div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> Arts & Crafts</div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> Modern Labs</div>
+            <div class="feat-item"><div class="feat-icon"><i class="fa-solid fa-check"></i></div> School Transport</div>
           </div>
         </div>
 
@@ -3810,70 +4991,23 @@
   </section>
 
 
-
-
   <!-- NEWS -->
   <section class="news">
     <div class="container">
       <div class="section-title">
-        <a href="./news.html" style="text-decoration: none; color: inherit; cursor: pointer;">
-          <span class="tag">📰 News &amp; Events</span>
-          <h2>Latest Updates from Loretto Central School</h2>
-        </a>
-        <p>Stay connected with the latest happenings, achievements, and events from our school community.</p>
+        <span class="tag"> News &amp; Events</span>
+        <h2>Latest Updates</h2>
+        <p>Recent news and events will appear here.</p>
         <div class="divider"></div>
       </div>
       <div class="news-grid">
-
-        <!-- Card 1 -->
         <div class="news-card">
-          <img class="news-thumb"
-            src="https://school.edu/wp-content/uploads/2026/02/whatsapp-image-2026-02-03-at-3.33.27-pm.jpeg"
-            alt="Farewell Programme"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-          <div class="news-thumb-placeholder n1" style="display:none;">🎓</div>
           <div class="news-body">
-            <div class="news-meta"><span class="news-date">03 Feb 2026</span><span class="news-tag-pill">Events</span>
-            </div>
-            <h3>Bidding Adieu: Farewell Programme for Grade X</h3>
-            <p>Loretto Central School organised a heartfelt farewell for Grade X Batch 2025–26, graced by Manager Rev.
-              Fr. Francis Crasta and Principal Rev. Fr. Jason Vijay Monis.</p>
-            <button class="read-more-btn" onclick="openNewsModal('nm1')">Read More →</button>
+            <div class="news-meta"><span class="news-date">Loading...</span><span class="news-tag-pill">Loading</span></div>
+            <h3>Loading latest news...</h3>
+            <p>Please wait while the latest updates load.</p>
           </div>
         </div>
-
-        <!-- Card 2 -->
-        <div class="news-card">
-          <img class="news-thumb" src="IMGS/news-placeholder.webp" alt="Republic Day 2026"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-          <div class="news-thumb-placeholder n2" style="display:none;">🇮🇳</div>
-          <div class="news-body">
-            <div class="news-meta"><span class="news-date">26 Jan 2026</span><span
-                class="news-tag-pill">Celebration</span></div>
-            <h3>Celebrating India's Glory: 77th Republic Day</h3>
-            <p>Loretto Central School celebrated the 77th Republic Day with great patriotism, featuring flag hoisting,
-              cultural performances, and a march past by students.</p>
-            <button class="read-more-btn" onclick="openNewsModal('nm2')">Read More →</button>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="news-card">
-          <img class="news-thumb"
-            src="https://school.edu/wp-content/uploads/2026/01/whatsapp-image-2026-01-05-at-3.19.29-pm-1.jpeg"
-            alt="National Karate Competition"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-          <div class="news-thumb-placeholder n3" style="display:none;">🥋</div>
-          <div class="news-body">
-            <div class="news-meta"><span class="news-date">05 Jan 2026</span><span
-                class="news-tag-pill">Achievement</span></div>
-            <h3>Outstanding Performance at National Level Open Karate Competition</h3>
-            <p>18 students won 8 Gold and 7 Silver medals at the National Level Open Karate Competition held at Father
-              Mullers Indoor Stadium, Kankanadi.</p>
-            <button class="read-more-btn" onclick="openNewsModal('nm3')">Read More →</button>
-          </div>
-        </div>
-
       </div>
 
       <div class="news-view-all">
@@ -3882,273 +5016,388 @@
     </div>
   </section>
 
-  <!-- ── NEWS MODALS ── -->
-  <div class="news-modal-overlay" id="nm1" onclick="if(event.target===this)closeNewsModal('nm1')">
-    <div class="news-modal">
-      <button class="news-modal-close" onclick="closeNewsModal('nm1')">✕</button>
-      <img class="news-modal-img"
-        src="https://school.edu/wp-content/uploads/2026/02/whatsapp-image-2026-02-03-at-3.33.27-pm.jpeg"
-        alt="Farewell Programme" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-      <div class="news-modal-img-placeholder n1" style="display:none;">🎓</div>
-      <div class="news-modal-body">
-        <div class="news-modal-meta"><span class="news-modal-date">03 February 2026</span><span
-            class="news-modal-tag">Events</span></div>
-        <div class="news-modal-title">Bidding Adieu: Farewell Programme for Grade X at Loretto Central School</div>
-        <div class="news-modal-divider"></div>
-        <div class="news-modal-content">
-          <p>Loretto Central School organised a farewell programme for the students of Grade X Batch 2025–26 in the
-            school auditorium. The occasion was graced by School Manager Rev. Fr. Francis Crasta, Principal Rev. Fr.
-            Jason Vijay Monis, PTA Vice President Mr. Rodney Ivan D'Souza, and Vice Principal Mrs. Anitha Pais.</p>
-          <p>The programme began with a solemn prayer, setting a reflective and heartfelt tone for the evening. Students
-            of the junior classes presented a variety of cultural performances — songs, dances, and skits — in honour of
-            their departing seniors.</p>
-          <p>The Grade X students were felicitated and presented with mementos as a token of appreciation for their
-            years of contribution to the school's academic and extracurricular life. The principal addressed the
-            outgoing batch, encouraging them to carry the values of Loretto — Love, Service, and Excellence — throughout
-            their lives.</p>
-          <p>The event concluded with a heartfelt vote of thanks and a group photograph, leaving both teachers and
-            students with cherished memories of their time at Loretto Central School.</p>
-        </div>
-        <div class="news-modal-source"><a href="#" target="_blank">Read original article on official website →</a></div>
-      </div>
-    </div>
-  </div>
+  <!-- WHY US — CONTINUOUS RTL TIMELINE -->
+  <style>
+    .why-us {
+      padding: 80px 0 72px;
+      background: linear-gradient(135deg, var(--light-bg) 0%, #f0ebe5 100%);
+      position: relative;
+      overflow: hidden;
+    }
 
-  <div class="news-modal-overlay" id="nm2" onclick="if(event.target===this)closeNewsModal('nm2')">
-    <div class="news-modal">
-      <button class="news-modal-close" onclick="closeNewsModal('nm2')">✕</button>
-      <img class="news-modal-img" src="IMGS/news-placeholder.webp" alt="Republic Day 2026"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-      <div class="news-modal-img-placeholder n2" style="display:none;">🇮🇳</div>
-      <div class="news-modal-body">
-        <div class="news-modal-meta"><span class="news-modal-date">26 January 2026</span><span
-            class="news-modal-tag">Celebration</span></div>
-        <div class="news-modal-title">Celebrating India's Glory: 77th Republic Day at Loretto Central School</div>
-        <div class="news-modal-divider"></div>
-        <div class="news-modal-content">
-          <p>Loretto Central School celebrated the 77th Republic Day with great patriotism and solemnity on the school
-            grounds. The celebration was graced by Rev. Fr. Francis Crasta, Manager; Rev. Fr. Jason Vijay Monis,
-            Principal; Sr. Idoline Rodrigues, Headmistress, Loreto Aided Kannada Medium School; Mrs. Anitha Pais, Vice
-            Principal; and Mr. Isaac Vas, Parish Council representative.</p>
-          <p>The programme commenced with the hoisting of the National Flag, followed by the singing of the National
-            Anthem. Students dressed in tricolour attire presented a colourful march past and cultural performances
-            highlighting the diversity and unity of India.</p>
-          <p>The principal's address emphasised the importance of civic responsibility and the sacrifices of freedom
-            fighters. He urged students to be proud ambassadors of India's rich heritage and to contribute positively to
-            the nation's progress.</p>
-          <p>The programme concluded with the distribution of sweets and a renewed sense of national pride among all
-            participants.</p>
-        </div>
-        <div class="news-modal-source"><a
-            href="https://school.edu/2026/01/26/celebrating-indias-glory-77th-republic-day-at-loretto-central-school/"
-            target="_blank">Read original article on official website →</a></div>
-      </div>
-    </div>
-  </div>
+    .why-us::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(14, 107, 107, 0.07) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-  <div class="news-modal-overlay" id="nm3" onclick="if(event.target===this)closeNewsModal('nm3')">
-    <div class="news-modal">
-      <button class="news-modal-close" onclick="closeNewsModal('nm3')">✕</button>
-      <img class="news-modal-img"
-        src="https://school.edu/wp-content/uploads/2026/01/whatsapp-image-2026-01-05-at-3.19.29-pm-1.jpeg"
-        alt="National Karate Competition"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-      <div class="news-modal-img-placeholder n3" style="display:none;">🥋</div>
-      <div class="news-modal-body">
-        <div class="news-modal-meta"><span class="news-modal-date">05 January 2026</span><span
-            class="news-modal-tag">Achievement</span></div>
-        <div class="news-modal-title">Outstanding Performance in Karate at the National Level Open Karate Competition
-        </div>
-        <div class="news-modal-divider"></div>
-        <div class="news-modal-content">
-          <p>Loreto English Medium CBSE High School participated in the National Level Open Karate Competition held at
-            Father Mullers Indoor Stadium, Kankanadi. A total of 18 students from the school took part in the event.</p>
-          <p>The students performed exceptionally well in both Kata and Kumite categories, winning a total of 8 Gold
-            Medals and 7 Silver Medals — a remarkable achievement that brought tremendous pride and honour to the
-            school.</p>
-          <p>The school management, principal, and staff congratulated all the participating students on their
-            outstanding performance. Special appreciation was extended to the karate coach and training staff whose
-            guidance made this success possible.</p>
-          <p>This achievement reflects the school's commitment to nurturing not just academic excellence, but also the
-            physical and sporting potential of every student. Loretto Central School is proud of its young champions and
-            looks forward to even greater achievements in future competitions.</p>
-        </div>
-        <div class="news-modal-source"><a
-            href="https://school.edu/2026/01/05/outstanding-performance-in-karate-at-the-national-level-open-karate-competition-loreto-english-medium-high-school/"
-            target="_blank">Read original article on official website →</a></div>
-      </div>
-    </div>
-  </div>
+    .wt-outer {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      padding: 20px 0 28px;
+      cursor: grab;
+      user-select: none;
+    }
 
-  <!-- WHY US -->
+    .wt-outer:active {
+      cursor: grabbing;
+    }
+
+    .wt-outer::before,
+    .wt-outer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .wt-outer::before {
+      left: 0;
+      background: linear-gradient(to right, #f0ebe5, transparent);
+    }
+
+    .wt-outer::after {
+      right: 0;
+      background: linear-gradient(to left, #f0ebe5, transparent);
+    }
+
+    .wt-belt {
+      display: flex;
+      align-items: flex-start;
+      width: max-content;
+      will-change: transform;
+    }
+
+    .wt-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 260px;
+      flex-shrink: 0;
+      padding: 0 12px;
+      position: relative;
+    }
+
+    .wt-step::before {
+      content: '';
+      position: absolute;
+      top: 9px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right, rgba(14, 107, 107, 0.3), rgba(200, 150, 12, 0.3));
+      z-index: 0;
+    }
+
+    .wt-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #094f4f;
+      border: 3px solid #fff;
+      outline: 2.5px solid #094f4f;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 18px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s, outline-color 0.3s;
+    }
+
+    .wt-step:hover .wt-dot {
+      transform: scale(1.5);
+      background: var(--gold);
+      outline-color: var(--gold);
+    }
+
+    .wt-card {
+      width: 100%;
+      height: 220px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1.5px solid rgba(14, 107, 107, 0.12);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(14, 107, 107, 0.07);
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.35s ease, border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wt-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--navy), var(--gold-light));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .wt-step:hover .wt-card {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 18px 44px rgba(14, 107, 107, 0.18), 0 4px 12px rgba(200, 150, 12, 0.12);
+      border-color: rgba(14, 107, 107, 0.35);
+    }
+
+    .wt-step:hover .wt-card::before {
+      transform: scaleX(1);
+    }
+
+    .wt-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+    }
+
+    .wt-icon {
+      font-size: 2rem;
+      line-height: 1;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .wt-step:hover .wt-icon {
+      transform: translateY(-4px) scale(1.15);
+    }
+
+    .wt-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+    }
+
+    .wt-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .wt-hint {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 640px) {
+      .why-us {
+        padding: 52px 0 44px;
+      }
+
+      .wt-outer {
+        padding: 16px 0 18px;
+      }
+
+      .wt-outer::before,
+      .wt-outer::after {
+        width: 40px;
+      }
+
+      .wt-step {
+        width: 210px;
+        padding: 0 8px;
+      }
+
+      .wt-card {
+        height: 210px;
+        padding: 16px 14px;
+      }
+
+      .wt-title {
+        font-size: 0.92rem;
+      }
+
+      .wt-text {
+        font-size: 0.75rem;
+      }
+
+      .wt-icon {
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .wt-step {
+        width: 185px;
+      }
+
+      .wt-card {
+        height: 220px;
+      }
+    }
+  </style>
+
   <section class="why-us">
     <div class="container">
-      <div class="section-title">
-        <span class="tag">Why Choose Us</span>
-        <h2>What Makes Loretto Central School Special</h2>
-        <p>We go beyond textbooks to offer a truly enriching school experience that prepares students for life.</p>
+        <div class="section-title">
+          <span class="tag">Why Choose Us</span>
+        <h2>What Makes Loretto Special</h2>
+        <p>Six reasons why thousands of families trust Loretto Central School.</p>
         <div class="divider"></div>
       </div>
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/faculty.webp" alt="Faculty"></div>
-          <h3>Expert Faculty</h3>
-          <p>Our teachers are highly qualified, trained, and dedicated to the success of every student.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/results.webp" alt="Results"></div>
-          <h3>Award-Winning Results</h3>
-          <p>Consistently outstanding CBSE board results with multiple toppers and merit holders each year.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/global.webp" alt="Global"></div>
-          <h3>Global Exposure</h3>
-          <p>Exchange programs, olympiads, and international competitions that broaden students' horizons.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/safety.webp" alt="Campus"></div>
-          <h3>Safe &amp; Secure Campus</h3>
-          <p>CCTV surveillance, trained security staff, and a child-friendly, safe learning environment.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/tech.webp" alt="Technology"></div>
-          <h3>Technology Integration</h3>
-          <p>Smart boards, computer labs, and digital resources integrated into everyday classroom learning.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/holistic.webp" alt="Holistic"></div>
-          <h3>Holistic Development</h3>
-          <p>Yoga, meditation, counselling, and wellness programs for the complete development of each child.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/parent.webp" alt="Parent"></div>
-          <h3>Parent Partnership</h3>
-          <p>Regular PTMs, parent app, and open-door communication to keep families closely involved.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon"><img src="IMGS/transport.webp" alt="Transport"></div>
-          <h3>Transport Network</h3>
-          <p>GPS-enabled school buses covering all major routes with trained drivers and attendants.</p>
+
+      <div class="wt-outer" id="wtOuter">
+        <div class="wt-belt" id="wtBelt">
+          <div class="wt-step"><div class="wt-dot"></div><div class="wt-card"><div class="wt-num">01 — Excellence</div><div class="wt-icon">🎓</div><div class="wt-title">Academic Excellence</div><div class="wt-text">100% board results for 10+ consecutive years.</div></div></div>
+          <div class="wt-step"><div class="wt-dot"></div><div class="wt-card"><div class="wt-num">02 — Values</div><div class="wt-icon">⛪</div><div class="wt-title">Values & Faith</div><div class="wt-text">Compassion, integrity, and service are lived every day.</div></div></div>
+          <div class="wt-step"><div class="wt-dot"></div><div class="wt-card"><div class="wt-num">03 — Sports</div><div class="wt-icon">🏆</div><div class="wt-title">Sports Champions</div><div class="wt-text">Students thrive in academics, arts, and sports.</div></div></div>
         </div>
       </div>
+
+      <p class="wt-hint">Auto-scrolling · Hover to pause · Drag to explore</p>
     </div>
   </section>
 
+  <script>
+    (function () {
+      var outer = document.getElementById('wtOuter');
+      var belt = document.getElementById('wtBelt');
+      if (!outer || !belt) return;
 
-  <!-- TESTIMONIALS -->
+      window.initWhyUsLoop = function () {
+        belt.style.transform = '';
+        x = 0;
+        var children = Array.from(belt.children);
+        if (children.length === 0) return;
+        
+        // Clear existing clones if any
+        children.forEach(function(c) { if(c.classList.contains('wt-clone')) c.remove(); });
+        var originals = Array.from(belt.children);
+        
+        originals.forEach(function (s) { 
+          var cl1 = s.cloneNode(true); cl1.classList.add('wt-clone'); belt.appendChild(cl1);
+          var cl2 = s.cloneNode(true); cl2.classList.add('wt-clone'); belt.appendChild(cl2);
+        });
+        
+        // recalculate sw
+        cachedSw = 0;
+        originals.forEach(function (s) { cachedSw += s.offsetWidth; });
+      };
+
+      var cachedSw = 0;
+      function oneSetWidth() {
+        if (cachedSw > 0) return cachedSw;
+        var originals = Array.from(belt.children).filter(function(c) { return !c.classList.contains('wt-clone'); });
+        var w = 0;
+        originals.forEach(function (s) { w += s.offsetWidth; });
+        cachedSw = w;
+        return w;
+      }
+      var SPEED = 0.7;
+      var x = 0;
+      var paused = false;
+      var isDrag = false;
+      var dragStartClient = 0;
+      var dragStartX = 0;
+      function draw() { belt.style.transform = 'translateX(' + (-x) + 'px)'; }
+      function loop() {
+        if (!paused && !isDrag) {
+          var speed = window.innerWidth <= 640 ? SPEED * 0.8 : SPEED;
+          x += speed;
+          var sw = oneSetWidth();
+          if (sw > 0 && x >= sw) x -= sw;
+        }
+        draw();
+        requestAnimationFrame(loop);
+      }
+      outer.addEventListener('mouseenter', function () { paused = true; });
+      outer.addEventListener('mouseleave', function () { paused = false; });
+      outer.addEventListener('mousedown', function (e) {
+        isDrag = true; dragStartClient = e.clientX; dragStartX = x; e.preventDefault();
+      });
+      window.addEventListener('mousemove', function (e) {
+        if (!isDrag) return;
+        var sw = oneSetWidth();
+        x = dragStartX + (dragStartClient - e.clientX);
+        if (x < 0 && sw > 0) x += sw;
+        if (sw > 0 && x >= sw) x -= sw;
+        draw();
+      });
+      window.addEventListener('mouseup', function () { isDrag = false; });
+      var touchStartClient = 0, touchStartX = 0;
+      outer.addEventListener('touchstart', function (e) {
+        isDrag = true; paused = true;
+        touchStartClient = e.touches[0].clientX; touchStartX = x;
+      }, { passive: true });
+      outer.addEventListener('touchmove', function (e) {
+        if (!isDrag) return;
+        var sw = oneSetWidth();
+        x = touchStartX + (touchStartClient - e.touches[0].clientX);
+        if (x < 0 && sw > 0) x += sw;
+        if (sw > 0 && x >= sw) x -= sw;
+        draw();
+      }, { passive: true });
+      outer.addEventListener('touchend', function () { isDrag = false; paused = false; }, { passive: true });
+      loop();
+    })();
+  </script>
+
+  <!-- TESTIMONIALS — POLAROID WALL -->
   <section class="testimonials">
     <div class="container">
       <div class="section-title">
-        <span class="tag">💬 What Parents Say</span>
+        <span class="tag"> What Parents Say</span>
         <h2>Trusted by Thousands of Families</h2>
-        <p>Hear directly from the parents and students who are part of the Loretto Central School family.</p>
+        <p>Testimonials from the school community will appear here.</p>
         <div class="divider"></div>
       </div>
-      <div class="test-grid">
-        <div class="test-card">
-          <div class="stars">★★★★★</div>
-          <div class="test-quote">"</div>
-          <p>Loretto Central School has been the best decision for our daughter. The teachers are incredibly dedicated
-            and the school's focus on both academics and values is exactly what we were looking for.</p>
-          <div class="test-author">
-            <div class="test-avatar a1">👩</div>
-            <div>
-              <div class="test-name">Priya Sharma</div>
-              <div class="test-role">Parent of Class VIII Student</div>
-            </div>
-          </div>
-        </div>
-        <div class="test-card">
-          <div class="stars">★★★★★</div>
-          <div class="test-quote">"</div>
-          <p>My son has grown tremendously since joining Loretto. The school's co-curricular activities and sports
-            program have helped build his confidence and leadership skills immensely.</p>
-          <div class="test-author">
-            <div class="test-avatar a2">👨</div>
-            <div>
-              <div class="test-name">Rajesh Kumar</div>
-              <div class="test-role">Parent of Class X Student</div>
-            </div>
-          </div>
-        </div>
-        <div class="test-card">
-          <div class="stars">★★★★★</div>
-          <div class="test-quote">"</div>
-          <p>The faculty at Loretto Central is exceptional. My daughter scored 97% in her boards and got into her dream
-            college. We are forever grateful to this school and its wonderful teachers.</p>
-          <div class="test-author">
-            <div class="test-avatar a3">👩</div>
-            <div>
-              <div class="test-name">Sunita Verma</div>
-              <div class="test-role">Parent of Class XII Alumni</div>
-            </div>
+
+      <div class="polaroid-wall">
+        <div class="pol-card">
+          <div class="pol-tape"></div>
+          <div class="pol-photo">...</div>
+          <div class="pol-stars">★★★★★</div>
+          <p class="pol-quote">Loading testimonials...</p>
+          <div class="pol-name">
+            <div class="pol-name-text">Loading...</div>
+            <div class="pol-role-text">Loading...</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- GALLERY -->
+  <!-- GALLERY — ORBITAL SPREAD -->
   <section class="gallery" id="gallery-section">
     <div class="container">
-      <div class="section-title" id="galleryTitle">
-        <span class="tag" style="animation:sectionTagSlide 0.8s ease both;">📸 School Gallery</span>
+
+        <div class="section-title" id="galleryTitle">
+        <span class="tag" style="animation:sectionTagSlide 0.8s ease both;"> School Gallery</span>
         <h2>Life at Loretto Central School</h2>
         <p>A glimpse into our vibrant campus life, events, achievements, and everyday moments.</p>
         <div class="divider"></div>
       </div>
 
-      <div class="gallery-grid" id="galleryGrid">
+      <!-- Orbital stack: hover the group to spread, hover a card to bring it forward -->
+      <div class="gallery-orbital" id="galleryGrid"></div>
 
-        <div class="gal-item g1 tall" data-label="Our Campus" style="--fd:6s;--fdelay:0s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🏫</span>
-        </div>
-
-        <div class="gal-item g2" data-label="Sports & Athletics" style="--fd:5s;--fdelay:0.3s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">⚽</span>
-        </div>
-
-        <div class="gal-item g3" data-label="Arts & Crafts" style="--fd:4.5s;--fdelay:0.6s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🎨</span>
-        </div>
-
-        <div class="gal-item g4 wide" data-label="Science Laboratories" style="--fd:7s;--fdelay:0.2s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🔬</span>
-        </div>
-
-        <div class="gal-item g5" data-label="Cultural Events" style="--fd:5.5s;--fdelay:0.8s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🎭</span>
-        </div>
-
-        <div class="gal-item g6" data-label="Library & Reading" style="--fd:4s;--fdelay:0.4s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">📚</span>
-        </div>
-
-        <div class="gal-item g7" data-label="Awards & Achievements" style="--fd:6.5s;--fdelay:1s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🏆</span>
-        </div>
-
-        <div class="gal-item g8" data-label="Music & Performing Arts" style="--fd:5s;--fdelay:0.7s;">
-          <div class="gal-top-bar"></div>
-          <span class="gal-icon">🎵</span>
-        </div>
-
-      </div>
+      <!-- Hint text -->
+      <p
+        style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:0;margin-bottom:28px;letter-spacing:.04em;">
+        Hover the gallery to explore — hover any card to bring it forward
+      </p>
 
       <!-- Counter bar -->
-      <div class="gallery-counter" id="galCounter">
-        <div class="gal-counter-item"><span class="gal-counter-num">8</span> Gallery Categories</div>
-        <div class="gal-counter-item"><span class="gal-counter-num">500+</span> Annual Events</div>
-        <div class="gal-counter-item"><span class="gal-counter-num">30+</span> Years of Memories</div>
-        <div class="gal-counter-item"><span class="gal-counter-num">🏅</span> Award Winners</div>
-      </div>
+      <div class="gallery-counter" id="galCounter"></div>
 
     </div>
   </section>
@@ -4158,8 +5407,7 @@
     <div class="container">
       <div class="inner">
         <h2>Admissions Open for 2025–26</h2>
-        <p>Join the Loretto Central School family. Limited seats available. Apply now to secure your child's future in
-          an environment that fosters excellence, values, and all-round growth.</p>
+        <p>Join the Loretto Central School family and secure your child’s future in an environment that fosters excellence, values, and all-round growth.</p>
         <div class="cta-btns">
           <a href="admissions/1-admissions.html" class="btn-primary">Apply for Admission Now</a>
           <a href="admissions/1-admissions.html" class="btn-outline">Download Prospectus</a>
@@ -4168,76 +5416,124 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="contact">
-    <div class="container">
-      <div class="section-title">
-        <span class="tag">📬 Get in Touch</span>
-        <h2>Contact Loretto Central School</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="contact-grid">
-        <div class="contact-info">
-          <h2>We'd Love to Hear From You</h2>
-          <p style="color:var(--text-muted);line-height:1.7;margin-bottom:28px;">Have questions about admissions, fees,
-            or our programs? Reach out to us through any of the channels below and our team will be happy to assist you.
-          </p>
-          <div class="contact-item">
-            <div class="contact-icon">📍</div>
-            <div>
-              <h4>Address</h4>
-              <p>Loretto Central School, Main Road, Near City Centre, PIN – 123456</p>
+  <!-- CONTACT — DIAGONAL SPLIT + PARTICLE BURST -->
+  <section class="contact" id="contact-section">
+
+    <div class="contact-shell">
+
+      <!-- Backgrounds -->
+      <div class="contact-shell-bg"></div>
+      <div class="contact-shell-white"></div>
+
+      <!-- Ambient glows -->
+      <div class="contact-glow contact-glow-1"></div>
+      <div class="contact-glow contact-glow-2"></div>
+
+      <!-- Orbiting rings -->
+      <div class="contact-ring contact-ring-1"></div>
+      <div class="contact-ring contact-ring-2"></div>
+
+      <!-- Rising particles (JS populates) -->
+      <div class="contact-particles" id="contactParticles"></div>
+
+      <!-- Main inner grid -->
+      <div class="contact-inner">
+
+        <!-- Mobile tab switcher (shown only on ≤600px via JS class toggling) -->
+        <div class="contact-mob-tabs" id="contactMobTabs">
+          <button class="contact-mob-tab active" onclick="contactTab('info', this)">📍 Info</button>
+          <button class="contact-mob-tab" onclick="contactTab('form', this)">✉️ Message</button>
+        </div>
+
+        <!-- LEFT: Info -->
+        <div class="contact-left mob-active" id="contactInfoPanel">
+          <span class="contact-left-tag">Get in Touch</span>
+          <h2>We’d Love to Hear From You</h2>
+          <p>Have questions about admissions, fees, or our programs? Reach out and our team will respond shortly.</p>
+
+          <div class="contact-items-list">
+            <div class="contact-item">
+              <div class="contact-icon">📍</div>
+              <div>
+                <h4>Address</h4>
+                <p>Loretto Central School, Main Road, Near City Centre</p>
+              </div>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">📞</div>
-            <div>
-              <h4>Phone</h4>
-              <p>+91 98765 43210 &nbsp;|&nbsp; +91 12345 67890</p>
+            <div class="contact-item">
+              <div class="contact-icon">📞</div>
+              <div>
+                <h4>Phone</h4>
+                <p>+91 98765 43210 | +91 12345 67890</p>
+              </div>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">✉️</div>
-            <div>
-              <h4>Email</h4>
-              <p><a href="mailto:info@school.edu">info@school.edu</a><br /><a
-                  href="mailto:principal@school.edu">principal@school.edu</a></p>
+            <div class="contact-item">
+              <div class="contact-icon">✉️</div>
+              <div>
+                <h4>Email</h4>
+                <p><a href="mailto:info@school.edu">info@school.edu</a><br><a href="mailto:principal@school.edu">principal@school.edu</a></p>
+              </div>
             </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">🕐</div>
-            <div>
-              <h4>Office Hours</h4>
-              <p>Monday – Saturday: 8:00 AM – 4:00 PM<br />Sunday: Closed</p>
+            <div class="contact-item">
+              <div class="contact-icon">🕐</div>
+              <div>
+                <h4>Office Hours</h4>
+                <p>Monday – Saturday: 8:00 AM – 4:00 PM<br>Sunday: Closed</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="contact-form">
+
+        <!-- RIGHT: Form -->
+        <div class="contact-right" id="contactFormPanel">
           <h3>Send Us a Message</h3>
+          <p class="contact-right-sub">Fill in the form and we will get back to you shortly.</p>
+
           <div class="form-row">
-            <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full Name" /></div>
-            <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 XXXXX XXXXX" /></div>
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="contactName" placeholder="Full Name" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="contactPhone" placeholder="+91 XXXXX XXXXX" />
+            </div>
           </div>
-          <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com" /></div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="contactEmail" placeholder="your@email.com" />
+          </div>
+
           <div class="form-group">
             <label>Subject</label>
-            <select>
+            <select id="contactSubject">
+              <option value="">Select a topic…</option>
               <option>Admission Enquiry</option>
               <option>Fee Structure</option>
               <option>Transport</option>
               <option>Other</option>
             </select>
           </div>
-          <div class="form-group"><label>Message</label><textarea placeholder="Write your message here..."></textarea>
+
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="contactMessage" placeholder="Write your message here…"></textarea>
           </div>
-          <button class="form-submit">Send Message →</button>
+
+          <button class="form-submit" id="contactSubmitBtn" onclick="contactBurst(this)">
+            <span id="contactBtnTxt">Send Message ✦</span>
+          </button>
         </div>
-      </div>
-    </div>
+
+      </div><!-- /contact-inner -->
+    </div><!-- /contact-shell -->
+
   </section>
 
   <!-- FOOTER -->
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     /* ── ABOUT + GALLERY SCROLL ANIMATIONS ── */
     (function () {
@@ -4323,20 +5619,25 @@
         });
       }
 
-      /* ── GALLERY: cards stagger in with 3D flip ── */
-      var galItems = document.querySelectorAll('#galleryGrid .gal-item');
-      galItems.forEach(function (item, i) {
-        item.style.opacity = '0';
-        item.style.transform = 'perspective(600px) rotateX(20deg) translateY(50px) scale(0.9)';
-        item.style.transition = 'opacity 0.6s ease ' + (i * 0.09) + 's, transform 0.6s cubic-bezier(0.34,1.3,0.64,1) ' + (i * 0.09) + 's, box-shadow 0.4s ease';
+      /* ── GALLERY: orbital cards stagger in ── */
+      var orbCards = document.querySelectorAll('.gallery-orbital .orb-card');
+      orbCards.forEach(function (card, i) {
+        card.style.opacity = '0';
+        card.style.transition = 'opacity 0.7s ease ' + (i * 0.15) + 's';
       });
       var galGrid = document.getElementById('galleryGrid');
       if (galGrid) {
         onVisible(galGrid, function () {
-          galItems.forEach(function (item) {
-            item.style.opacity = '1';
-            item.style.transform = 'perspective(600px) rotateX(0) translateY(0) scale(1)';
+          orbCards.forEach(function (card) {
+            card.style.opacity = '1';
           });
+          /* restore natural depth opacities after entrance completes */
+          setTimeout(function () {
+            if (orbCards[0]) orbCards[0].style.opacity = '0.72';
+            if (orbCards[1]) orbCards[1].style.opacity = '0.88';
+            if (orbCards[3]) orbCards[3].style.opacity = '0.88';
+            if (orbCards[4]) orbCards[4].style.opacity = '0.72';
+          }, 1100);
         }, 0.1);
       }
 
@@ -4357,88 +5658,667 @@
         });
       }
 
-      /* ── GALLERY: 3D tilt on hover (desktop only) ── */
-      if (window.innerWidth > 768) {
-        galItems.forEach(function (item) {
-          item.addEventListener('mousemove', function (e) {
-            var rect = item.getBoundingClientRect();
-            var cx = (e.clientX - rect.left) / rect.width - 0.5;
-            var cy = (e.clientY - rect.top) / rect.height - 0.5;
-            item.style.transform = 'perspective(500px) rotateX(' + (-cy * 12) + 'deg) rotateY(' + (cx * 12) + 'deg) scale(1.07) translateY(-8px)';
-          });
-          item.addEventListener('mouseleave', function () {
-            item.style.transform = '';
-          });
-        });
-      }
-
     })();
   </script>
 
-  <script src="/components/Navbar.js" defer></script>
-  <script src="/components/Footer.js" defer></script>
-  <script src="/shared-data-loader.js" defer></script>
+  <script src="./components/Navbar.js"></script>
+  <script src="./components/Footer.js"></script>
+  <script src="./shared-data-loader.js"></script>
 
   <script>
-    window.addEventListener('DOMContentLoaded', async () => {
-      // Load News
-      renderNewsListExtended('news-grid-home');
+    /* ── DYNAMIC CONTENT LOADING FOR HOME PAGE ── */
+    const HERO_CONTENT_CACHE_KEY = 'loretto_homepage_hero_cache';
+    const ABOUT_CONTENT_CACHE_KEY = 'loretto_homepage_about_cache';
+    const WHY_US_CONTENT_CACHE_KEY = 'loretto_homepage_why_us_cache';
+    const GALLERY_CONTENT_CACHE_KEY = 'loretto_homepage_gallery_cache';
+    const CTA_CONTENT_CACHE_KEY = 'loretto_homepage_cta_cache';
+    const CONTACT_CONTENT_CACHE_KEY = 'loretto_homepage_contact_cache';
+    const HOMEPAGE_SHARED_STATE_KEY = 'loretto_homepage_shared_state';
+    let homepageSyncChannel = null;
+    try {
+      if (typeof BroadcastChannel !== 'undefined') {
+        homepageSyncChannel = new BroadcastChannel('loretto-homepage-sync');
+      }
+    } catch (channelErr) {}
+    const DEFAULT_HERO_QUOTES = [
+      { text: 'Shaping the ', em: 'Leaders', suffix: ' of Tomorrow' },
+      { text: '', em: 'Excellence', suffix: ' in Every Classroom' },
+      { text: 'Where ', em: 'Character', suffix: ' Meets Achievement' }
+    ];
+    const DEFAULT_HERO_CONTENT = {
+      badgeText: 'CBSE Affiliated School',
+      subtitle: 'Loretto Central School provides a world-class education rooted in values, discipline, and innovation. We nurture young minds to achieve academic excellence and holistic development.',
+      primaryButtonText: 'Apply for Admission',
+      primaryButtonLink: 'admissions/1-admissions.html',
+      secondaryButtonText: 'Take a Virtual Tour',
+      secondaryButtonLink: 'https://www.youtube.com/@lcscbse',
+      stats: [
+        { value: '15+', label: 'Years of Excellence' },
+        { value: '1000+', label: 'Happy Students' },
+        { value: '25+', label: 'Dedicated Faculty' },
+        { value: '100%', label: 'Result' }
+      ],
+      typewriterQuotes: DEFAULT_HERO_QUOTES.slice()
+    };
+    const DEFAULT_ABOUT_CONTENT = {
+      tag: 'About Our School',
+      year: '1994',
+      heading: 'A Legacy of Excellence & Values',
+      paragraph1: 'Loretto Central School has been a beacon of quality education for over three decades. Founded on the principles of academic rigour, character building, and holistic development, we are proud to serve thousands of families.',
+      paragraph2: 'Affiliated to CBSE, New Delhi, our school offers a comprehensive curriculum from Nursery to Class XII, delivered by a team of highly qualified and passionate educators committed to bringing out the best in every child.',
+      badgeValue: 'A+',
+      badgeLabel: 'CBSE Grade',
+      image: 'IMGS/school img.webp',
+      features: [
+        { icon: '', text: 'CBSE Curriculum' },
+        { icon: '', text: 'Smart Classrooms' },
+        { icon: '', text: 'Sports Facilities' },
+        { icon: '', text: 'Arts & Crafts' },
+        { icon: '', text: 'Modern Labs' },
+        { icon: '', text: 'School Transport' }
+      ]
+    };
+    const DEFAULT_WHY_US_CONTENT = {
+      title: 'What Makes Loretto Special',
+      subtitle: 'Six reasons why thousands of families trust Loretto Central School.',
+      cards: [
+        { number: '01 — Excellence', icon: '🎓', title: 'Academic Excellence', description: '100% board results for 10+ consecutive years. Personalised mentoring, smart classrooms, and teachers who inspire every learner.' },
+        { number: '02 — Values', icon: '⛪', title: 'Values & Faith', description: 'Rooted in the Loreto tradition — compassion, integrity, and service are lived every day.' },
+        { number: '03 — Sports', icon: '🏆', title: 'Sports Champions', description: 'State and national-level achievers in academics, arts, and sports.' }
+      ]
+    };
+    const DEFAULT_GALLERY_CONTENT = {
+      tag: 'School Gallery',
+      heading: 'Life at Loretto Central School',
+      subtitle: 'A glimpse into our vibrant campus life, events, achievements, and everyday moments.',
+      hint: 'Hover the gallery to explore — hover any card to bring it forward',
+      cards: [
+        { title: 'Science Labs', image: 'IMGS/gallery1.jpg', visible: true },
+        { title: 'Arts & Culture', image: 'IMGS/gallery2.jpg', visible: true },
+        { title: 'Campus Life', image: 'IMGS/school img.webp', visible: true },
+        { title: 'Sports', image: 'IMGS/gallery4.jpg', visible: true },
+        { title: 'Achievements', image: 'IMGS/gallery5.jpg', visible: true }
+      ],
+      counters: [
+        { value: '8', label: 'Gallery Categories' },
+        { value: '500+', label: 'Annual Events' },
+        { value: '30+', label: 'Years of Memories' },
+        { value: '🏅', label: 'Award Winners' }
+      ]
+    };
+    const DEFAULT_CTA_CONTENT = {
+      visible: true,
+      headline: 'Admissions Open for 2025–26',
+      subtext: 'Join the Loretto Central School family and secure your child’s future in an environment that fosters excellence, values, and all-round growth.',
+      primaryButtonText: 'Apply for Admission Now',
+      primaryButtonLink: 'admissions/1-admissions.html',
+      secondaryButtonText: 'Download Prospectus',
+      secondaryButtonLink: 'admissions/1-admissions.html'
+    };
+    const DEFAULT_CONTACT_CONTENT = {
+      leftTag: 'Get in Touch',
+      heading: 'We’d Love to Hear From You',
+      intro: 'Have questions about admissions, fees, or our programs? Reach out and our team will respond shortly.',
+      address: 'Loretto Central School, Main Road, Near City Centre',
+      phones: '+91 98765 43210 | +91 12345 67890',
+      emails: 'info@school.edu, principal@school.edu',
+      officeHours: 'Monday – Saturday: 8:00 AM – 4:00 PM',
+      sundayHours: 'Sunday: Closed',
+      enableForm: true,
+      formTitle: 'Send Us a Message',
+      formSubtitle: 'Fill in the form and we will get back to you shortly.'
+    };
+    const SEO_SETTINGS_CACHE_KEY = 'loretto_settings_seo_cache';
+    const DEFAULT_SEO_SETTINGS = {
+      title: 'Loretto Central School',
+      description: '',
+      keywords: '',
+      canonicalUrl: '',
+      ogImage: '',
+      favicon: 'favicon.ico'
+    };
 
-      // Load Testimonials
-      renderTestimonialsListExtended('test-grid-home');
+    async function fetchHomepageSection(endpoint) {
+      try {
+        const apiUrl = new URL('/api/' + endpoint, window.location.origin + '/').toString();
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
 
-      // Load Contact Info for static placeholders if any
-      const contact = await loadContactData();
-      if (contact) {
-        document.querySelectorAll('.contact-address-text').forEach(el => el.textContent = contact.address);
-        document.querySelectorAll('.contact-phone-text').forEach(el => el.textContent = contact.phone);
-        document.querySelectorAll('.contact-email-text').forEach(el => el.textContent = contact.email);
+    async function fetchSeoSettings() {
+      try {
+        const apiUrl = new URL('/api/settings/seo', window.location.origin + '/').toString();
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function upsertMetaTag(attr, value, content) {
+      if (!content) return;
+      let tag = document.head.querySelector(`meta[${attr}="${value}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute(attr, value);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    }
+
+    function applySeoSettings(seoData) {
+      const source = Object.assign({}, DEFAULT_SEO_SETTINGS, seoData || {});
+      if (source.title) document.title = source.title;
+      if (source.description) upsertMetaTag('name', 'description', source.description);
+      if (source.keywords) upsertMetaTag('name', 'keywords', source.keywords);
+      if (source.canonicalUrl) {
+        let canonical = document.head.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          canonical = document.createElement('link');
+          canonical.setAttribute('rel', 'canonical');
+          document.head.appendChild(canonical);
+        }
+        canonical.setAttribute('href', source.canonicalUrl);
+      }
+      if (source.ogImage) {
+        upsertMetaTag('property', 'og:image', source.ogImage);
+        upsertMetaTag('name', 'twitter:image', source.ogImage);
+      }
+      if (source.title) {
+        upsertMetaTag('property', 'og:title', source.title);
+        upsertMetaTag('name', 'twitter:title', source.title);
+      }
+      if (source.description) {
+        upsertMetaTag('property', 'og:description', source.description);
+        upsertMetaTag('name', 'twitter:description', source.description);
+      }
+      upsertMetaTag('name', 'twitter:card', 'summary_large_image');
+      if (source.favicon) {
+        var favicon = document.querySelector('link[rel="shortcut icon"], link[rel="icon"]');
+        if (!favicon) {
+          favicon = document.createElement('link');
+          favicon.setAttribute('rel', 'icon');
+          document.head.appendChild(favicon);
+        }
+        favicon.setAttribute('href', source.favicon);
+      }
+    }
+
+    async function refreshSeoSettings() {
+      const payload = await fetchSeoSettings();
+      const data = payload && payload.data && typeof payload.data === 'object' ? payload.data : null;
+      if (!data) return;
+      try {
+        localStorage.setItem(SEO_SETTINGS_CACHE_KEY, JSON.stringify(data));
+      } catch (storageErr) {}
+      applySeoSettings(data);
+    }
+
+    async function refreshHomepageFromApi() {
+      const sections = await Promise.all([
+        fetchHomepageSection('homepage/hero'),
+        fetchHomepageSection('homepage/about'),
+        fetchHomepageSection('homepage/why-us'),
+        fetchHomepageSection('homepage/gallery'),
+        fetchHomepageSection('homepage/cta'),
+        fetchHomepageSection('homepage/contact')
+      ]);
+
+      const pairs = [
+        [sections[0], HERO_CONTENT_CACHE_KEY, applyHeroContent],
+        [sections[1], ABOUT_CONTENT_CACHE_KEY, applyAboutContent],
+        [sections[2], WHY_US_CONTENT_CACHE_KEY, applyWhyUsContent],
+        [sections[3], GALLERY_CONTENT_CACHE_KEY, applyGalleryContent],
+        [sections[4], CTA_CONTENT_CACHE_KEY, applyCtaContent],
+        [sections[5], CONTACT_CONTENT_CACHE_KEY, applyContactContent]
+      ];
+
+      pairs.forEach(function (entry) {
+        const payload = entry[0];
+        const key = entry[1];
+        const apply = entry[2];
+        const data = payload && payload.data && typeof payload.data === 'object' ? payload.data : null;
+        if (!data) return;
+        try {
+          localStorage.setItem(key, JSON.stringify(data));
+        } catch (storageErr) {}
+        apply(data);
+      });
+    }
+
+    function applyHomepageCaches() {
+      let applied = false;
+      try {
+        const cachedSeo = JSON.parse(localStorage.getItem(SEO_SETTINGS_CACHE_KEY) || '{}');
+        if (Object.keys(cachedSeo).length) {
+          applySeoSettings(cachedSeo);
+          applied = true;
+        }
+        const cachedHero = JSON.parse(localStorage.getItem(HERO_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedHero).length) { applyHeroContent(cachedHero); applied = true; }
+        const cachedAbout = JSON.parse(localStorage.getItem(ABOUT_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedAbout).length) { applyAboutContent(cachedAbout); applied = true; }
+        const cachedWhyUs = JSON.parse(localStorage.getItem(WHY_US_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedWhyUs).length) { applyWhyUsContent(cachedWhyUs); applied = true; }
+        const cachedGallery = JSON.parse(localStorage.getItem(GALLERY_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedGallery).length) { applyGalleryContent(cachedGallery); applied = true; }
+        const cachedCta = JSON.parse(localStorage.getItem(CTA_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedCta).length) { applyCtaContent(cachedCta); applied = true; }
+        const cachedContact = JSON.parse(localStorage.getItem(CONTACT_CONTENT_CACHE_KEY) || '{}');
+        if (Object.keys(cachedContact).length) { applyContactContent(cachedContact); applied = true; }
+
+        const sharedState = JSON.parse(localStorage.getItem(HOMEPAGE_SHARED_STATE_KEY) || '{}');
+        if (sharedState && typeof sharedState === 'object') {
+          if (sharedState.hero && typeof sharedState.hero === 'object') { applyHeroContent(sharedState.hero); applied = true; }
+          if (sharedState.about && typeof sharedState.about === 'object') { applyAboutContent(sharedState.about); applied = true; }
+          if (sharedState.whyUs && typeof sharedState.whyUs === 'object') { applyWhyUsContent(sharedState.whyUs); applied = true; }
+          if (sharedState.gallery && typeof sharedState.gallery === 'object') { applyGalleryContent(sharedState.gallery); applied = true; }
+          if (sharedState.cta && typeof sharedState.cta === 'object') { applyCtaContent(sharedState.cta); applied = true; }
+          if (sharedState.contact && typeof sharedState.contact === 'object') { applyContactContent(sharedState.contact); applied = true; }
+        }
+      } catch (stErr) {}
+      return applied;
+    }
+
+    function applySharedHomepageState(sharedState) {
+      if (!sharedState || typeof sharedState !== 'object') return false;
+      let applied = false;
+      if (sharedState.hero && typeof sharedState.hero === 'object') { applyHeroContent(sharedState.hero); applied = true; }
+      if (sharedState.about && typeof sharedState.about === 'object') { applyAboutContent(sharedState.about); applied = true; }
+      if (sharedState.whyUs && typeof sharedState.whyUs === 'object') { applyWhyUsContent(sharedState.whyUs); applied = true; }
+      if (sharedState.gallery && typeof sharedState.gallery === 'object') { applyGalleryContent(sharedState.gallery); applied = true; }
+      if (sharedState.cta && typeof sharedState.cta === 'object') { applyCtaContent(sharedState.cta); applied = true; }
+      if (sharedState.contact && typeof sharedState.contact === 'object') { applyContactContent(sharedState.contact); applied = true; }
+      return applied;
+    }
+
+    let lastHomepageUpdateSeen = '';
+
+    function syncHomepageFromSharedState() {
+      const nextMarker = localStorage.getItem('loretto_homepage_last_updated') || '';
+      if (nextMarker && nextMarker !== lastHomepageUpdateSeen) {
+        lastHomepageUpdateSeen = nextMarker;
+      }
+      return applyHomepageCaches();
+    }
+
+    function isLocalRuntime() {
+      const hostname = (window.location.hostname || '').toLowerCase();
+      return hostname === 'localhost' || hostname === '127.0.0.1';
+    }
+
+    function applyHeroContent(heroData) {
+      if (!heroData || typeof heroData !== 'object') return;
+      
+      const heroBg = document.querySelector('.hero-bg-img');
+      const heroBgUrl = heroData.backgroundImage || heroData.image || '';
+      const heroBadgeText = document.querySelector('.hero-badge');
+      const heroSubtitle = document.querySelector('.hero-text p');
+      const heroPrimaryBtn = document.querySelector('.hero-btns .btn-primary');
+      const heroSecondaryBtn = document.querySelector('.hero-btns .btn-outline');
+
+      if (heroBg && heroBgUrl) {
+        heroBg.style.backgroundImage = `url("${heroBgUrl}")`;
+      } else if (heroBg && heroData.backgroundImageRemoved) {
+        heroBg.style.backgroundImage = 'none';
+      }
+      
+      if (heroBadgeText && heroData.badgeText) {
+        // Keep the dot span
+        heroBadgeText.innerHTML = `<span class="hero-badge-dot"></span> ${heroData.badgeText}`;
+      }
+      
+      if (heroSubtitle && heroData.subtitle) {
+        heroSubtitle.textContent = heroData.subtitle;
+      }
+      
+      if (heroPrimaryBtn) {
+        if (heroData.primaryButtonText) heroPrimaryBtn.textContent = heroData.primaryButtonText;
+        if (heroData.primaryButtonLink) heroPrimaryBtn.setAttribute('href', heroData.primaryButtonLink);
+      }
+      if (heroSecondaryBtn) {
+        if (heroData.secondaryButtonText) heroSecondaryBtn.textContent = heroData.secondaryButtonText;
+        if (heroData.secondaryButtonLink) heroSecondaryBtn.setAttribute('href', heroData.secondaryButtonLink);
+      }
+      
+      // Stats
+      if (Array.isArray(heroData.stats)) {
+        heroData.stats.forEach((item, index) => {
+          const statDiv = document.querySelector(`.hero-stats .stat:nth-child(${index + 1})`);
+          if (statDiv) {
+            statDiv.setAttribute('data-target', parseInt(item.value) || 0);
+            const suffix = String(item.value).replace(/[0-9]/g, '');
+            statDiv.setAttribute('data-suffix', suffix || '');
+            const numEl = statDiv.querySelector('.num');
+            const lblEl = statDiv.querySelector('.lbl');
+            if (numEl) numEl.textContent = item.value;
+            if (lblEl) lblEl.textContent = item.label;
+          }
+        });
+      }
+      
+      // Quotes
+      if (Array.isArray(heroData.typewriterQuotes) && heroData.typewriterQuotes.length > 0) {
+        window.HERO_QUOTES = heroData.typewriterQuotes;
+        document.dispatchEvent(new CustomEvent('loretto-hero-quotes-updated'));
+      }
+    }
+
+    function applyAboutContent(aboutData) {
+      if (!aboutData || typeof aboutData !== 'object') return;
+      
+      const aboutTag = document.querySelector('#aboutText .tag');
+      const aboutH2 = document.querySelector('#aboutText h2');
+      const aboutPs = document.querySelectorAll('#aboutText p');
+      const aboutImg = document.querySelector('#aboutImgWrap img');
+      const yearTag = document.querySelector('.about-year-tag');
+      const badgeNum = document.querySelector('.about-badge-card .num');
+      const badgeLbl = document.querySelector('.about-badge-card .lbl');
+      
+      if (aboutTag && aboutData.tag) aboutTag.textContent = aboutData.tag;
+      if (aboutH2 && aboutData.heading) aboutH2.textContent = aboutData.heading;
+      if (aboutPs[0] && aboutData.paragraph1) aboutPs[0].textContent = aboutData.paragraph1;
+      if (aboutPs[1] && aboutData.paragraph2) aboutPs[1].textContent = aboutData.paragraph2;
+      if (aboutImg && aboutData.image) aboutImg.setAttribute('src', aboutData.image);
+      if (yearTag && aboutData.year) yearTag.textContent = `Est. ${aboutData.year}`;
+      if (badgeNum && aboutData.badgeValue) badgeNum.textContent = aboutData.badgeValue;
+      if (badgeLbl && aboutData.badgeLabel) badgeLbl.textContent = aboutData.badgeLabel;
+      
+      // Features
+      const featContainer = document.getElementById('aboutFeatures');
+      if (featContainer && Array.isArray(aboutData.features)) {
+        featContainer.innerHTML = '';
+        aboutData.features.forEach(feat => {
+          featContainer.innerHTML += `
+            <div class="feat-item">
+              <div class="feat-icon"><i class="${feat.icon || 'fa-solid fa-check'}"></i></div> ${feat.text}
+            </div>
+          `;
+        });
+      }
+    }
+
+    function applyWhyUsContent(whyUsData) {
+      if (!whyUsData || typeof whyUsData !== 'object' || !Array.isArray(whyUsData.cards)) return;
+      
+      const titleEl = document.querySelector('.why-us .section-title h2');
+      const subEl = document.querySelector('.why-us .section-title p');
+      if (titleEl && whyUsData.title) titleEl.textContent = whyUsData.title;
+      if (subEl && whyUsData.subtitle) subEl.textContent = whyUsData.subtitle;
+      
+      const belt = document.getElementById('wtBelt');
+      if (belt) {
+        belt.innerHTML = '';
+        whyUsData.cards.forEach(card => {
+          belt.innerHTML += `
+            <div class="wt-step">
+              <div class="wt-dot"></div>
+              <div class="wt-card">
+                <div class="wt-num">${card.number || ''}</div>
+                <div class="wt-icon">${card.icon || ''}</div>
+                <div class="wt-title">${card.title || ''}</div>
+                <div class="wt-text">${card.description || ''}</div>
+              </div>
+            </div>
+          `;
+        });
+        // Reinject clones for the infinite loop since we replaced innerHTML
+        if (window.initWhyUsLoop) window.initWhyUsLoop();
+      }
+    }
+
+    function applyGalleryContent(galleryData) {
+      if (!galleryData || typeof galleryData !== 'object') return;
+      
+      const galTag = document.querySelector('#galleryTitle .tag');
+      const galH2 = document.querySelector('#galleryTitle h2');
+      const galP = document.querySelector('#galleryTitle p');
+      if (galTag && galleryData.tag) galTag.textContent = galleryData.tag;
+      if (galH2 && galleryData.heading) galH2.textContent = galleryData.heading;
+      if (galP && galleryData.subtitle) galP.textContent = galleryData.subtitle;
+      
+      const grid = document.getElementById('galleryGrid');
+      if (grid && Array.isArray(galleryData.cards)) {
+        grid.innerHTML = '';
+        galleryData.cards.filter(c => c.visible !== false).slice(0, 5).forEach((card, i) => {
+          const delays = ['1.2s', '0.6s', '0s', '0.4s', '0.9s'];
+          const durations = ['5s', '6.5s', '5.5s', '6s', '7s'];
+          grid.innerHTML += `
+            <div class="orb-card">
+              <div class="orb-card-overlay"></div>
+              <img class="orb-card-icon" style="--oi-d:${durations[i] || '6s'};--oi-dl:${delays[i] || '0s'};" src="${card.image}" alt="${card.title}" />
+            </div>
+          `;
+        });
+      }
+      
+      const counters = document.getElementById('galCounter');
+      if (counters && Array.isArray(galleryData.counters)) {
+        counters.innerHTML = '';
+        galleryData.counters.forEach(c => {
+          counters.innerHTML += `<div class="gal-counter-item"><span class="gal-counter-num">${c.value}</span> ${c.label}</div>`;
+        });
+      }
+    }
+
+    function applyCtaContent(ctaData) {
+      if (!ctaData || typeof ctaData !== 'object') return;
+      const ctaSection = document.querySelector('.admissions-cta');
+      if (!ctaSection) return;
+      if (ctaData.visible === false) { ctaSection.style.display = 'none'; return; }
+      ctaSection.style.display = '';
+      
+      const h2 = ctaSection.querySelector('h2');
+      const p = ctaSection.querySelector('p');
+      const btn1 = ctaSection.querySelector('.btn-primary');
+      const btn2 = ctaSection.querySelector('.btn-outline');
+      
+      if (h2 && ctaData.headline) h2.textContent = ctaData.headline;
+      if (p && ctaData.subtext) p.textContent = ctaData.subtext;
+      if (btn1) {
+        if (ctaData.primaryButtonText) btn1.textContent = ctaData.primaryButtonText;
+        if (ctaData.primaryButtonLink) btn1.setAttribute('href', ctaData.primaryButtonLink);
+      }
+      if (btn2) {
+        if (ctaData.secondaryButtonText) btn2.textContent = ctaData.secondaryButtonText;
+        if (ctaData.secondaryButtonLink) btn2.setAttribute('href', ctaData.secondaryButtonLink);
+      }
+    }
+
+    function applyContactContent(contactData) {
+      if (!contactData || typeof contactData !== 'object') return;
+      const infoPanel = document.getElementById('contactInfoPanel');
+      if (!infoPanel) return;
+      
+      const tag = infoPanel.querySelector('.contact-left-tag');
+      const h2 = infoPanel.querySelector('h2');
+      const p = infoPanel.querySelector('p');
+      if (tag && contactData.leftTag) tag.textContent = contactData.leftTag;
+      if (h2 && contactData.heading) h2.innerHTML = contactData.heading.replace(/\n/g, '<br>');
+      if (p && contactData.intro) p.textContent = contactData.intro;
+      
+      const items = infoPanel.querySelectorAll('.contact-item');
+      if (items[0] && contactData.address) items[0].querySelector('p').innerHTML = contactData.address.replace(/\n/g, '<br>');
+      if (items[1] && contactData.phones) items[1].querySelector('p').textContent = contactData.phones;
+      if (items[2] && contactData.emails) {
+        const emailP = items[2].querySelector('p');
+        emailP.innerHTML = contactData.emails.split(',').map(e => `<a href="mailto:${e.trim()}">${e.trim()}</a>`).join('<br>');
+      }
+      if (items[3] && contactData.officeHours) {
+        items[3].querySelector('p').innerHTML = `${contactData.officeHours}<br>${contactData.sundayHours || ''}`;
+      }
+    }
+
+    function renderHomepageNews(newsItems) {
+      const newsGrid = document.querySelector('.news-grid');
+      if (!newsGrid || !Array.isArray(newsItems) || !newsItems.length) return;
+
+      newsGrid.innerHTML = '';
+      const topNews = newsItems.slice(0, 3);
+
+      topNews.forEach((item, i) => {
+        const dateStr = window.formatDisplayDate ? window.formatDisplayDate(item.date) : new Date(item.date).toLocaleDateString();
+        const imageUrl = (item.image || (Array.isArray(item.images) ? item.images[0] : '') || '').trim();
+        const hasImage = imageUrl !== '';
+        const emoji = ['🎓', '🇮🇳', '🥋', '🏅', '🏆', '🎉'][i % 6];
+        const detailUrl = window.buildNewsDetailUrl ? window.buildNewsDetailUrl(item) : './news.html';
+        const excerptText = item.excerpt || (item.content ? item.content.substring(0, 100) + '...' : '');
+
+        newsGrid.innerHTML += `
+          <article class="news-card">
+            <a href="${detailUrl}" style="display:block;color:inherit;text-decoration:none;">
+              <img class="news-thumb" src="${hasImage ? imageUrl : ''}" alt="${item.title || ''}" style="display:${hasImage ? 'block' : 'none'};" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+              <div class="news-thumb-placeholder n${(i % 6) + 1}" style="display:${hasImage ? 'none' : 'flex'};">${emoji}</div>
+              <div class="news-body">
+                <div class="news-meta"><span class="news-date">${dateStr}</span><span class="news-tag-pill">${item.category || 'Update'}</span></div>
+                <h3>${item.title || ''}</h3>
+                <p>${excerptText}</p>
+                <span class="read-more-btn">Read More →</span>
+              </div>
+            </a>
+          </article>
+        `;
+      });
+    }
+
+    function renderHomepageTestimonials(testimonials) {
+      const testiGrid = document.querySelector('.polaroid-wall');
+      const visibleTestimonials = Array.isArray(testimonials)
+        ? testimonials.filter(item => item && item.visible !== false)
+        : [];
+      if (!testiGrid || !visibleTestimonials.length) return;
+
+      testiGrid.innerHTML = '';
+      visibleTestimonials.slice(0, 4).forEach((item, i) => {
+        const emoji = ['👩', '👨', '🧑', '👱‍♀️', '👨‍🦰', '👩‍🦱'][i % 6];
+        const stars = '★'.repeat(Math.min(5, Math.max(1, parseInt(item.rating) || 5)));
+        const photoUrl = (item.photo || item.image || item.avatar || item.photoUrl || '').trim();
+        const hasImage = photoUrl !== '';
+        const photoContent = hasImage
+          ? `<img src="${photoUrl}" alt="${item.name || 'Testimonial'}" onerror="this.parentElement.innerHTML='${emoji}'">`
+          : emoji;
+
+        testiGrid.innerHTML += `
+          <div class="pol-card">
+            <div class="pol-tape"></div>
+            <div class="pol-photo">${photoContent}</div>
+            <div class="pol-stars">${stars}</div>
+            <p class="pol-quote">${item.text || ''}</p>
+            <div class="pol-name">
+              <div class="pol-name-text">${item.name || ''}</div>
+              <div class="pol-role-text">${item.role || ''}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Set HERO_QUOTES immediately so the typewriter has real content from the start
+    window.HERO_QUOTES = DEFAULT_HERO_QUOTES.slice();
+
+    async function initHomepageDynamicContent() {
+      console.log('[Loretto] DOMContentLoaded triggered.');
+      try {
+        applyHeroContent(DEFAULT_HERO_CONTENT);
+        applyAboutContent(DEFAULT_ABOUT_CONTENT);
+        applyWhyUsContent(DEFAULT_WHY_US_CONTENT);
+        applyGalleryContent(DEFAULT_GALLERY_CONTENT);
+        applyCtaContent(DEFAULT_CTA_CONTENT);
+        applyContactContent(DEFAULT_CONTACT_CONTENT);
+        applySeoSettings(DEFAULT_SEO_SETTINGS);
+
+        // Initial load from cache
+        const hasCachedHomepageContent = applyHomepageCaches();
+
+        if (!hasCachedHomepageContent || isLocalRuntime()) {
+          await refreshHomepageFromApi();
+        }
+        await refreshSeoSettings();
+
+        // Load News
+        if (typeof window.loadNewsData === 'function') {
+          const newsData = await window.loadNewsData();
+          renderHomepageNews(newsData);
+        }
+
+        // Load Testimonials
+        if (typeof window.loadTestimonialsData === 'function') {
+          const testiData = await window.loadTestimonialsData();
+          renderHomepageTestimonials(testiData);
+        }
+      } catch (err) {
+        console.error('Failed to load dynamic content for homepage:', err);
+      }
+    }
+
+    window.addEventListener('storage', function (event) {
+      const keys = [
+        SEO_SETTINGS_CACHE_KEY,
+        HOMEPAGE_SHARED_STATE_KEY,
+        HERO_CONTENT_CACHE_KEY,
+        ABOUT_CONTENT_CACHE_KEY,
+        WHY_US_CONTENT_CACHE_KEY,
+        GALLERY_CONTENT_CACHE_KEY,
+        CTA_CONTENT_CACHE_KEY,
+        CONTACT_CONTENT_CACHE_KEY,
+        'loretto_homepage_last_updated',
+        'loretto_site_settings_last_updated'
+      ];
+      if (keys.indexOf(event.key) === -1) return;
+      syncHomepageFromSharedState();
+      if (event.key === SEO_SETTINGS_CACHE_KEY || event.key === 'loretto_site_settings_last_updated') {
+        try {
+          const cachedSeo = JSON.parse(localStorage.getItem(SEO_SETTINGS_CACHE_KEY) || '{}');
+          if (Object.keys(cachedSeo).length) applySeoSettings(cachedSeo);
+        } catch (storageErr) {}
       }
     });
 
-    async function renderNewsListExtended(containerId) {
-      const container = document.querySelector('.news-grid');
-      if (!container) return;
-      const news = await loadNewsData();
-      const latest = news.slice(0, 3);
-      if (latest.length === 0) return;
-
-      container.innerHTML = latest.map((item, i) => `
-        <div class="news-card">
-          ${item.image ? `<img class="news-thumb" src="${item.image}" alt="${item.title}" />` : `<div class="news-thumb-placeholder n${(i % 3) + 1}">📰</div>`}
-          <div class="news-body">
-            <div class="news-meta"><span class="news-date">${item.date || ''}</span><span class="news-tag-pill">${item.category || 'Events'}</span></div>
-            <h3>${item.title || ''}</h3>
-            <p>${item.excerpt || ''}</p>
-            <div style="display: flex; gap: 10px; margin-top: auto;">
-              <button class="read-more-btn" onclick="openNewsModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">Quick View</button>
-              <a href="./news.html" class="read-more-btn" style="background: transparent; color: var(--navy); border: 1px solid var(--navy); text-decoration: none; display: flex; align-items: center;">Read More →</a>
-            </div>
-          </div>
-        </div>
-      `).join('');
+    if (homepageSyncChannel) {
+      homepageSyncChannel.addEventListener('message', function (event) {
+        const data = event && event.data;
+        if (!data || data.type !== 'homepage-shared-state') return;
+        try {
+          localStorage.setItem(HOMEPAGE_SHARED_STATE_KEY, JSON.stringify(data.payload || {}));
+        } catch (storageErr) {}
+        applySharedHomepageState(data.payload || {});
+      });
     }
 
-    async function renderTestimonialsListExtended(containerId) {
-      const container = document.querySelector('.test-grid');
-      if (!container) return;
-      const testimonials = await loadTestimonialsData();
-      if (testimonials.length === 0) return;
+    window.addEventListener('focus', function () {
+      syncHomepageFromSharedState();
+      refreshSeoSettings();
+      if (isLocalRuntime()) refreshHomepageFromApi();
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) {
+        syncHomepageFromSharedState();
+        refreshSeoSettings();
+        if (isLocalRuntime()) refreshHomepageFromApi();
+      }
+    });
+    window.setInterval(syncHomepageFromSharedState, 2000);
+    window.setInterval(function () {
+      if (isLocalRuntime()) refreshHomepageFromApi();
+    }, 3000);
 
-      container.innerHTML = testimonials.slice(0, 3).map((item, i) => `
-        <div class="test-card">
-          <div class="stars">${'★'.repeat(item.rating || 5)}${'☆'.repeat(5 - (item.rating || 5))}</div>
-          <div class="test-quote">"</div>
-          <p>${item.text || ''}</p>
-          <div class="test-author">
-            <div class="test-avatar a${(i % 3) + 1}">${item.name ? item.name[0] : '👤'}</div>
-            <div>
-              <div class="test-name">${item.name || ''}</div>
-              <div class="test-role">${item.role || ''}</div>
-            </div>
-          </div>
-        </div>
-      `).join('');
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHomepageDynamicContent);
+    } else {
+      initHomepageDynamicContent();
     }
   </script>
 
@@ -4535,26 +6415,46 @@
   </script>
 
   <script>
-    /* ── TYPEWRITER CYCLE ── */
     (function () {
-      var quotes = [
+      var fallbackQuotes = [
         { text: 'Shaping the ', em: 'Leaders', suffix: ' of Tomorrow' },
         { text: '', em: 'Excellence', suffix: ' in Every Classroom' },
-        { text: 'Where ', em: 'Character', suffix: ' Meets Achievement' },
-        { text: 'Building ', em: 'Futures', suffix: ', One Student at a Time' },
+        { text: 'Where ', em: 'Character', suffix: ' Meets Achievement' }
       ];
-      var TYPE_SPEED = 55;
-      var DELETE_SPEED = 28;
-      var PAUSE_AFTER = 2200;
-      var PAUSE_BEFORE = 380;
-      var current = 0, animating = false;
+      var TYPE_SPEED = 80;
+      var DELETE_SPEED = 40;
+      var PAUSE_AFTER = 3000;
+      var PAUSE_BEFORE = 1000;
+      var current = 0;
+      var animating = false;
+      var typingInterval = null;
+      var deletingInterval = null;
+      var pauseTimer = null;
+      var hasStarted = false;
       var twText = document.getElementById('twText');
       var dotsEl = document.getElementById('twDots');
       if (!twText) return;
 
-      /* Build nav dots if container exists */
-      if (dotsEl) {
-        quotes.forEach(function (_, i) {
+      function getQuotes() {
+        return Array.isArray(window.HERO_QUOTES) && window.HERO_QUOTES.length
+          ? window.HERO_QUOTES
+          : fallbackQuotes;
+      }
+
+      function clearTypewriterTimers() {
+        if (typingInterval) clearInterval(typingInterval);
+        if (deletingInterval) clearInterval(deletingInterval);
+        if (pauseTimer) clearTimeout(pauseTimer);
+        typingInterval = null;
+        deletingInterval = null;
+        pauseTimer = null;
+        animating = false;
+      }
+
+      function buildDots() {
+        if (!dotsEl) return;
+        dotsEl.innerHTML = '';
+        getQuotes().forEach(function (_, i) {
           var d = document.createElement('button');
           d.className = 'twdot' + (i === 0 ? ' on' : '');
           d.setAttribute('aria-label', 'Quote ' + (i + 1));
@@ -4562,6 +6462,8 @@
           dotsEl.appendChild(d);
         });
       }
+
+      buildDots();
 
       function updateDots(idx) {
         if (!dotsEl) return;
@@ -4590,11 +6492,12 @@
         var full = getFullText(q);
         var i = 0;
         animating = true;
-        var id = setInterval(function () {
+        typingInterval = setInterval(function () {
           i++;
           twText.innerHTML = buildHTML(q, i);
           if (i >= full.length) {
-            clearInterval(id);
+            clearInterval(typingInterval);
+            typingInterval = null;
             animating = false;
             callback();
           }
@@ -4605,11 +6508,12 @@
         var full = getFullText(q);
         var i = full.length;
         animating = true;
-        var id = setInterval(function () {
+        deletingInterval = setInterval(function () {
           i--;
           twText.innerHTML = buildHTML(q, i);
           if (i <= 0) {
-            clearInterval(id);
+            clearInterval(deletingInterval);
+            deletingInterval = null;
             animating = false;
             callback();
           }
@@ -4617,11 +6521,14 @@
       }
 
       function runCycle() {
+        var quotes = getQuotes();
+        if (!quotes.length) return;
+        if (current >= quotes.length) current = 0;
         var q = quotes[current];
         typeIn(q, function () {
-          setTimeout(function () {
+          pauseTimer = setTimeout(function () {
             deleteOut(q, function () {
-              setTimeout(function () {
+              pauseTimer = setTimeout(function () {
                 current = (current + 1) % quotes.length;
                 updateDots(current);
                 runCycle();
@@ -4631,21 +6538,189 @@
         });
       }
 
-      function jumpTo(idx) {
-        var q = quotes[current];
-        deleteOut(q, function () {
-          setTimeout(function () {
-            current = idx;
-            updateDots(current);
-            runCycle();
-          }, PAUSE_BEFORE);
-        });
+      function startOrRestartTypewriter() {
+        clearTypewriterTimers();
+        current = 0;
+        twText.innerHTML = '';
+        buildDots();
+        updateDots(0);
+        hasStarted = true;
+        runCycle();
       }
 
-      updateDots(0);
-      runCycle();
+      document.addEventListener('loretto-hero-quotes-updated', function () {
+        startOrRestartTypewriter();
+      });
+
+      if (getQuotes().length && !hasStarted) startOrRestartTypewriter();
     })();
   </script>
-</body>
 
+  <script>
+    /* ── CONTACT: RISING PARTICLES ── */
+    (function () {
+      var container = document.getElementById('contactParticles');
+      if (!container) return;
+      var colors = [
+        'rgba(14, 107, 107, 0.18)',
+        'rgba(200, 150, 12, 0.2)',
+        'rgba(14, 107, 107, 0.1)',
+        'rgba(200, 150, 12, 0.12)'
+      ];
+      for (var i = 0; i < 22; i++) {
+        var p = document.createElement('div');
+        p.className = 'contact-particle';
+        var sz = Math.random() * 5 + 2;
+        p.style.cssText = [
+          'left:' + (Math.random() * 48) + '%',
+          'bottom:' + (Math.random() * 55) + '%',
+          'width:' + sz + 'px',
+          'height:' + sz + 'px',
+          '--pd:-' + (Math.random() * 3 + 3) + 's',
+          '--pdl:-' + (Math.random() * 6) + 's',
+          'background:' + colors[Math.floor(Math.random() * colors.length)]
+        ].join(';');
+        container.appendChild(p);
+      }
+    })();
+
+    /* ── CONTACT: CONFETTI BURST ON SUBMIT ── */
+    async function contactBurst(btn) {
+      var txt = document.getElementById('contactBtnTxt');
+      if (!txt) return;
+
+      var nameInput = document.getElementById('contactName');
+      var phoneInput = document.getElementById('contactPhone');
+      var emailInput = document.getElementById('contactEmail');
+      var subjectInput = document.getElementById('contactSubject');
+      var messageInput = document.getElementById('contactMessage');
+
+      if (!nameInput.value || !emailInput.value || !messageInput.value) {
+        alert('Please fill out all required fields (Name, Email, Message).');
+        return;
+      }
+
+      var payload = {
+        name: nameInput.value,
+        phone: phoneInput.value,
+        email: emailInput.value,
+        subject: subjectInput.value,
+        message: messageInput.value
+      };
+
+      /* Sending state */
+      txt.textContent = 'Sending…';
+      btn.disabled = true;
+      btn.style.opacity = '0.85';
+
+      try {
+        const apiBase = typeof window.resolveApiBase === 'function' ? await window.resolveApiBase() : '';
+        const response = await fetch(`${apiBase}/contact/enquiry`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('Server error');
+        }
+
+        txt.textContent = '✓ Message Sent!';
+        btn.style.background = 'var(--gold)';
+        btn.style.color = 'var(--navy-dark)';
+        btn.style.opacity = '1';
+
+        // clear inputs
+        nameInput.value = '';
+        phoneInput.value = '';
+        emailInput.value = '';
+        subjectInput.value = '';
+        messageInput.value = '';
+
+        /* Burst confetti */
+        var palette = ['#c8960c', '#e8b020', '#0e6b6b', '#ffffff', '#f5e6c0', '#094f4f'];
+        var rect = btn.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top;
+
+        for (var i = 0; i < 28; i++) {
+          var dot = document.createElement('div');
+          dot.className = 'conf-dot';
+          dot.style.background = palette[i % palette.length];
+          dot.style.left = cx + 'px';
+          dot.style.top = cy + 'px';
+          document.body.appendChild(dot);
+
+          var angle = Math.random() * Math.PI * 2;
+          var dist = 70 + Math.random() * 90;
+          var tx = Math.cos(angle) * dist;
+          var ty = Math.sin(angle) * dist - 80;
+          var delay = Math.random() * 120;
+
+          dot.animate(
+            [
+              { transform: 'translate(0,0) scale(1)', opacity: 1 },
+              { transform: 'translate(' + tx + 'px,' + ty + 'px) scale(0)', opacity: 0 }
+            ],
+            { duration: 750 + Math.random() * 400, easing: 'cubic-bezier(0,0.9,0.57,1)', delay: delay }
+          ).onfinish = function () { this.effect.target.remove(); };
+        }
+
+        /* Reset after 3s */
+        setTimeout(function () {
+          txt.textContent = 'Send Message ✦';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.disabled = false;
+        }, 3000);
+      } catch (err) {
+        txt.textContent = '❌ Failed to Send';
+        btn.style.background = 'var(--navy)';
+        btn.disabled = false;
+        console.error(err);
+        setTimeout(function () {
+          txt.textContent = 'Send Message ✦';
+          btn.style.background = '';
+        }, 3000);
+      }
+    }
+
+    /* ── CONTACT: MOBILE TAB SWITCHER ── */
+    function contactTab(panel, btn) {
+      var info = document.getElementById('contactInfoPanel');
+      var form = document.getElementById('contactFormPanel');
+      var tabs = document.querySelectorAll('.contact-mob-tab');
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      btn.classList.add('active');
+      if (panel === 'info') {
+        info.classList.add('mob-active');
+        form.classList.remove('mob-active');
+      } else {
+        form.classList.add('mob-active');
+        info.classList.remove('mob-active');
+      }
+    }
+
+    /* On desktop, always show both panels */
+    (function () {
+      function resetContactPanels() {
+        var info = document.getElementById('contactInfoPanel');
+        var form = document.getElementById('contactFormPanel');
+        var tabs = document.getElementById('contactMobTabs');
+        if (!info || !form) return;
+        if (window.innerWidth > 600) {
+          info.classList.add('mob-active');
+          form.classList.add('mob-active');
+          if (tabs) tabs.style.display = 'none';
+        } else {
+          if (tabs) tabs.style.display = 'flex';
+          /* keep whichever tab is active */
+        }
+      }
+      resetContactPanels();
+      window.addEventListener('resize', resetContactPanels);
+    })();
+  </script>
+
+</body>
 </html>

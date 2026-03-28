@@ -6,6 +6,7 @@
   <title>Child Protection Policy | School Information | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="/shared-data-loader.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -377,7 +378,7 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Child Protection Policy</h1>
+      <h1 id="childProtectPageTitle">Child Protection Policy</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a>
         <span>›</span>
@@ -409,10 +410,10 @@
     <div class="content-card">
 
       <h2>Child Protection Policy</h2>
-      <p>Loretto Central School recognises the fundamental right of every child to be safe, respected, and protected from all forms of abuse, neglect, exploitation, and violence. Our Child Protection Policy sets out the school's commitment and procedures to safeguard the welfare of all children in our care.</p>
-      <div class="highlight-box"><p>This policy applies to all students, staff, volunteers, contractors, and visitors. It is implemented in accordance with the <strong>POCSO Act 2012</strong>, <strong>RTE Act 2009</strong>, <strong>Juvenile Justice Act 2015</strong>, and CBSE child safety guidelines.</p></div>
+      <p id="childProtectIntro">Loretto Central School recognises the fundamental right of every child to be safe, respected, and protected from all forms of abuse, neglect, exploitation, and violence. Our Child Protection Policy sets out the school's commitment and procedures to safeguard the welfare of all children in our care.</p>
+      <div class="highlight-box"><p id="childProtectHighlight">This policy applies to all students, staff, volunteers, contractors, and visitors. It is implemented in accordance with the <strong>POCSO Act 2012</strong>, <strong>RTE Act 2009</strong>, <strong>Juvenile Justice Act 2015</strong>, and CBSE child safety guidelines.</p></div>
       <h3>Our Commitment</h3>
-      <ul>
+      <ul id="childProtectCommitmentsList">
         <li>The safety and well-being of every child is the school's highest priority</li>
         <li>Every child has the right to be heard, believed, and supported</li>
         <li>All staff are responsible for the safety of children in their care</li>
@@ -421,17 +422,17 @@
         <li>The school will work in partnership with parents and authorities to protect children</li>
       </ul>
       <h3>Types of Abuse — Awareness</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">🛡️</div><h4>Physical Abuse</h4><p>Any form of deliberate physical harm to a child. Corporal punishment is strictly prohibited.</p></div>
-        <div class="feat-card"><div class="icon">💬</div><h4>Emotional Abuse</h4><p>Persistent emotional ill-treatment, humiliation, or threats that affect a child's development.</p></div>
-        <div class="feat-card"><div class="icon">🔒</div><h4>Sexual Abuse</h4><p>Any sexual act or contact involving a child. Refer to our Prevention of Sexual Harassment Policy.</p></div>
-        <div class="feat-card"><div class="icon">⚠️</div><h4>Neglect</h4><p>Failure to provide for a child's basic physical, educational, emotional, or health needs.</p></div>
-        <div class="feat-card"><div class="icon">📱</div><h4>Cyberbullying</h4><p>Harassment or humiliation via digital platforms. Students are educated on safe internet use.</p></div>
-        <div class="feat-card"><div class="icon">🤝</div><h4>Bullying</h4><p>Repeated intentional harm through words, actions, or social exclusion. Anti-Bullying Policy applies.</p></div>
+      <div class="feat-grid" id="childProtectAbuseGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Physical Abuse</h4><p>Any form of deliberate physical harm to a child. Corporal punishment is strictly prohibited.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Emotional Abuse</h4><p>Persistent emotional ill-treatment, humiliation, or threats that affect a child's development.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Sexual Abuse</h4><p>Any sexual act or contact involving a child. Refer to our Prevention of Sexual Harassment Policy.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Neglect</h4><p>Failure to provide for a child's basic physical, educational, emotional, or health needs.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Cyberbullying</h4><p>Harassment or humiliation via digital platforms. Students are educated on safe internet use.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Bullying</h4><p>Repeated intentional harm through words, actions, or social exclusion. Anti-Bullying Policy applies.</p></div>
       </div>
       <h3>Reporting Procedures</h3>
       <p>Any student, parent, or staff member who suspects or witnesses child abuse must immediately report it to:</p>
-      <ul>
+      <ul id="childProtectContactsList">
         <li>The Class Teacher or Form Teacher (for immediate classroom concerns)</li>
         <li>The Principal (for serious concerns requiring urgent action)</li>
         <li>The Child Protection Officer designated by the school</li>
@@ -440,7 +441,7 @@
       </ul>
       <div class="policy-section">
         <h3>Staff Training &amp; Awareness</h3>
-        <p>All staff members undergo mandatory child protection training at the time of joining and annually thereafter. This includes recognising signs of abuse, reporting obligations under POCSO, and maintaining professional boundaries with students at all times.</p>
+        <p id="childProtectStaffTraining">All staff members undergo mandatory child protection training at the time of joining and annually thereafter. This includes recognising signs of abuse, reporting obligations under POCSO, and maintaining professional boundaries with students at all times.</p>
       </div>
       
   </div>
@@ -448,5 +449,62 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var block = await loadContentBlock('school-info.child-protection');
+        var data = block && block.data ? block.data : null;
+        if (!data || typeof data !== 'object') return;
+
+        if (typeof data.intro === 'string') {
+          var introEl = document.getElementById('childProtectIntro');
+          if (introEl) introEl.textContent = data.intro;
+        }
+        if (typeof data.highlightBox === 'string') {
+          var highlightEl = document.getElementById('childProtectHighlight');
+          if (highlightEl) highlightEl.textContent = data.highlightBox;
+        }
+        if (typeof data.staffTraining === 'string') {
+          var trainingEl = document.getElementById('childProtectStaffTraining');
+          if (trainingEl) trainingEl.textContent = data.staffTraining;
+        }
+        if (Array.isArray(data.commitments) && data.commitments.length) {
+          var commitmentsEl = document.getElementById('childProtectCommitmentsList');
+          if (commitmentsEl) {
+            commitmentsEl.innerHTML = data.commitments.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.contacts) && data.contacts.length) {
+          var contactsEl = document.getElementById('childProtectContactsList');
+          if (contactsEl) {
+            contactsEl.innerHTML = data.contacts.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.abuseTypes) && data.abuseTypes.length) {
+          var abuseEl = document.getElementById('childProtectAbuseGrid');
+          if (abuseEl) {
+            abuseEl.innerHTML = data.abuseTypes.map(function (item) {
+              return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+            }).join('');
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load child protection content:', error);
+      }
+    });
+  </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SSLC Results | Mandatory Disclosure | Loretto Central School</title>
+  <title>Mandatory Disclosure | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -257,11 +257,11 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>SSLC / Board Examination Results</h1>
+      <h1 id="disclosurePageTitle">Mandatory Disclosure</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a><span>›</span>
         <span>Mandatory Disclosure</span><span>›</span>
-        <span>SSLC / Board Examination Results</span>
+        <span id="disclosureBreadcrumbTitle">Loading...</span>
       </div>
     </div>
   </div>
@@ -270,55 +270,13 @@
 <!-- CONTENT -->
 <section class="page-content">
   <div class="container">
-    <div class="content-card">
-
-      <h2>SSLC / Board Examination Results</h2>
-      <p>Loretto Central School has consistently achieved excellent results in the CBSE Class X Board Examinations. The following is a summary of the last three years' performance.</p>
-      <div class="highlight-box">
-        <p>📊 Detailed mark-wise results, subject-wise analysis, and individual student result reports are available from the school office on request.</p>
-      </div>
-      <h3>Class X Board Results — Last 3 Years</h3>
-      <table class="info-table">
-        <thead><tr><th>Academic Year</th><th>Students Registered</th><th>Students Appeared</th><th>Students Passed</th><th>Pass %</th><th>Distinction / 90%+</th></tr></thead>
-        <tbody>
-          <tr><td>2024–25</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>2023–24</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>2022–23</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td><td>To be updated</td></tr>
-        </tbody>
-      </table>
-      <h3>Subject-wise Performance (Latest Year)</h3>
-      <table class="info-table">
-        <thead><tr><th>Subject</th><th>Average Marks / Grade</th><th>Pass %</th></tr></thead>
-        <tbody>
-          <tr><td>English</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>Hindi / Second Language</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>Mathematics</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>Science</td><td>To be updated</td><td>To be updated</td></tr>
-          <tr><td>Social Science</td><td>To be updated</td><td>To be updated</td></tr>
-        </tbody>
-      </table>
-      <p>Results will be updated following official declaration by CBSE each year. For official results, visit: <a href="https://cbseresults.nic.in" target="_blank" style="color:var(--navy);font-weight:600;">cbseresults.nic.in →</a></p>
-
-      <!-- PDF-DOWNLOAD-INJECTED -->
-      <div class="doc-display" style="margin-top:32px;">
-        <div class="doc-icon">📄</div>
-        <h3>Official Document</h3>
-        <p>This document is available on the school's official website and CBSE portal.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;">
-          <a href="https://school.edu/s-s-l-c-results/" target="_blank" class="btn-doc">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M14 9v4a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 1h6v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="1" x2="8" y2="7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            View on Official Website
-          </a>
-        </div>
-        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;">
-          Source: <a href="https://school.edu/s-s-l-c-results/" target="_blank" style="color:var(--gold);font-weight:600;">school.edu</a>
-        </p>
-      </div>
-    </div>
+    <div class="content-card" id="mandatoryDisclosureContent"></div>
   </div>
 </section>
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script src="/components/MandatoryDisclosurePage.js"></script>
 </body>
 </html>

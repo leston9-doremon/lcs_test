@@ -393,7 +393,7 @@
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
       text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
     }
-    .acad-hero-text h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .acad-hero-text h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 800; color: #fff !important; margin-bottom: 10px; }
     .acad-hero-text h2::after { display: none; }
     .acad-hero-text p { font-size: 0.97rem; color: rgba(255,255,255,0.72); line-height: 1.7; margin: 0; max-width: 580px; }
 
@@ -547,7 +547,7 @@
 
       <div class="acad-hero">
         <div class="acad-hero-inner">
-          <div class="acad-hero-icon">📚</div>
+          <div class="acad-hero-icon"></div>
           <div class="acad-hero-text">
             <span class="acad-hero-badge">Academic Year 2024–25 · CBSE Prescribed</span>
             <h2>Book List 2024–25</h2>
@@ -557,31 +557,31 @@
       </div>
 
       <div class="acad-tiles">
-        <div class="acad-tile"><div class="acad-tile-icon">📖</div><div class="acad-tile-label">Publisher</div><div class="acad-tile-value">NCERT / Approved</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">🏫</div><div class="acad-tile-label">Classes</div><div class="acad-tile-value">LKG to Class X</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">📅</div><div class="acad-tile-label">Academic Year</div><div class="acad-tile-value">2024 – 2025</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">🛒</div><div class="acad-tile-label">Available At</div><div class="acad-tile-value">School / Approved Stores</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Publisher</div><div class="acad-tile-value">NCERT / Approved</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Classes</div><div class="acad-tile-value">LKG to Class X</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Academic Year</div><div class="acad-tile-value">2024 – 2025</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Available At</div><div class="acad-tile-value">School / Approved Stores</div></div>
       </div>
 
       <h2>Prescribed Book List by Class</h2>
 
       <table class="book-table">
         <thead><tr><th>Subject</th><th>Book Title</th><th>Publisher</th><th>Class</th></tr></thead>
-        <tbody>
-          <tr class="book-class-header"><td colspan="4">🌱 Pre-Primary — LKG &amp; UKG</td></tr>
+        <tbody id="bookListTableBody">
+          <tr class="book-class-header"><td colspan="4"> Pre-Primary — LKG &amp; UKG</td></tr>
           <tr><td>English</td><td>Stepping Stones / My English Book</td><td>Approved Publisher</td><td>LKG / UKG</td></tr>
           <tr><td>Maths</td><td>Number Fun / My Maths Book</td><td>Approved Publisher</td><td>LKG / UKG</td></tr>
           <tr><td>EVS</td><td>My World Around Me</td><td>Approved Publisher</td><td>LKG / UKG</td></tr>
           <tr><td>Drawing / Activity</td><td>Fun with Art &amp; Activity</td><td>Approved Publisher</td><td>LKG / UKG</td></tr>
 
-          <tr class="book-class-header"><td colspan="4">📗 Primary — Classes I to V</td></tr>
+          <tr class="book-class-header"><td colspan="4"> Primary — Classes I to V</td></tr>
           <tr><td>English</td><td>Marigold (I–V) — NCERT</td><td>NCERT</td><td>I – V</td></tr>
           <tr><td>Mathematics</td><td>Math Magic (I–V) — NCERT</td><td>NCERT</td><td>I – V</td></tr>
           <tr><td>EVS</td><td>Looking Around (III–V) — NCERT</td><td>NCERT</td><td>III – V</td></tr>
           <tr><td>Hindi</td><td>Rimjhim (I–V) — NCERT</td><td>NCERT</td><td>I – V</td></tr>
           <tr><td>Kannada</td><td>Karnataka State Prescribed Kannada Reader</td><td>KTBS</td><td>I – V</td></tr>
 
-          <tr class="book-class-header"><td colspan="4">📘 Middle School — Classes VI to VIII</td></tr>
+          <tr class="book-class-header"><td colspan="4"> Middle School — Classes VI to VIII</td></tr>
           <tr><td>English</td><td>Honeysuckle / A Pact with the Sun — NCERT</td><td>NCERT</td><td>VI – VIII</td></tr>
           <tr><td>Mathematics</td><td>Mathematics — NCERT</td><td>NCERT</td><td>VI – VIII</td></tr>
           <tr><td>Science</td><td>Science — NCERT</td><td>NCERT</td><td>VI – VIII</td></tr>
@@ -590,7 +590,7 @@
           <tr><td>Kannada</td><td>Karnataka State Prescribed Kannada Reader</td><td>KTBS</td><td>VI – VIII</td></tr>
           <tr><td>Computer Science</td><td>Computer Science (School Approved)</td><td>Approved Publisher</td><td>VI – VIII</td></tr>
 
-          <tr class="book-class-header"><td colspan="4">📙 Secondary — Classes IX &amp; X</td></tr>
+          <tr class="book-class-header"><td colspan="4"> Secondary — Classes IX &amp; X</td></tr>
           <tr><td>English</td><td>Beehive / First Flight + Moments / Footprints — NCERT</td><td>NCERT</td><td>IX / X</td></tr>
           <tr><td>Mathematics</td><td>Mathematics — NCERT (Standard / Basic)</td><td>NCERT</td><td>IX / X</td></tr>
           <tr><td>Science</td><td>Science — NCERT</td><td>NCERT</td><td>IX / X</td></tr>
@@ -602,12 +602,12 @@
       </table>
 
       <div class="dl-box">
-        <div class="dl-box-icon">📄</div>
+        <div class="dl-box-icon"></div>
         <div class="dl-box-text">
           <strong>Download Official Book List — PDF</strong>
           <p>The school's official prescribed book list as shared with parents at the beginning of the academic year.</p>
         </div>
-        <a href="https://school.edu" target="_blank" class="dl-btn">⬇ Download PDF</a>
+        <a href="#" target="_blank" class="dl-btn" id="bookListDownloadBtn">⬇ Download PDF</a>
       </div>
 
       <h3>Important Instructions</h3>
@@ -625,5 +625,98 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script>
+    (function initBookListPage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+      function resolveApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [
+          localStorage.getItem('loretto_api_base') || '',
+          defaultRemoteApi,
+          window.location.origin + '/api',
+          'http://localhost:3000/api',
+          'http://127.0.0.1:3000/api',
+          'http://localhost:8000/api',
+          'http://127.0.0.1:8000/api'
+        ].filter(function(value, index, list) {
+          return value && list.indexOf(value) === index;
+        });
+
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function(base) {
+          attempt = attempt.then(function(found) {
+            if (found) return found;
+            return fetch(base + '/health', { method: 'GET' })
+              .then(function(res) { return res.ok ? res.json() : null; })
+              .then(function(data) { return data && data.service === 'loretto-backend' ? base : null; })
+              .catch(function() { return null; });
+          });
+        });
+
+        return attempt.then(function(found) {
+          return found || defaultRemoteApi;
+        });
+      }
+      function buildDownloadUrl(item) {
+        var raw = String(item && item.url || '').trim();
+        if (!raw) return '#';
+        var filename = (item && item.meta && item.meta.originalFilename) || (item && item.originalFilename) || 'book-list.pdf';
+        var proxyBase = window._lorettoApiBase || localStorage.getItem('loretto_api_base') || '';
+        if (!proxyBase || proxyBase.indexOf('http') !== 0 || proxyBase.indexOf(window.location.host) !== -1) {
+          if (window.location.port === '5500' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            proxyBase = 'http://localhost:3000/api';
+          } else {
+            proxyBase = defaultRemoteApi;
+          }
+        }
+        return proxyBase + '/upload/download?url=' + encodeURIComponent(raw) + '&filename=' + encodeURIComponent(filename) + '&inline=1';
+      }
+      function renderBookTable(content) {
+        var tbody = document.getElementById('bookListTableBody');
+        if (!tbody || !content || !Array.isArray(content.classes) || !content.classes.length) return;
+        tbody.innerHTML = content.classes.map(function(group) {
+          var groupRow = '<tr class="book-class-header"><td colspan="4"> ' + escapeHtml(group.label || 'Class Group') + '</td></tr>';
+          var books = (Array.isArray(group.books) ? group.books : []).map(function(book) {
+            return '<tr><td>' + escapeHtml(book.subject || '') + '</td><td>' + escapeHtml(book.title || '') + '</td><td>' + escapeHtml(book.publisher || '') + '</td><td>' + escapeHtml(book.className || '') + '</td></tr>';
+          }).join('');
+          return groupRow + books;
+        }).join('');
+      }
+      window.addEventListener('DOMContentLoaded', async function() {
+        window._lorettoApiBase = await resolveApiBase();
+        var docs = await loadDocumentsData();
+        var items = Array.isArray(docs) ? docs.filter(function(item) { return item && item.category === 'book-list'; }) : [];
+        if (!items.length) return;
+        var latest = items.sort(function(a, b) {
+          return new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0);
+        })[0];
+        var btn = document.getElementById('bookListDownloadBtn');
+        if (btn && latest.url) {
+          btn.href = buildDownloadUrl(latest);
+          btn.removeAttribute('download');
+          btn.setAttribute('target', '_blank');
+          btn.setAttribute('rel', 'noopener');
+          btn.textContent = 'View PDF';
+        }
+
+        var contentRes = await loadContentBlock('academics.bookList');
+        var content = contentRes && contentRes.data ? contentRes.data : {};
+        if (content.title) {
+          var heading = document.querySelector('.page-banner-content h1');
+          var heroTitle = document.querySelector('.acad-hero-text h2');
+          if (heading) heading.textContent = content.title;
+          if (heroTitle) heroTitle.textContent = content.title;
+        }
+        if (content.academicYear) {
+          var yearBadge = document.querySelector('.acad-hero-badge');
+          if (yearBadge) yearBadge.textContent = 'Academic Year ' + content.academicYear + ' · CBSE Prescribed';
+        }
+        renderBookTable(content);
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -426,11 +426,25 @@
     }
     .faculty-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(14,107,107,0.12); border-color: rgba(14,107,107,0.3); }
     .faculty-avatar {
-      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 14px;
+      width: 176px; height: 176px; margin: 0 auto 22px;
+      border-radius: 22px;
+      border: 4px solid rgba(14,107,107,0.16);
+      box-shadow: 0 10px 24px rgba(14,107,107,0.12);
       background: linear-gradient(135deg, var(--navy-dark), var(--navy));
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem; color: #fff; font-weight: 700;
+      font-size: 2.55rem; color: #fff; font-weight: 700;
+      overflow: hidden;
     }
+    .faculty-avatar-photo {
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      background: #eaf3f3;
+    }
+    .faculty-avatar-fallback {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    }
+    .faculty-info { display: flex; flex-direction: column; align-items: center; }
     .faculty-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
     .faculty-subject { font-size: 0.78rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
     .faculty-qual { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
@@ -564,7 +578,7 @@
 
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    renderFacultyList('faculty-grid');
+    renderFacultyListWithInitials('faculty-grid');
   });
 
   // Custom rendering for faculty if needed specifically (using the one from loader for now)
@@ -588,8 +602,8 @@
       return `
         <div class="faculty-card">
           ${item.photo
-            ? `<img class="faculty-avatar" src="${item.photo}" alt="${item.name}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 14px;display:block;" />`
-            : `<div class="faculty-avatar" style="background:var(--navy);color:#fff;width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;">${initials}</div>`
+            ? `<img class="faculty-avatar faculty-avatar-photo" src="${item.photo}" alt="${item.name}" />`
+            : `<div class="faculty-avatar faculty-avatar-fallback">${initials}</div>`
           }
           <div class="faculty-name">${item.name || ''}</div>
           <div class="faculty-subject">${item.subject || ''}</div>

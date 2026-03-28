@@ -6,6 +6,7 @@
   <title>Website Privacy Policy | School Information | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="/shared-data-loader.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -377,7 +378,7 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Website Privacy Policy</h1>
+      <h1 id="privacyPageTitle">Website Privacy Policy</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a>
         <span>›</span>
@@ -409,23 +410,23 @@
     <div class="content-card">
 
       <h2>Website Privacy Policy</h2>
-      <p>Loretto Central School is committed to protecting the privacy and personal information of all visitors to our website and members of our school community. This Privacy Policy explains how we collect, use, store, and protect your information.</p>
-      <div class="highlight-box"><p>This policy applies to the official website at <strong>www.school.edu</strong> and all associated digital platforms. By using our website, you agree to the terms of this policy.</p></div>
+      <p id="privacyIntro">Loretto Central School is committed to protecting the privacy and personal information of all visitors to our website and members of our school community. This Privacy Policy explains how we collect, use, store, and protect your information.</p>
+      <div class="highlight-box"><p id="privacyHighlight">This policy applies to the official website at <strong>www.school.edu</strong> and all associated digital platforms. By using our website, you agree to the terms of this policy.</p></div>
       <h3>Information We Collect</h3>
-      <ul>
+      <ul id="privacyCollectedList">
         <li><strong>Contact Form Data:</strong> Name, email, phone number, and message when submitting an enquiry</li>
         <li><strong>Admission Enquiry Data:</strong> Student name, class, parent details submitted during admission enquiries</li>
         <li><strong>Usage Data:</strong> Pages visited, time spent, and browser/device information collected anonymously</li>
         <li><strong>Cookies:</strong> Small data files stored on your device to improve browsing experience</li>
       </ul>
       <h3>How We Use Your Information</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">📧</div><h4>Communication</h4><p>To respond to enquiries, admission requests, and general queries in a timely manner.</p></div>
-        <div class="feat-card"><div class="icon">📊</div><h4>Website Improvement</h4><p>Anonymised analytics data used to improve website content, navigation, and performance.</p></div>
-        <div class="feat-card"><div class="icon">🔔</div><h4>School Updates</h4><p>With your consent, we may send school news, circulars, and event notifications.</p></div>
+      <div class="feat-grid" id="privacyUsageGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Communication</h4><p>To respond to enquiries, admission requests, and general queries in a timely manner.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Website Improvement</h4><p>Anonymised analytics data used to improve website content, navigation, and performance.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>School Updates</h4><p>With your consent, we may send school news, circulars, and event notifications.</p></div>
       </div>
       <h3>Data Protection</h3>
-      <ul>
+      <ul id="privacyProtectionList">
         <li>All personal data is stored securely and accessed only by authorised school personnel</li>
         <li>We do not sell, trade, or share your personal information with third parties</li>
         <li>Data collected for admission purposes is used solely for school administration</li>
@@ -435,7 +436,7 @@
       <h3>Your Rights</h3>
       <table class="timing-table">
         <thead><tr><th>Right</th><th>Description</th></tr></thead>
-        <tbody>
+        <tbody id="privacyRightsBody">
           <tr><td>Access</td><td>Request a copy of personal data we hold about you</td></tr>
           <tr><td>Correction</td><td>Request correction of inaccurate or incomplete data</td></tr>
           <tr><td>Deletion</td><td>Request deletion of your personal data (subject to legal obligations)</td></tr>
@@ -449,5 +450,66 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var block = await loadContentBlock('school-info.privacy-policy');
+        var data = block && block.data ? block.data : null;
+        if (!data || typeof data !== 'object') return;
+
+        if (typeof data.intro === 'string') {
+          var introEl = document.getElementById('privacyIntro');
+          if (introEl) introEl.textContent = data.intro;
+        }
+        if (typeof data.highlightBox === 'string') {
+          var highlightEl = document.getElementById('privacyHighlight');
+          if (highlightEl) highlightEl.textContent = data.highlightBox;
+        }
+        if (Array.isArray(data.dataCollected) && data.dataCollected.length) {
+          var collectedEl = document.getElementById('privacyCollectedList');
+          if (collectedEl) {
+            collectedEl.innerHTML = data.dataCollected.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.usageCards) && data.usageCards.length) {
+          var usageEl = document.getElementById('privacyUsageGrid');
+          if (usageEl) {
+            usageEl.innerHTML = data.usageCards.map(function (item) {
+              return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.dataProtection) && data.dataProtection.length) {
+          var protectionEl = document.getElementById('privacyProtectionList');
+          if (protectionEl) {
+            protectionEl.innerHTML = data.dataProtection.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.rights) && data.rights.length) {
+          var rightsEl = document.getElementById('privacyRightsBody');
+          if (rightsEl) {
+            rightsEl.innerHTML = data.rights.map(function (item) {
+              return '<tr><td>' + escapeHtml(item.right || '') + '</td><td>' + escapeHtml(item.description || '') + '</td></tr>';
+            }).join('');
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load privacy content:', error);
+      }
+    });
+  </script>
 </body>
 </html>

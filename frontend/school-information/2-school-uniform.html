@@ -408,11 +408,11 @@
   <div class="container">
     <div class="content-card">
 
-      <h2>School Uniform</h2>
-      <p>Loretto Central School believes that a neat and proper uniform instils discipline, equality, and school pride in every student. All students are required to wear the prescribed school uniform on all working days.</p>
-      <div class="highlight-box"><p>Wearing the school uniform properly is a matter of discipline and school pride. Students must come in clean, ironed uniform every day. The school badge and ID card must be visible at all times.</p></div>
+      <h2 id="uniformPageTitle">School Uniform</h2>
+      <p id="uniformIntro">Loretto Central School believes that a neat and proper uniform instils discipline, equality, and school pride in every student. All students are required to wear the prescribed school uniform on all working days.</p>
+      <div class="highlight-box"><p id="uniformHighlight">Wearing the school uniform properly is a matter of discipline and school pride. Students must come in clean, ironed uniform every day. The school badge and ID card must be visible at all times.</p></div>
       <h3>Boys' Uniform</h3>
-      <ul>
+      <ul id="uniformBoysList">
         <li>White full-sleeve shirt with school monogram</li>
         <li>Navy blue trousers (well-ironed)</li>
         <li>Black leather shoes (well-polished) with white socks</li>
@@ -420,7 +420,7 @@
         <li>School ID card worn at all times within campus</li>
       </ul>
       <h3>Girls' Uniform</h3>
-      <ul>
+      <ul id="uniformGirlsList">
         <li>White salwar kurta with school monogram</li>
         <li>Navy blue dupatta</li>
         <li>Black shoes (well-polished) with white socks</li>
@@ -428,17 +428,17 @@
         <li>School ID card worn at all times within campus</li>
       </ul>
       <h3>PE / Sports Uniform</h3>
-      <ul>
+      <ul id="uniformPeList">
         <li>School sports T-shirt (navy blue with school logo)</li>
         <li>White track pants / shorts (as prescribed per class)</li>
         <li>Sports shoes (white canvas or running shoes)</li>
         <li>PE uniform to be worn only on Physical Education days</li>
       </ul>
       <h3>General Uniform Rules</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">✂️</div><h4>Neat Appearance</h4><p>Uniforms must be clean and well-ironed. Torn or faded uniforms must be replaced promptly.</p></div>
-        <div class="feat-card"><div class="icon">🚫</div><h4>No Jewellery</h4><p>No jewellery or accessories allowed. Simple studs for girls are permitted.</p></div>
-        <div class="feat-card"><div class="icon">💇</div><h4>Hair &amp; Grooming</h4><p>Boys must keep hair short and neat. Girls must tie hair. No coloured hair or nail paint.</p></div>
+      <div class="feat-grid" id="uniformRulesGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Neat Appearance</h4><p>Uniforms must be clean and well-ironed. Torn or faded uniforms must be replaced promptly.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>No Jewellery</h4><p>No jewellery or accessories allowed. Simple studs for girls are permitted.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Hair &amp; Grooming</h4><p>Boys must keep hair short and neat. Girls must tie hair. No coloured hair or nail paint.</p></div>
       </div>
       
   </div>
@@ -446,5 +446,57 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script>
+    (function initUniformPage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function renderList(rootId, items) {
+        var root = document.getElementById(rootId);
+        if (!root || !Array.isArray(items) || !items.length) return;
+        root.innerHTML = items.map(function(item) {
+          return '<li>' + escapeHtml(item) + '</li>';
+        }).join('');
+      }
+
+      window.addEventListener('DOMContentLoaded', async function() {
+        try {
+          var payload = await loadContentBlock('school-info.uniform');
+          var data = payload && payload.data ? payload.data : {};
+          if (!data || typeof data !== 'object') return;
+
+          if (data.intro) {
+            var intro = document.getElementById('uniformIntro');
+            if (intro) intro.textContent = data.intro;
+          }
+          if (data.highlightBox) {
+            var highlight = document.getElementById('uniformHighlight');
+            if (highlight) highlight.textContent = data.highlightBox;
+          }
+          renderList('uniformBoysList', data.boys);
+          renderList('uniformGirlsList', data.girls);
+          renderList('uniformPeList', data.pe);
+
+          if (Array.isArray(data.rules) && data.rules.length) {
+            var grid = document.getElementById('uniformRulesGrid');
+            if (grid) {
+              grid.innerHTML = data.rules.map(function(item) {
+                return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+              }).join('');
+            }
+          }
+        } catch (e) {
+          console.error('Uniform content load failed', e);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -331,29 +331,29 @@
 <section class="page-content">
   <div class="container">
     <div class="content-card">
-      <h2>Principal's Message</h2>
+      <h2 id="principalHeadingDisplay">Principal's Message</h2>
       <div class="message-layout">
         <div class="message-photo-col">
-          <img class="message-photo" 
+          <img class="message-photo" id="principalPhotoDisplay"
                src="https://school.edu/wp-content/uploads/2023/08/fr-jason-vijay-monis.jpg" 
                alt="Rev. Fr. Jason Vijay Monis"
                onerror="this.style.display='none'; document.getElementById('prin-placeholder').style.display='flex';" />
-          <div class="message-photo-placeholder" id="prin-placeholder" style="display:none">⛪<span>Rev. Fr. Jason Vijay Monis</span></div>
+          <div class="message-photo-placeholder" id="prin-placeholder" style="display:none"><span>Rev. Fr. Jason Vijay Monis</span></div>
           <div class="message-name-card">
-            <div class="person-name">Rev. Fr. Jason Vijay Monis</div>
-            <div class="person-title">Principal</div>
-            <div class="person-org">Loretto Central School</div>
+            <div class="person-name" id="principalNameDisplay">Rev. Fr. Jason Vijay Monis</div>
+            <div class="person-title" id="principalTitleDisplay">Principal</div>
+            <div class="person-org" id="principalOrgDisplay">Loretto Central School</div>
           </div>
         </div>
-        <div class="message-text">
+        <div class="message-text" id="principalTextDisplay">
           <span class="quote-mark">"</span>
-          <div class="highlight-quote">"Learning allows us to make sense of the world around us, the world inside of us, and where we fit within the world."</div>
+          <div class="highlight-quote" id="principalHighlightQuoteDisplay">"Learning allows us to make sense of the world around us, the world inside of us, and where we fit within the world."</div>
           <p>In these modern days, education has become more and more commercial and more challenging. Everyone strives to get the highest and elite place but most of the time the values are lost and we see the condition in the society. While looking at these things the future is not so easy and handy. As a result, there is a high need to prepare a value-based society for the future, which is a need of the hour in this modernised condition.</p>
           <p>The school is a place where children spend their time with peer groups and a variety of children coming from different backgrounds and cultures. It's an apt place to teach the values and culture which is a requirement for a healthy society.</p>
           <p>Loretto Central School started in view of educating the children, meeting the modern needs in a village area. The need has always been our priority and it is looked into. Along with academic excellence, we also focus towards extracurricular activities, sports, games, and value-based study. Frequently, parent meetings and input sessions are conducted to nurture the children.</p>
           <p>The dedicated and qualified staff see that the vision and mission is achieved every year when the batch moves out from this school. Looking at the needs of the future and the demands from society, we have affiliated to the CBSE curriculum. The school is now CBSE affiliated, and we are committed to building on this foundation for the benefit of all our students.</p>
           <p>We remain grateful to our patron saint, Our Lady of Loretto.</p>
-          <div class="signature">
+          <div class="signature" id="principalSignatureDisplay">
             <strong>Fr. Jason Vijay Monis</strong>
             <span>Principal, Loretto Central School</span>
           </div>
@@ -365,5 +365,83 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function () {
+      var DEFAULT_PRINCIPAL = {
+        heading: "Principal's Message",
+        subHeading: 'From the desk of our Principal',
+        highlightQuote: 'Learning allows us to make sense of the world around us, the world inside of us, and where we fit within the world.',
+        body: 'In these modern days, education has become more and more commercial and more challenging. Everyone strives to get the highest and elite place but most of the time the values are lost and we see the condition in the society. While looking at these things the future is not so easy and handy. As a result, there is a high need to prepare a value-based society for the future, which is a need of the hour in this modernised condition.\n\nThe school is a place where children spend their time with peer groups and a variety of children coming from different backgrounds and cultures. It\'s an apt place to teach the values and culture which is a requirement for a healthy society.\n\nLoretto Central School started in view of educating the children, meeting the modern needs in a village area. The need has always been our priority and it is looked into. Along with academic excellence, we also focus towards extracurricular activities, sports, games, and value-based study. Frequently, parent meetings and input sessions are conducted to nurture the children.\n\nThe dedicated and qualified staff see that the vision and mission is achieved every year when the batch moves out from this school. Looking at the needs of the future and the demands from society, we have affiliated to the CBSE curriculum. The school is now CBSE affiliated, and we are committed to building on this foundation for the benefit of all our students.\n\nWe remain grateful to our patron saint, Our Lady of Loretto.',
+        signature: 'Fr. Jason Vijay Monis',
+        name: 'Rev. Fr. Jason Vijay Monis',
+        title: 'Principal',
+        organization: 'Loretto Central School',
+        photo: 'https://school.edu/wp-content/uploads/2023/08/fr-jason-vijay-monis.jpg'
+      };
+
+      function applyPrincipalData(data) {
+        var source = Object.assign({}, DEFAULT_PRINCIPAL, data || {});
+        var heading = document.getElementById('principalHeadingDisplay');
+        var photo = document.getElementById('principalPhotoDisplay');
+        var placeholder = document.getElementById('prin-placeholder');
+        var name = document.getElementById('principalNameDisplay');
+        var title = document.getElementById('principalTitleDisplay');
+        var org = document.getElementById('principalOrgDisplay');
+        var text = document.getElementById('principalTextDisplay');
+        var highlightQuote = source.highlightQuote || DEFAULT_PRINCIPAL.highlightQuote;
+
+        if (heading) heading.textContent = source.heading || DEFAULT_PRINCIPAL.heading;
+        if (photo && source.photo) {
+          photo.src = source.photo;
+          photo.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+        }
+        if (name) name.textContent = source.name || '';
+        if (title) title.textContent = source.title || '';
+        if (org) org.textContent = source.organization || '';
+        if (text && source.body) {
+          var parts = String(source.body).split(/\n\s*\n/).filter(Boolean);
+          text.innerHTML = '<span class="quote-mark">"</span><div class="highlight-quote" id="principalHighlightQuoteDisplay">"' + highlightQuote + '"</div>'
+            + parts.map(function (paragraph) { return '<p>' + paragraph + '</p>'; }).join('')
+            + '<div class="signature" id="principalSignatureDisplay"><strong>' + (source.signature || '') + '</strong><span>' + ((source.title || '') + (source.organization ? ', ' + source.organization : '')) + '</span></div>';
+        }
+      }
+
+      function resolvePrincipalApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [
+          localStorage.getItem('loretto_api_base') || '',
+          defaultRemoteApi,
+          window.location.origin + '/api',
+          'http://localhost:3000/api',
+          'http://127.0.0.1:3000/api',
+          'http://localhost:8000/api',
+          'http://127.0.0.1:8000/api'
+        ].filter(function (value, index, list) {
+          return value && list.indexOf(value) === index;
+        });
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health', { method: 'GET' })
+              .then(function (res) { return res.ok ? res.json() : null; })
+              .then(function (data) { return data && data.service === 'loretto-backend' ? base : null; })
+              .catch(function () { return null; });
+          });
+        });
+        return attempt.then(function (found) { return found || defaultRemoteApi; });
+      }
+
+      resolvePrincipalApiBase()
+        .then(function (base) { return fetch(base + '/about/principals-message'); })
+        .then(function (res) { return res.json(); })
+        .then(function (item) {
+          var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+          if (Object.keys(data).length) applyPrincipalData(data);
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>

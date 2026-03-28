@@ -6,6 +6,7 @@
   <title>Prevention of Sexual Harassment | School Information | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="/shared-data-loader.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -377,7 +378,7 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Prevention of Sexual Harassment</h1>
+      <h1 id="harassmentPageTitle">Prevention of Sexual Harassment</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a>
         <span>›</span>
@@ -409,11 +410,11 @@
     <div class="content-card">
 
       <h2>Prevention of Sexual Harassment</h2>
-      <p>Loretto Central School is firmly committed to providing a safe, respectful, and dignified environment for all students, staff, and visitors. The school has a zero-tolerance policy towards any form of sexual harassment on its premises or in any school-related activity.</p>
-      <div class="highlight-box"><p>This policy is in compliance with the <strong>Protection of Children from Sexual Offences (POCSO) Act, 2012</strong>, the <strong>Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013</strong>, and CBSE child safety guidelines.</p></div>
+      <p id="harassmentIntro">Loretto Central School is firmly committed to providing a safe, respectful, and dignified environment for all students, staff, and visitors. The school has a zero-tolerance policy towards any form of sexual harassment on its premises or in any school-related activity.</p>
+      <div class="highlight-box"><p id="harassmentHighlight">This policy is in compliance with the <strong>Protection of Children from Sexual Offences (POCSO) Act, 2012</strong>, the <strong>Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013</strong>, and CBSE child safety guidelines.</p></div>
       <h3>Zero Tolerance Policy</h3>
       <p>Any act of sexual harassment — whether physical, verbal, non-verbal, or digital — is strictly prohibited. This includes:</p>
-      <ul>
+      <ul id="harassmentActsList">
         <li>Unwelcome physical contact or advances of a sexual nature</li>
         <li>Demand or request for sexual favours</li>
         <li>Sexually coloured remarks, jokes, or gestures</li>
@@ -425,7 +426,7 @@
       <p>The school has constituted an Internal Complaints Committee (ICC) as required under applicable laws. The committee receives, processes, and resolves complaints in a time-bound and confidential manner.</p>
       <table class="timing-table">
         <thead><tr><th>Role</th><th>Designation</th></tr></thead>
-        <tbody>
+        <tbody id="harassmentIccBody">
           <tr><td>Presiding Officer</td><td>Senior Female Staff Member (as designated)</td></tr>
           <tr><td>Member</td><td>Staff Representative</td></tr>
           <tr><td>Member</td><td>Parent Representative</td></tr>
@@ -433,14 +434,14 @@
         </tbody>
       </table>
       <h3>Reporting a Complaint</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">📝</div><h4>Written Complaint</h4><p>Submit a written complaint to the ICC Presiding Officer or directly to the Principal's office.</p></div>
-        <div class="feat-card"><div class="icon">🤝</div><h4>Confidential</h4><p>All complaints handled with strict confidentiality. The complainant's identity is protected.</p></div>
-        <div class="feat-card"><div class="icon">⏱️</div><h4>Time-Bound</h4><p>Complaints acknowledged within 3 working days and resolved within 90 days of receipt.</p></div>
+      <div class="feat-grid" id="harassmentReportingGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Written Complaint</h4><p>Submit a written complaint to the ICC Presiding Officer or directly to the Principal's office.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Confidential</h4><p>All complaints handled with strict confidentiality. The complainant's identity is protected.</p></div>
+        <div class="feat-card"><div class="icon">⏱</div><h4>Time-Bound</h4><p>Complaints acknowledged within 3 working days and resolved within 90 days of receipt.</p></div>
       </div>
       <div class="policy-section">
         <h3>POCSO Compliance</h3>
-        <p>In compliance with the POCSO Act 2012, all staff are trained to recognise signs of abuse and are mandatory reporters. Any suspicion or disclosure of child sexual abuse will be immediately reported to the appropriate authorities.</p>
+        <p id="harassmentPocsoBox">In compliance with the POCSO Act 2012, all staff are trained to recognise signs of abuse and are mandatory reporters. Any suspicion or disclosure of child sexual abuse will be immediately reported to the appropriate authorities.</p>
       </div>
       
   </div>
@@ -448,5 +449,62 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var block = await loadContentBlock('school-info.harassment');
+        var data = block && block.data ? block.data : null;
+        if (!data || typeof data !== 'object') return;
+
+        if (typeof data.intro === 'string') {
+          var introEl = document.getElementById('harassmentIntro');
+          if (introEl) introEl.textContent = data.intro;
+        }
+        if (typeof data.highlightBox === 'string') {
+          var highlightEl = document.getElementById('harassmentHighlight');
+          if (highlightEl) highlightEl.textContent = data.highlightBox;
+        }
+        if (typeof data.pocsoBox === 'string') {
+          var pocsoEl = document.getElementById('harassmentPocsoBox');
+          if (pocsoEl) pocsoEl.textContent = data.pocsoBox;
+        }
+        if (Array.isArray(data.prohibitedActs) && data.prohibitedActs.length) {
+          var actsEl = document.getElementById('harassmentActsList');
+          if (actsEl) {
+            actsEl.innerHTML = data.prohibitedActs.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.iccMembers) && data.iccMembers.length) {
+          var iccEl = document.getElementById('harassmentIccBody');
+          if (iccEl) {
+            iccEl.innerHTML = data.iccMembers.map(function (item) {
+              return '<tr><td>' + escapeHtml(item.role || '') + '</td><td>' + escapeHtml(item.designation || '') + '</td></tr>';
+            }).join('');
+          }
+        }
+        if (Array.isArray(data.reportingCards) && data.reportingCards.length) {
+          var reportingEl = document.getElementById('harassmentReportingGrid');
+          if (reportingEl) {
+            reportingEl.innerHTML = data.reportingCards.map(function (item) {
+              return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+            }).join('');
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load harassment content:', error);
+      }
+    });
+  </script>
 </body>
 </html>

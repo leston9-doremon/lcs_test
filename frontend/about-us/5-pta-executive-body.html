@@ -144,14 +144,19 @@
     .pta-intro { margin-bottom: 40px; }
     .pta-leadership { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
     .pta-leader-card { background: linear-gradient(135deg, #fdf6e3 0%, #f5e6c0 100%); border: 2px solid var(--gold); border-radius: 12px; padding: 24px 20px; text-align: center; }
+    .pta-leader-photo { width: 74px; height: 74px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 14px; border: 3px solid rgba(14,107,107,0.12); background: #fff; }
+    .pta-leader-photo-fallback { width: 74px; height: 74px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; background: var(--navy); color: #fff; font-weight: 800; font-size: 1.3rem; }
     .pta-leader-card .role-tag { display: inline-block; background: var(--gold); color: #fff; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
     .pta-leader-card .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); }
     .members-section h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
     .pta-members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
     .pta-member { display: flex; align-items: center; gap: 12px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; transition: box-shadow 0.2s, transform 0.2s; }
     .pta-member:hover { box-shadow: 0 4px 16px rgba(14,107,107,0.12); transform: translateY(-2px); }
-    .pta-member-icon { width: 38px; height: 38px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .pta-member-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .pta-member-icon { width: 42px; height: 42px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: #fff; font-weight: 800; flex-shrink: 0; overflow: hidden; }
+    .pta-member-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pta-member-text { min-width: 0; }
+    .pta-member-name { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .pta-member-role { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
 
     footer { background: var(--navy-dark); color: rgba(255,255,255,0.7); padding: 48px 0 0; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; }
@@ -328,43 +333,19 @@
 <section class="page-content">
   <div class="container">
     <div class="content-card">
-      <h2>PTA Executive Body</h2>
+      <h2 id="ptaHeadingDisplay">PTA Executive Body</h2>
 
       <div class="pta-intro">
-        <p>The Parent-Teacher Association (PTA) plays a vital supportive role in the functioning of the school. The main motive of the PTA is to build a strong relationship between the school and the children's families, supporting holistic development and a nurturing community. The PTA general body meets once a year. During the year, the executive committee meets regularly. Various activities are conducted under the leadership of the PTA.</p>
+        <p id="ptaIntroDisplay"></p>
       </div>
 
       <!-- Leadership -->
-      <div class="pta-leadership">
-        <div class="pta-leader-card">
-          <div class="role-tag">President</div>
-          <div class="name">Rev. Fr. Francis Crasta</div>
-        </div>
-        <div class="pta-leader-card">
-          <div class="role-tag">Secretary</div>
-          <div class="name">Rev. Fr. Jason Monis</div>
-        </div>
-        <div class="pta-leader-card">
-          <div class="role-tag">Vice President</div>
-          <div class="name">Mr. Sachin Noronha</div>
-        </div>
-      </div>
+      <div class="pta-leadership" id="ptaLeadershipDisplay"></div>
 
       <!-- Members -->
       <div class="members-section">
         <h3>Executive Committee Members</h3>
-        <div class="pta-members-grid">
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mr. Praveen Pinto</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mrs. Savitha</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mrs. Gracy Dsouza</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mr. Jagadeesh Acharya</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mrs. Sweeda Martis</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mr. Richard Miranda</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mr. Maxim Lobo</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mr. Rudolf Lobo</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mrs. Jacintha Pinto</div></div>
-          <div class="pta-member"><div class="pta-member-icon">👤</div><div class="pta-member-name">Mrs. Veena Precilla Menezes</div></div>
-        </div>
+        <div class="pta-members-grid" id="ptaMembersGridDisplay"></div>
       </div>
     </div>
   </div>
@@ -372,5 +353,130 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    const PTA_CACHE_KEY = 'loretto_about_pta_cache';
+    const EMPTY_PTA = {
+      intro: '',
+      members: []
+    };
+
+    function ptaInitials(name) {
+      return (name || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(function (part) { return part.charAt(0).toUpperCase(); })
+        .join('') || 'P';
+    }
+
+    function renderPTALeader(member) {
+      var photo = member.photo
+        ? '<img class="pta-leader-photo" src="' + member.photo + '" alt="' + (member.name || '') + '" />'
+        : '<div class="pta-leader-photo-fallback">' + ptaInitials(member.name) + '</div>';
+      return '<div class="pta-leader-card">'
+        + photo
+        + '<div class="role-tag">' + (member.designation || 'Member') + '</div>'
+        + '<div class="name">' + (member.name || '') + '</div>'
+        + '</div>';
+    }
+
+    function renderPTAMember(member) {
+      var icon = member.photo
+        ? '<img src="' + member.photo + '" alt="' + (member.name || '') + '" />'
+        : ptaInitials(member.name);
+      return '<div class="pta-member">'
+        + '<div class="pta-member-icon">' + icon + '</div>'
+        + '<div class="pta-member-text"><div class="pta-member-name">' + (member.name || '') + '</div><div class="pta-member-role">' + (member.designation || 'Executive Committee Member') + '</div></div>'
+        + '</div>';
+    }
+
+    function findPTAPostMember(members, role) {
+      return members.find(function (member) {
+        return (member.designation || '').toLowerCase() === role.toLowerCase();
+      });
+    }
+
+    function applyPTAData(data) {
+      var source = Object.assign({}, EMPTY_PTA, data || {});
+      var members = Array.isArray(source.members) ? source.members.slice() : [];
+      var visibleMembers = members.filter(function (member) { return member && member.visible !== false; }).sort(function (a, b) {
+        return (a.order || 0) - (b.order || 0);
+      });
+      var president = findPTAPostMember(visibleMembers, 'President');
+      var secretary = findPTAPostMember(visibleMembers, 'Secretary');
+      var vicePresident = findPTAPostMember(visibleMembers, 'Vice President');
+      var leaders = [president, secretary, vicePresident].filter(Boolean);
+      var leaderIds = {};
+      leaders.forEach(function (member) {
+        leaderIds[member.id || member.name || Math.random().toString(36)] = true;
+      });
+      var others = visibleMembers.filter(function (member) {
+        var key = member.id || member.name;
+        return !leaderIds[key];
+      });
+      var section = document.querySelector('.members-section');
+
+      var intro = document.getElementById('ptaIntroDisplay');
+      if (intro) intro.textContent = source.intro || '';
+
+      var leadership = document.getElementById('ptaLeadershipDisplay');
+      if (leadership) {
+        leadership.innerHTML = leaders.map(renderPTALeader).join('');
+        leadership.style.display = leaders.length ? '' : 'none';
+      }
+
+      var membersGrid = document.getElementById('ptaMembersGridDisplay');
+      if (membersGrid) {
+        membersGrid.innerHTML = others.map(renderPTAMember).join('');
+      }
+
+      if (section) {
+        section.style.display = others.length ? '' : 'none';
+      }
+    }
+
+    async function resolvePTAApiBase() {
+      var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+      var candidates = [];
+      try {
+        var stored = localStorage.getItem('loretto_api_base');
+        if (stored) candidates.push(stored);
+      } catch (err) {}
+      candidates.push(defaultRemoteApi, window.location.origin + '/api', 'http://localhost:3000/api');
+      var seen = {};
+      for (var i = 0; i < candidates.length; i++) {
+        var base = candidates[i];
+        if (!base || seen[base]) continue;
+        seen[base] = true;
+        try {
+          var res = await fetch(base.replace(/\/$/, '') + '/health', { cache: 'no-store' });
+          if (res.ok) {
+            try { localStorage.setItem('loretto_api_base', base.replace(/\/$/, '')); } catch (storageErr) {}
+            return base.replace(/\/$/, '');
+          }
+        } catch (err) {}
+      }
+      return defaultRemoteApi.replace(/\/$/, '');
+    }
+
+    (async function initPTAPage() {
+      applyPTAData(EMPTY_PTA);
+      try {
+        var cached = JSON.parse(localStorage.getItem(PTA_CACHE_KEY) || '{}');
+        if (cached && typeof cached === 'object') {
+          applyPTAData(cached);
+        }
+      } catch (err) {}
+      try {
+        var apiBase = await resolvePTAApiBase();
+        var res = await fetch(apiBase + '/about/pta', { cache: 'no-store' });
+        var item = await res.json().catch(function () { return {}; });
+        if (res.ok && item && item.data) {
+          try { localStorage.setItem(PTA_CACHE_KEY, JSON.stringify(item.data)); } catch (storageErr) {}
+          applyPTAData(item.data);
+        }
+      } catch (err) {}
+    })();
+  </script>
 </body>
 </html>

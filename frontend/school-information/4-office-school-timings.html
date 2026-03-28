@@ -408,12 +408,12 @@
   <div class="container">
     <div class="content-card">
 
-      <h2>Office &amp; School Timings</h2>
-      <p>Loretto Central School follows a structured daily schedule to ensure maximum learning time and discipline. All students and staff are expected to strictly adhere to the timings below.</p>
+      <h2 id="timingsPageTitle">Office &amp; School Timings</h2>
+      <p id="timingsIntro">Loretto Central School follows a structured daily schedule to ensure maximum learning time and discipline. All students and staff are expected to strictly adhere to the timings below.</p>
       <h3>School Timings</h3>
       <table class="timing-table">
         <thead><tr><th>Day</th><th>School Begins</th><th>School Ends</th><th>Remarks</th></tr></thead>
-        <tbody>
+        <tbody id="schoolTimingsBody">
           <tr><td>Monday – Friday</td><td>8:30 AM</td><td>3:30 PM</td><td>Regular working days</td></tr>
           <tr><td>Saturday</td><td>8:30 AM</td><td>12:30 PM</td><td>As per CBSE schedule</td></tr>
           <tr><td>Sunday</td><td>—</td><td>—</td><td>Holiday</td></tr>
@@ -422,7 +422,7 @@
       <h3>Pre-Primary Timings (LKG &amp; UKG)</h3>
       <table class="timing-table">
         <thead><tr><th>Day</th><th>School Begins</th><th>School Ends</th></tr></thead>
-        <tbody>
+        <tbody id="prePrimaryTimingsBody">
           <tr><td>Monday – Friday</td><td>8:30 AM</td><td>1:00 PM</td></tr>
           <tr><td>Saturday</td><td>8:30 AM</td><td>12:00 PM</td></tr>
         </tbody>
@@ -430,17 +430,17 @@
       <h3>School Office Timings</h3>
       <table class="timing-table">
         <thead><tr><th>Day</th><th>Office Opens</th><th>Office Closes</th><th>Remarks</th></tr></thead>
-        <tbody>
+        <tbody id="officeTimingsBody">
           <tr><td>Monday – Friday</td><td>8:00 AM</td><td>4:30 PM</td><td>Admissions, fees, records</td></tr>
           <tr><td>Saturday</td><td>8:00 AM</td><td>1:30 PM</td><td>Limited services</td></tr>
           <tr><td>Sunday / Holidays</td><td>—</td><td>—</td><td>Closed; prior appointment needed</td></tr>
         </tbody>
       </table>
       <h3>Daily Schedule</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">🏃</div><h4>Assembly</h4><p>Morning assembly at 8:30 AM — prayer, pledge, thought of the day, news headlines.</p></div>
-        <div class="feat-card"><div class="icon">📚</div><h4>Class Hours</h4><p>8 periods of 45 minutes each. Break 11:00–11:30 AM; Lunch 1:00–1:30 PM.</p></div>
-        <div class="feat-card"><div class="icon">⚽</div><h4>Games Period</h4><p>Physical Education integrated into weekly timetable; outdoor games on PE days.</p></div>
+      <div class="feat-grid" id="dailyScheduleGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Assembly</h4><p>Morning assembly at 8:30 AM — prayer, pledge, thought of the day, news headlines.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Class Hours</h4><p>8 periods of 45 minutes each. Break 11:00–11:30 AM; Lunch 1:00–1:30 PM.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Games Period</h4><p>Physical Education integrated into weekly timetable; outdoor games on PE days.</p></div>
       </div>
       
   </div>
@@ -448,5 +448,55 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script>
+    (function initTimingsPage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function renderTable(rootId, items, fields) {
+        var root = document.getElementById(rootId);
+        if (!root || !Array.isArray(items) || !items.length) return;
+        root.innerHTML = items.map(function(item) {
+          return '<tr>' + fields.map(function(field) {
+            return '<td>' + escapeHtml(item[field] || '') + '</td>';
+          }).join('') + '</tr>';
+        }).join('');
+      }
+
+      window.addEventListener('DOMContentLoaded', async function() {
+        try {
+          var payload = await loadContentBlock('school-info.timings');
+          var data = payload && payload.data ? payload.data : {};
+          if (!data || typeof data !== 'object') return;
+
+          if (data.intro) {
+            var intro = document.getElementById('timingsIntro');
+            if (intro) intro.textContent = data.intro;
+          }
+          renderTable('schoolTimingsBody', data.schoolTimings, ['day', 'begins', 'ends', 'remarks']);
+          renderTable('prePrimaryTimingsBody', data.prePrimary, ['day', 'begins', 'ends']);
+          renderTable('officeTimingsBody', data.office, ['day', 'opens', 'closes', 'remarks']);
+
+          if (Array.isArray(data.dailySchedule) && data.dailySchedule.length) {
+            var grid = document.getElementById('dailyScheduleGrid');
+            if (grid) {
+              grid.innerHTML = data.dailySchedule.map(function(item) {
+                return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+              }).join('');
+            }
+          }
+        } catch (e) {
+          console.error('Timings content load failed', e);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

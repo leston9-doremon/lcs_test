@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index Page Admin</title>
+  <script src="/admin/admin-auth.js"></script>
+  <style>
+    :root {
+      --navy: #0e6b6b;
+      --navy-dark: #094f4f;
+      --gold: #c8960c;
+      --gold-light: #e8b020;
+      --bg: #f5f2eb;
+      --panel: #ffffff;
+      --text: #1f3030;
+      --muted: #667a7a;
+      --border: #ddd4bd;
+      --danger: #c53d3d;
+      --success: #17854d;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--navy-dark);
+    }
+    .topbar p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button, .link-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .primary {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      color: #fff;
+    }
+    .gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #1d2323;
+    }
+    .ghost {
+      background: #fff;
+      color: var(--navy-dark);
+      border: 1px solid var(--border);
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 22px;
+    }
+    .status {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .status.ok { border-color: rgba(23,133,77,.25); color: var(--success); }
+    .status.err { border-color: rgba(197,61,61,.25); color: var(--danger); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .panel.full { grid-column: 1 / -1; }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #fff, #f8f5ef);
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--navy-dark);
+    }
+    .panel-body {
+      padding: 16px 18px 18px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .form-grid.cols-1 { grid-template-columns: 1fr; }
+    .form-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+    .mini-note {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fcfbf8;
+    }
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+    .item-head strong {
+      color: var(--navy-dark);
+      font-size: 0.92rem;
+    }
+    .danger {
+      background: #fff;
+      border: 1px solid rgba(197,61,61,.25);
+      color: var(--danger);
+    }
+    .inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .inline input[type="checkbox"] {
+      width: auto;
+    }
+    @media (max-width: 900px) {
+      .grid, .form-grid, .form-grid.cols-3 {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <h1>Index Page Admin</h1>
+      <p>Dedicated editor for <code>index.html</code> using <code>/api/index-page</code>.</p>
+    </div>
+    <div class="actions">
+      <a class="link-btn ghost" href="/index.html" target="_blank">Open Homepage</a>
+      <a class="link-btn ghost" href="/admin/admin-panel.html">Main Admin</a>
+      <button class="gold" type="button" id="reloadBtn">Reload</button>
+      <button class="primary" type="button" id="saveAllBtn">Save All</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="status" id="statusBox">Loading homepage editor…</div>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Hero</h2>
+          <button class="ghost" type="button" data-save-section="hero">Save Hero</button>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div>
+              <label for="heroBadgeText">Badge Text</label>
+              <input id="heroBadgeText" />
+            </div>
+            <div>
+              <label for="heroBackgroundImage">Background Image URL</label>
+              <input id="heroBackgroundImage" />
+            </div>
+            <div class="form-grid cols-1" style="grid-column:1/-1;">
+              <div>
+                <label for="heroSubtitle">Subtitle</label>
+                <textarea id="heroSubtitle"></textarea>
+              </div>
+            </div>
+            <div>
+              <label for="heroPrimaryButtonText">Primary Button Text</label>
+              <input id="heroPrimaryButtonText" />
+            </div>
+            <div>
+              <label for="heroPrimaryButtonLink">Primary Button Link</label>
+              <input id="heroPrimaryButtonLink" />
+            </div>
+            <div>
+              <label for="heroSecondaryButtonText">Secondary Button Text</label>
+              <input id="heroSecondaryButtonText" />
+            </div>
+            <div>
+              <label for="heroSecondaryButtonLink">Secondary Button Link</label>
+              <input id="heroSecondaryButtonLink" />
+            </div>
+          </div>
+
+          <div class="list" id="typewriterList"></div>
+          <div class="inline" style="margin-top:12px;">
+            <button class="ghost" type="button" id="addTypewriterBtn">Add Typewriter Line</button>
+            <span class="mini-note">Prefix / highlight / suffix</span>
+          </div>
+
+          <div class="list" id="heroStatsList"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>About</h2>
+          <button class="ghost" type="button" data-save-section="about">Save About</button>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div>
+              <label for="aboutTag">Tag</label>
+              <input id="aboutTag" />
+            </div>
+            <div>
+              <label for="aboutYear">Year</label>
+              <input id="aboutYear" />
+            </div>
+            <div>
+              <label for="aboutHeading">Heading</label>
+              <input id="aboutHeading" />
+            </div>
+            <div>
+              <label for="aboutImage">Image URL</label>
+              <input id="aboutImage" />
+            </div>
+            <div>
+              <label for="aboutBadgeValue">Badge Value</label>
+              <input id="aboutBadgeValue" />
+            </div>
+            <div>
+              <label for="aboutBadgeLabel">Badge Label</label>
+              <input id="aboutBadgeLabel" />
+            </div>
+            <div class="form-grid cols-1" style="grid-column:1/-1;">
+              <div>
+                <label for="aboutParagraph1">Paragraph 1</label>
+                <textarea id="aboutParagraph1"></textarea>
+              </div>
+              <div>
+                <label for="aboutParagraph2">Paragraph 2</label>
+                <textarea id="aboutParagraph2"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="list" id="aboutFeaturesList"></div>
+          <div class="inline" style="margin-top:12px;">
+            <button class="ghost" type="button" id="addFeatureBtn">Add Feature</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel full">
+        <div class="panel-head">
+          <h2>Why Us</h2>
+          <button class="ghost" type="button" data-save-section="whyUs">Save Why Us</button>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div>
+              <label for="whyUsTitle">Title</label>
+              <input id="whyUsTitle" />
+            </div>
+            <div>
+              <label for="whyUsSubtitle">Subtitle</label>
+              <input id="whyUsSubtitle" />
+            </div>
+          </div>
+          <div class="list" id="whyUsCardsList"></div>
+          <div class="inline" style="margin-top:12px;">
+            <button class="ghost" type="button" id="addWhyUsBtn">Add Card</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel full">
+        <div class="panel-head">
+          <h2>Gallery</h2>
+          <button class="ghost" type="button" data-save-section="gallery">Save Gallery</button>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div>
+              <label for="galleryTag">Tag</label>
+              <input id="galleryTag" />
+            </div>
+            <div>
+              <label for="galleryHeading">Heading</label>
+              <input id="galleryHeading" />
+            </div>
+            <div class="form-grid cols-1" style="grid-column:1/-1;">
+              <div>
+                <label for="gallerySubtitle">Subtitle</label>
+                <textarea id="gallerySubtitle"></textarea>
+              </div>
+            </div>
+            <div style="grid-column:1/-1;">
+              <label for="galleryHint">Hint</label>
+              <input id="galleryHint" />
+            </div>
+          </div>
+          <div class="list" id="galleryCardsList"></div>
+          <div class="inline" style="margin-top:12px;">
+            <button class="ghost" type="button" id="addGalleryCardBtn">Add Gallery Card</button>
+          </div>
+          <div class="list" id="galleryCountersList"></div>
+          <div class="inline" style="margin-top:12px;">
+            <button class="ghost" type="button" id="addGalleryCounterBtn">Add Gallery Counter</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>CTA</h2>
+          <button class="ghost" type="button" data-save-section="cta">Save CTA</button>
+        </div>
+        <div class="panel-body">
+          <div class="inline" style="margin-bottom:12px;">
+            <input id="ctaVisible" type="checkbox" />
+            <label for="ctaVisible" style="margin:0;">Visible</label>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="ctaHeadline">Headline</label>
+              <input id="ctaHeadline" />
+            </div>
+            <div>
+              <label for="ctaSubtext">Subtext</label>
+              <textarea id="ctaSubtext"></textarea>
+            </div>
+            <div>
+              <label for="ctaPrimaryButtonText">Primary Button Text</label>
+              <input id="ctaPrimaryButtonText" />
+            </div>
+            <div>
+              <label for="ctaPrimaryButtonLink">Primary Button Link</label>
+              <input id="ctaPrimaryButtonLink" />
+            </div>
+            <div>
+              <label for="ctaSecondaryButtonText">Secondary Button Text</label>
+              <input id="ctaSecondaryButtonText" />
+            </div>
+            <div>
+              <label for="ctaSecondaryButtonLink">Secondary Button Link</label>
+              <input id="ctaSecondaryButtonLink" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Contact</h2>
+          <button class="ghost" type="button" data-save-section="contact">Save Contact</button>
+        </div>
+        <div class="panel-body">
+          <div class="inline" style="margin-bottom:12px;">
+            <input id="contactEnableForm" type="checkbox" />
+            <label for="contactEnableForm" style="margin:0;">Enable Form</label>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="contactLeftTag">Left Tag</label>
+              <input id="contactLeftTag" />
+            </div>
+            <div>
+              <label for="contactHeading">Heading</label>
+              <input id="contactHeading" />
+            </div>
+            <div class="form-grid cols-1" style="grid-column:1/-1;">
+              <div>
+                <label for="contactIntro">Intro</label>
+                <textarea id="contactIntro"></textarea>
+              </div>
+              <div>
+                <label for="contactAddress">Address</label>
+                <textarea id="contactAddress"></textarea>
+              </div>
+            </div>
+            <div>
+              <label for="contactPhones">Phones</label>
+              <input id="contactPhones" />
+              <div class="mini-note">Separate with commas</div>
+            </div>
+            <div>
+              <label for="contactEmails">Emails</label>
+              <input id="contactEmails" />
+              <div class="mini-note">Separate with commas</div>
+            </div>
+            <div>
+              <label for="contactOfficeHours">Office Hours</label>
+              <input id="contactOfficeHours" />
+            </div>
+            <div>
+              <label for="contactSundayHours">Sunday Hours</label>
+              <input id="contactSundayHours" />
+            </div>
+            <div>
+              <label for="contactFormTitle">Form Title</label>
+              <input id="contactFormTitle" />
+            </div>
+            <div>
+              <label for="contactFormSubtitle">Form Subtitle</label>
+              <input id="contactFormSubtitle" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    var state = {
+      hero: {},
+      about: {},
+      whyUs: {},
+      gallery: {},
+      cta: {},
+      contact: {}
+    };
+    var editorReady = false;
+    var editorBusy = false;
+
+    function setStatus(message, kind) {
+      var box = document.getElementById('statusBox');
+      if (!box) return;
+      box.className = 'status' + (kind ? ' ' + kind : '');
+      box.textContent = message;
+    }
+
+    function setEditorState(next) {
+      editorBusy = !!(next && next.busy);
+      if (typeof (next && next.ready) === 'boolean') {
+        editorReady = next.ready;
+      }
+
+      var disabled = editorBusy || !editorReady;
+      var buttons = document.querySelectorAll('#saveAllBtn, [data-save-section], #reloadBtn');
+      buttons.forEach(function (button) {
+        if (!button) return;
+        if (button.id === 'reloadBtn') {
+          button.disabled = !!editorBusy;
+          return;
+        }
+        button.disabled = disabled;
+      });
+    }
+
+    async function parseJsonSafe(response) {
+      try {
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function friendlyError(error, fallback) {
+      var message = (error && error.message ? error.message : '').trim();
+      if (!message || /failed to fetch/i.test(message) || /networkerror/i.test(message)) {
+        return 'Cannot reach the backend. Start or restart the server, then reload this page.';
+      }
+      return message || fallback;
+    }
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function value(id) {
+      var el = byId(id);
+      return el ? el.value : '';
+    }
+
+    function checked(id) {
+      var el = byId(id);
+      return !!(el && el.checked);
+    }
+
+    function setValue(id, next) {
+      var el = byId(id);
+      if (el) el.value = next || '';
+    }
+
+    function setChecked(id, next) {
+      var el = byId(id);
+      if (el) el.checked = !!next;
+    }
+
+    function createTypewriterItem(item, index) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Typewriter Line ' + (index + 1) + '</strong><button class="danger" type="button" data-remove>Remove</button></div>',
+        '<div class="form-grid cols-3">',
+        '<div><label>Prefix</label><input data-key="text" value="' + ((item && item.text) || '') + '"></div>',
+        '<div><label>Highlight</label><input data-key="em" value="' + ((item && item.em) || '') + '"></div>',
+        '<div><label>Suffix</label><input data-key="suffix" value="' + ((item && item.suffix) || '') + '"></div>',
+        '</div>'
+      ].join('');
+      wrap.querySelector('[data-remove]').addEventListener('click', function () { wrap.remove(); });
+      return wrap;
+    }
+
+    function createStatItem(item, index) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Stat ' + (index + 1) + '</strong></div>',
+        '<div class="form-grid">',
+        '<div><label>Value</label><input data-key="value" value="' + ((item && item.value) || '') + '"></div>',
+        '<div><label>Label</label><input data-key="label" value="' + ((item && item.label) || '') + '"></div>',
+        '</div>'
+      ].join('');
+      return wrap;
+    }
+
+    function createFeatureItem(item) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Feature</strong><button class="danger" type="button" data-remove>Remove</button></div>',
+        '<div class="form-grid">',
+        '<div><label>Icon Class</label><input data-key="icon" value="' + ((item && item.icon) || '') + '"></div>',
+        '<div><label>Text</label><input data-key="text" value="' + ((item && item.text) || '') + '"></div>',
+        '</div>'
+      ].join('');
+      wrap.querySelector('[data-remove]').addEventListener('click', function () { wrap.remove(); });
+      return wrap;
+    }
+
+    function createWhyUsItem(item, index) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Card ' + (index + 1) + '</strong><button class="danger" type="button" data-remove>Remove</button></div>',
+        '<div class="form-grid">',
+        '<div><label>Number</label><input data-key="number" value="' + ((item && item.number) || '') + '"></div>',
+        '<div><label>Icon</label><input data-key="icon" value="' + ((item && item.icon) || '') + '"></div>',
+        '<div><label>Title</label><input data-key="title" value="' + ((item && item.title) || '') + '"></div>',
+        '<div style="grid-column:1/-1;"><label>Description</label><textarea data-key="description">' + ((item && item.description) || '') + '</textarea></div>',
+        '</div>'
+      ].join('');
+      wrap.querySelector('[data-remove]').addEventListener('click', function () { wrap.remove(); });
+      return wrap;
+    }
+
+    function createGalleryCardItem(item, index) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Gallery Card ' + (index + 1) + '</strong><button class="danger" type="button" data-remove>Remove</button></div>',
+        '<div class="form-grid">',
+        '<div><label>Title</label><input data-key="title" value="' + ((item && item.title) || '') + '"></div>',
+        '<div><label>Image URL</label><input data-key="image" value="' + ((item && item.image) || '') + '"></div>',
+        '<div class="inline"><input data-key="visible" type="checkbox"' + ((item && item.visible !== false) ? ' checked' : '') + '><label style="margin:0;">Visible</label></div>',
+        '</div>'
+      ].join('');
+      wrap.querySelector('[data-remove]').addEventListener('click', function () { wrap.remove(); });
+      return wrap;
+    }
+
+    function createGalleryCounterItem(item, index) {
+      var wrap = document.createElement('div');
+      wrap.className = 'item';
+      wrap.innerHTML = [
+        '<div class="item-head"><strong>Counter ' + (index + 1) + '</strong><button class="danger" type="button" data-remove>Remove</button></div>',
+        '<div class="form-grid">',
+        '<div><label>Value</label><input data-key="value" value="' + ((item && item.value) || '') + '"></div>',
+        '<div><label>Label</label><input data-key="label" value="' + ((item && item.label) || '') + '"></div>',
+        '</div>'
+      ].join('');
+      wrap.querySelector('[data-remove]').addEventListener('click', function () { wrap.remove(); });
+      return wrap;
+    }
+
+    function readList(containerId) {
+      var container = byId(containerId);
+      if (!container) return [];
+      return Array.from(container.children).map(function (item) {
+        var result = {};
+        item.querySelectorAll('[data-key]').forEach(function (field) {
+          var key = field.getAttribute('data-key');
+          result[key] = field.type === 'checkbox' ? !!field.checked : field.value;
+        });
+        return result;
+      });
+    }
+
+    function renderList(containerId, items, factory) {
+      var container = byId(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      (items || []).forEach(function (item, index) {
+        container.appendChild(factory(item, index));
+      });
+    }
+
+    function hydrateForm() {
+      setValue('heroBadgeText', state.hero.badgeText);
+      setValue('heroBackgroundImage', state.hero.backgroundImage || state.hero.image);
+      setValue('heroSubtitle', state.hero.subtitle);
+      setValue('heroPrimaryButtonText', state.hero.primaryButtonText);
+      setValue('heroPrimaryButtonLink', state.hero.primaryButtonLink);
+      setValue('heroSecondaryButtonText', state.hero.secondaryButtonText);
+      setValue('heroSecondaryButtonLink', state.hero.secondaryButtonLink);
+      renderList('typewriterList', state.hero.typewriterQuotes || [], createTypewriterItem);
+      renderList('heroStatsList', (state.hero.stats || []).length ? state.hero.stats : [{}, {}, {}, {}], createStatItem);
+
+      setValue('aboutTag', state.about.tag);
+      setValue('aboutYear', state.about.year);
+      setValue('aboutHeading', state.about.heading);
+      setValue('aboutImage', state.about.image);
+      setValue('aboutBadgeValue', state.about.badgeValue);
+      setValue('aboutBadgeLabel', state.about.badgeLabel);
+      setValue('aboutParagraph1', state.about.paragraph1);
+      setValue('aboutParagraph2', state.about.paragraph2);
+      renderList('aboutFeaturesList', state.about.features || [], createFeatureItem);
+
+      setValue('whyUsTitle', state.whyUs.title);
+      setValue('whyUsSubtitle', state.whyUs.subtitle);
+      renderList('whyUsCardsList', state.whyUs.cards || [], createWhyUsItem);
+
+      setValue('galleryTag', state.gallery.tag);
+      setValue('galleryHeading', state.gallery.heading);
+      setValue('gallerySubtitle', state.gallery.subtitle);
+      setValue('galleryHint', state.gallery.hint);
+      renderList('galleryCardsList', state.gallery.cards || [], createGalleryCardItem);
+      renderList('galleryCountersList', state.gallery.counters || [], createGalleryCounterItem);
+
+      setChecked('ctaVisible', state.cta.visible !== false);
+      setValue('ctaHeadline', state.cta.headline);
+      setValue('ctaSubtext', state.cta.subtext);
+      setValue('ctaPrimaryButtonText', state.cta.primaryButtonText);
+      setValue('ctaPrimaryButtonLink', state.cta.primaryButtonLink);
+      setValue('ctaSecondaryButtonText', state.cta.secondaryButtonText);
+      setValue('ctaSecondaryButtonLink', state.cta.secondaryButtonLink);
+
+      setChecked('contactEnableForm', state.contact.enableForm !== false);
+      setValue('contactLeftTag', state.contact.leftTag);
+      setValue('contactHeading', state.contact.heading);
+      setValue('contactIntro', state.contact.intro);
+      setValue('contactAddress', state.contact.address);
+      setValue('contactPhones', Array.isArray(state.contact.phones) ? state.contact.phones.join(', ') : (state.contact.phones || ''));
+      setValue('contactEmails', Array.isArray(state.contact.emails) ? state.contact.emails.join(', ') : (state.contact.emails || ''));
+      setValue('contactOfficeHours', state.contact.officeHours);
+      setValue('contactSundayHours', state.contact.sundayHours);
+      setValue('contactFormTitle', state.contact.formTitle);
+      setValue('contactFormSubtitle', state.contact.formSubtitle);
+    }
+
+    function collectState() {
+      return {
+        hero: {
+          badgeText: value('heroBadgeText').trim(),
+          backgroundImage: value('heroBackgroundImage').trim(),
+          subtitle: value('heroSubtitle').trim(),
+          primaryButtonText: value('heroPrimaryButtonText').trim(),
+          primaryButtonLink: value('heroPrimaryButtonLink').trim(),
+          secondaryButtonText: value('heroSecondaryButtonText').trim(),
+          secondaryButtonLink: value('heroSecondaryButtonLink').trim(),
+          typewriterQuotes: readList('typewriterList').filter(function (item) {
+            return (item.text || item.em || item.suffix || '').trim();
+          }),
+          stats: readList('heroStatsList')
+        },
+        about: {
+          tag: value('aboutTag').trim(),
+          year: value('aboutYear').trim(),
+          heading: value('aboutHeading').trim(),
+          image: value('aboutImage').trim(),
+          badgeValue: value('aboutBadgeValue').trim(),
+          badgeLabel: value('aboutBadgeLabel').trim(),
+          paragraph1: value('aboutParagraph1').trim(),
+          paragraph2: value('aboutParagraph2').trim(),
+          features: readList('aboutFeaturesList').filter(function (item) { return item.text; })
+        },
+        whyUs: {
+          title: value('whyUsTitle').trim(),
+          subtitle: value('whyUsSubtitle').trim(),
+          cards: readList('whyUsCardsList').filter(function (item) { return item.title || item.description; })
+        },
+        gallery: {
+          tag: value('galleryTag').trim(),
+          heading: value('galleryHeading').trim(),
+          subtitle: value('gallerySubtitle').trim(),
+          hint: value('galleryHint').trim(),
+          cards: readList('galleryCardsList').filter(function (item) { return item.title || item.image; }),
+          counters: readList('galleryCountersList').filter(function (item) { return item.value || item.label; })
+        },
+        cta: {
+          visible: checked('ctaVisible'),
+          headline: value('ctaHeadline').trim(),
+          subtext: value('ctaSubtext').trim(),
+          primaryButtonText: value('ctaPrimaryButtonText').trim(),
+          primaryButtonLink: value('ctaPrimaryButtonLink').trim(),
+          secondaryButtonText: value('ctaSecondaryButtonText').trim(),
+          secondaryButtonLink: value('ctaSecondaryButtonLink').trim()
+        },
+        contact: {
+          enableForm: checked('contactEnableForm'),
+          leftTag: value('contactLeftTag').trim(),
+          heading: value('contactHeading').trim(),
+          intro: value('contactIntro').trim(),
+          address: value('contactAddress').trim(),
+          phones: value('contactPhones').split(',').map(function (item) { return item.trim(); }).filter(Boolean),
+          emails: value('contactEmails').split(',').map(function (item) { return item.trim(); }).filter(Boolean),
+          officeHours: value('contactOfficeHours').trim(),
+          sundayHours: value('contactSundayHours').trim(),
+          formTitle: value('contactFormTitle').trim(),
+          formSubtitle: value('contactFormSubtitle').trim()
+        }
+      };
+    }
+
+    async function fetchIndexPage() {
+      var response = await fetch('/api/index-page', { headers: window.apiHeaders ? window.apiHeaders({}) : {} });
+      var payload = await parseJsonSafe(response);
+      if (!response.ok || !payload || !payload.sections) {
+        throw new Error((payload && payload.error) || 'Failed to load index page content');
+      }
+      return payload;
+    }
+
+    async function saveAllSections() {
+      var nextState = collectState();
+      var response = await fetch('/api/index-page', {
+        method: 'PUT',
+        headers: window.apiHeaders ? window.apiHeaders({ 'Content-Type': 'application/json' }) : { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sections: nextState })
+      });
+      var payload = await parseJsonSafe(response);
+      if (!response.ok || !payload || !payload.sections) {
+        throw new Error((payload && payload.error) || 'Failed to save index page');
+      }
+      state = payload.sections;
+      hydrateForm();
+      return payload;
+    }
+
+    async function saveSingleSection(sectionName) {
+      var nextState = collectState();
+      var response = await fetch('/api/index-page/' + encodeURIComponent(sectionName), {
+        method: 'PUT',
+        headers: window.apiHeaders ? window.apiHeaders({ 'Content-Type': 'application/json' }) : { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: nextState[sectionName] || {} })
+      });
+      var payload = await parseJsonSafe(response);
+      if (!response.ok || !payload || !payload.data) {
+        throw new Error((payload && payload.error) || ('Failed to save ' + sectionName));
+      }
+      state[sectionName] = payload.data;
+      hydrateForm();
+    }
+
+    function bindEvents() {
+      byId('reloadBtn').addEventListener('click', async function () {
+        try {
+          setEditorState({ busy: true });
+          setStatus('Reloading dedicated homepage editor…');
+          var payload = await fetchIndexPage();
+          state = payload.sections || state;
+          hydrateForm();
+          setEditorState({ busy: false, ready: true });
+          setStatus('Dedicated homepage editor reloaded.', 'ok');
+        } catch (error) {
+          setEditorState({ busy: false, ready: false });
+          setStatus(friendlyError(error, 'Failed to reload homepage editor'), 'err');
+        }
+      });
+
+      byId('saveAllBtn').addEventListener('click', async function () {
+        try {
+          setEditorState({ busy: true });
+          setStatus('Saving all homepage sections…');
+          await saveAllSections();
+          setEditorState({ busy: false, ready: true });
+          setStatus('All homepage sections saved through /api/index-page.', 'ok');
+        } catch (error) {
+          setEditorState({ busy: false });
+          setStatus(friendlyError(error, 'Failed to save homepage sections'), 'err');
+        }
+      });
+
+      document.querySelectorAll('[data-save-section]').forEach(function (button) {
+        button.addEventListener('click', async function () {
+          var sectionName = button.getAttribute('data-save-section');
+          try {
+            setEditorState({ busy: true });
+            setStatus('Saving ' + sectionName + '…');
+            await saveSingleSection(sectionName);
+            setEditorState({ busy: false, ready: true });
+            setStatus(sectionName + ' saved.', 'ok');
+          } catch (error) {
+            setEditorState({ busy: false });
+            setStatus(friendlyError(error, 'Failed to save ' + sectionName), 'err');
+          }
+        });
+      });
+
+      byId('addTypewriterBtn').addEventListener('click', function () {
+        byId('typewriterList').appendChild(createTypewriterItem({}, byId('typewriterList').children.length));
+      });
+      byId('addFeatureBtn').addEventListener('click', function () {
+        byId('aboutFeaturesList').appendChild(createFeatureItem({}));
+      });
+      byId('addWhyUsBtn').addEventListener('click', function () {
+        byId('whyUsCardsList').appendChild(createWhyUsItem({}, byId('whyUsCardsList').children.length));
+      });
+      byId('addGalleryCardBtn').addEventListener('click', function () {
+        byId('galleryCardsList').appendChild(createGalleryCardItem({}, byId('galleryCardsList').children.length));
+      });
+      byId('addGalleryCounterBtn').addEventListener('click', function () {
+        byId('galleryCountersList').appendChild(createGalleryCounterItem({}, byId('galleryCountersList').children.length));
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      setEditorState({ ready: false, busy: false });
+      bindEvents();
+      try {
+        setEditorState({ busy: true });
+        var payload = await fetchIndexPage();
+        state = payload.sections || state;
+        hydrateForm();
+        setEditorState({ busy: false, ready: true });
+        setStatus('Dedicated homepage editor is ready.', 'ok');
+      } catch (error) {
+        setEditorState({ busy: false, ready: false });
+        setStatus(friendlyError(error, 'Failed to load homepage editor'), 'err');
+      }
+    });
+  </script>
+</body>
+</html>

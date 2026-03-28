@@ -333,21 +333,21 @@
 <section class="page-content">
   <div class="container">
     <div class="content-card">
-      <h2>Manager Speaks</h2>
+      <h2 id="managerHeadingDisplay">Manager Speaks</h2>
       <div class="message-layout">
         <div class="message-photo-col">
-          <img class="message-photo" 
+          <img class="message-photo" id="managerPhotoDisplay"
                src="../IMGS/manager.jpeg" 
                alt="Rev. Fr. Francis Crasta"
                onerror="this.style.display='none'; document.getElementById('mgr-placeholder').style.display='flex';" />
-          <div class="message-photo-placeholder" id="mgr-placeholder" style="display:none">⛪<span>Rev. Fr. Francis Crasta</span></div>
+          <div class="message-photo-placeholder" id="mgr-placeholder" style="display:none"><span>Rev. Fr. Francis Crasta</span></div>
           <div class="message-name-card">
-            <div class="person-name">Rev. Fr. Francis Crasta</div>
-            <div class="person-title">Manager / Correspondent</div>
-            <div class="person-org">Loretto Central School, Loretto</div>
+            <div class="person-name" id="managerNameDisplay">Rev. Fr. Francis Crasta</div>
+            <div class="person-title" id="managerTitleDisplay">Manager / Correspondent</div>
+            <div class="person-org" id="managerOrgDisplay">Loretto Central School, Loretto</div>
           </div>
         </div>
-        <div class="message-text">
+        <div class="message-text" id="managerTextDisplay">
           <span class="quote-mark">"</span>
           <p>Dear Students, Parents, Teachers, Management Board Members, and Visitors,</p>
           <p>Welcome to the official website of Loretto Central School (formerly Loretto English Medium High School — LEMHS). We are thrilled to have you explore our digital platform, designed to provide you with comprehensive insights into our school's vibrant community, academic programs, extracurricular activities, and much more.</p>
@@ -357,7 +357,7 @@
           <p>On this wall you can also find essential information regarding our admissions process, enrollment requirements, and upcoming open house events and various competitions for prospective students. Parents can access valuable resources and tools designed to support parents/guardians in their journey as partners in their child's education, including notifications, communication platforms, academic calendars, and parent-teacher association information.</p>
           <p>As the school is now affiliated to the CBSE curriculum, we are committed to giving the best of facilities and creating an environment which will enhance each and every student to give their best under the able guidance of Principal Fr. Jason Vijay Monis and our veteran teaching staff.</p>
           <p>May God, the Source of Wisdom and Knowledge, guide us all.</p>
-          <div class="signature">
+          <div class="signature" id="managerSignatureDisplay">
             <strong>Fr. Francis Crasta (M.A, MSW(HR))</strong>
             <span>Correspondent / Manager, Loretto Central School</span>
           </div>
@@ -369,5 +369,87 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function () {
+      var DEFAULT_MANAGER = {
+        heading: 'Manager Speaks',
+        subHeading: 'A message from our School Manager',
+        body: 'Dear Students, Parents, Teachers, Management Board Members, and Visitors,\n\nWelcome to the official website of Loretto Central School (formerly Loretto English Medium High School — LEMHS). We are thrilled to have you explore our digital platform, designed to provide you with comprehensive insights into our school\'s vibrant community, academic programs, extracurricular activities, and much more.\n\nAt LEMHS, we believe in fostering a nurturing environment where every individual is felt being loved and taken care of. Every individual is encouraged to thrive academically, socially, emotionally and develop the innate potentials at the best of one\'s ability. Our website serves as a gateway to our school\'s ethos, values, and commitment to excellence in education.\n\nThrough this digital window one can learn about our school\'s rich legacy, history, mission, and vision, as well as our dedicated faculty and staff who are passionate about guiding and inspiring our students. You can also explore our diverse range of academic programs, curriculum offerings, and innovative teaching methodologies aimed at nurturing and fostering the dreams and aspirations of young minds.\n\nThrough this digital space you can dive into the vibrant tapestry of student life in our premises, featuring extracurricular activities, clubs, sports teams, and community service initiatives that enrich the overall student experience.\n\nOn this wall you can also find essential information regarding our admissions process, enrollment requirements, and upcoming open house events and various competitions for prospective students. Parents can access valuable resources and tools designed to support parents/guardians in their journey as partners in their child\'s education, including notifications, communication platforms, academic calendars, and parent-teacher association information.\n\nAs the school is now affiliated to the CBSE curriculum, we are committed to giving the best of facilities and creating an environment which will enhance each and every student to give their best under the able guidance of Principal Fr. Jason Vijay Monis and our veteran teaching staff.\n\nMay God, the Source of Wisdom and Knowledge, guide us all.',
+        signature: 'Fr. Francis Crasta (M.A, MSW(HR))',
+        name: 'Rev. Fr. Francis Crasta',
+        title: 'Manager / Correspondent',
+        organization: 'Loretto Central School, Loretto',
+        photo: '../IMGS/manager.jpeg'
+      };
+
+      function applyManagerData(data) {
+        var source = Object.assign({}, DEFAULT_MANAGER, data || {});
+        var heading = document.getElementById('managerHeadingDisplay');
+        var photo = document.getElementById('managerPhotoDisplay');
+        var placeholder = document.getElementById('mgr-placeholder');
+        var name = document.getElementById('managerNameDisplay');
+        var title = document.getElementById('managerTitleDisplay');
+        var org = document.getElementById('managerOrgDisplay');
+        var text = document.getElementById('managerTextDisplay');
+        var signature = document.getElementById('managerSignatureDisplay');
+
+        if (heading) heading.textContent = source.heading || DEFAULT_MANAGER.heading;
+        if (photo && source.photo) {
+          photo.src = source.photo;
+          photo.style.display = 'block';
+          if (placeholder) placeholder.style.display = 'none';
+        }
+        if (name) name.textContent = source.name || '';
+        if (title) title.textContent = source.title || '';
+        if (org) org.textContent = source.organization || '';
+        if (text && source.body) {
+          var parts = String(source.body).split(/\n\s*\n/).filter(Boolean);
+          var signatureHtml = signature ? signature.outerHTML : '';
+          text.innerHTML = '<span class="quote-mark">"</span>' + parts.map(function (paragraph) {
+            return '<p>' + paragraph + '</p>';
+          }).join('') + signatureHtml;
+        }
+        var newSignature = document.getElementById('managerSignatureDisplay');
+        if (newSignature) {
+          newSignature.innerHTML = '<strong>' + (source.signature || '') + '</strong><span>' + ((source.title || '') + (source.organization ? ', ' + source.organization : '')) + '</span>';
+        }
+      }
+
+      function resolveManagerApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [
+          localStorage.getItem('loretto_api_base') || '',
+          defaultRemoteApi,
+          window.location.origin + '/api',
+          'http://localhost:3000/api',
+          'http://127.0.0.1:3000/api',
+          'http://localhost:8000/api',
+          'http://127.0.0.1:8000/api'
+        ].filter(function (value, index, list) {
+          return value && list.indexOf(value) === index;
+        });
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health', { method: 'GET' })
+              .then(function (res) { return res.ok ? res.json() : null; })
+              .then(function (data) { return data && data.service === 'loretto-backend' ? base : null; })
+              .catch(function () { return null; });
+          });
+        });
+        return attempt.then(function (found) { return found || defaultRemoteApi; });
+      }
+
+      resolveManagerApiBase()
+        .then(function (base) { return fetch(base + '/about/manager-speaks'); })
+        .then(function (res) { return res.json(); })
+        .then(function (item) {
+          var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+          if (Object.keys(data).length) applyManagerData(data);
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>

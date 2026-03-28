@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teachers Information | Mandatory Disclosure | Loretto Central School</title>
+  <title>Mandatory Disclosure | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -257,11 +257,11 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Teachers Information</h1>
+      <h1 id="disclosurePageTitle">Mandatory Disclosure</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a><span>›</span>
         <span>Mandatory Disclosure</span><span>›</span>
-        <span>Teachers Information</span>
+        <span id="disclosureBreadcrumbTitle">Loading...</span>
       </div>
     </div>
   </div>
@@ -270,74 +270,13 @@
 <!-- CONTENT -->
 <section class="page-content">
   <div class="container">
-    <div class="content-card">
-
-      <h2>Teachers Information</h2>
-      <p>As required under CBSE Mandatory Disclosure norms, the following information about the teaching faculty of Loretto Central School is published here. The school maintains a qualified and experienced team of educators dedicated to the holistic development of every student.</p>
-      <div class="highlight-box">
-        <p>All teachers at Loretto Central School hold the required academic and professional qualifications as per CBSE norms. Individual teaching records are maintained and available for inspection at the school office.</p>
-      </div>
-      <h3>Teaching Staff — Summary</h3>
-      <table class="info-table">
-        <thead><tr><th>Particulars</th><th>Details</th></tr></thead>
-        <tbody>
-          <tr><td>Total Teaching Staff</td><td>To be updated</td></tr>
-          <tr><td>PGT (Post Graduate Teachers)</td><td>To be updated</td></tr>
-          <tr><td>TGT (Trained Graduate Teachers)</td><td>To be updated</td></tr>
-          <tr><td>PRT (Primary Teachers)</td><td>To be updated</td></tr>
-          <tr><td>Special Educators / Others</td><td>To be updated</td></tr>
-          <tr><td>Non-Teaching Staff</td><td>To be updated</td></tr>
-          <tr><td>Student–Teacher Ratio</td><td>As per CBSE norms (approx. 1:30)</td></tr>
-        </tbody>
-      </table>
-      <h3>Staff Qualifications Profile</h3>
-      <table class="info-table">
-        <thead><tr><th>Qualification</th><th>No. of Teaching Staff</th></tr></thead>
-        <tbody>
-          <tr><td>Post Graduate (M.A. / M.Sc. / M.Com. etc.)</td><td>To be updated</td></tr>
-          <tr><td>Graduate (B.A. / B.Sc. / B.Com. etc.)</td><td>To be updated</td></tr>
-          <tr><td>B.Ed. / M.Ed.</td><td>To be updated</td></tr>
-          <tr><td>D.Ed. / D.El.Ed.</td><td>To be updated</td></tr>
-          <tr><td>Other / Additional Qualifications</td><td>To be updated</td></tr>
-        </tbody>
-      </table>
-      <h3>Subject-wise Faculty Allocation</h3>
-      <table class="info-table">
-        <thead><tr><th>Subject / Department</th><th>No. of Teachers</th><th>Qualification Level</th></tr></thead>
-        <tbody>
-          <tr><td>English</td><td>To be updated</td><td>PGT / TGT</td></tr>
-          <tr><td>Hindi</td><td>To be updated</td><td>TGT</td></tr>
-          <tr><td>Mathematics</td><td>To be updated</td><td>PGT / TGT</td></tr>
-          <tr><td>Science</td><td>To be updated</td><td>PGT / TGT</td></tr>
-          <tr><td>Social Science</td><td>To be updated</td><td>TGT</td></tr>
-          <tr><td>Computer Science</td><td>To be updated</td><td>PGT / TGT</td></tr>
-          <tr><td>Physical Education</td><td>To be updated</td><td>Specialised</td></tr>
-          <tr><td>Art &amp; Craft / Music</td><td>To be updated</td><td>Specialised</td></tr>
-          <tr><td>Pre-Primary (LKG / UKG)</td><td>To be updated</td><td>Trained</td></tr>
-        </tbody>
-      </table>
-      <p>For a complete list of all faculty members with their individual qualifications and experience, please contact the school office.</p>
-
-      <!-- PDF-DOWNLOAD-INJECTED -->
-      <div class="doc-display" style="margin-top:32px;">
-        <div class="doc-icon">📄</div>
-        <h3>Official Document</h3>
-        <p>This document is available on the school's official website and CBSE portal.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;">
-          <a href="https://school.edu/teachers-information/" target="_blank" class="btn-doc">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M14 9v4a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 1h6v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="1" x2="8" y2="7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            View on Official Website
-          </a>
-        </div>
-        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;">
-          Source: <a href="https://school.edu/teachers-information/" target="_blank" style="color:var(--gold);font-weight:600;">school.edu</a>
-        </p>
-      </div>
-    </div>
+    <div class="content-card" id="mandatoryDisclosureContent"></div>
   </div>
 </section>
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script src="/components/MandatoryDisclosurePage.js"></script>
 </body>
 </html>

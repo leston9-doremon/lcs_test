@@ -408,13 +408,13 @@
   <div class="container">
     <div class="content-card">
 
-      <h2>School Calendar</h2>
-      <p>The Academic Calendar for Loretto Central School is published at the start of each academic year. It outlines all key academic events, examinations, holidays, and important school activities.</p>
-      <div class="highlight-box"><p>The academic year runs from <strong>April to March</strong> as per CBSE norms, with a minimum of <strong>220 working days</strong>. Specific dates may be revised and communicated through school circulars.</p></div>
-      <h3>Key Academic Events (2024–25)</h3>
+      <h2 id="calendarPageTitle">School Calendar</h2>
+      <p id="calendarIntro">The Academic Calendar for Loretto Central School is published at the start of each academic year. It outlines all key academic events, examinations, holidays, and important school activities.</p>
+      <div class="highlight-box"><p id="calendarHighlight">The academic year runs from <strong>April to March</strong> as per CBSE norms, with a minimum of <strong>220 working days</strong>. Specific dates may be revised and communicated through school circulars.</p></div>
+      <h3 id="calendarEventsHeading">Key Academic Events (2024–25)</h3>
       <table class="timing-table">
         <thead><tr><th>Month</th><th>Event / Activity</th><th>Remarks</th></tr></thead>
-        <tbody>
+        <tbody id="calendarEventsBody">
           <tr><td>April</td><td>New Academic Year Begins</td><td>All classes</td></tr>
           <tr><td>May</td><td>Parent-Teacher Meeting (PTM)</td><td>First term orientation</td></tr>
           <tr><td>June</td><td>Periodic Test – I (PT-1)</td><td>Classes I–X</td></tr>
@@ -430,7 +430,7 @@
         </tbody>
       </table>
       <h3>School Holidays</h3>
-      <ul>
+      <ul id="calendarHolidaysList">
         <li>Republic Day — 26 January</li>
         <li>Good Friday</li>
         <li>Id-ul-Fitr</li>
@@ -447,5 +447,57 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script>
+    (function initCalendarPage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      window.addEventListener('DOMContentLoaded', async function() {
+        try {
+          var payload = await loadContentBlock('school-info.calendar');
+          var data = payload && payload.data ? payload.data : {};
+          if (!data || typeof data !== 'object') return;
+
+          if (data.intro) {
+            var intro = document.getElementById('calendarIntro');
+            if (intro) intro.textContent = data.intro;
+          }
+          if (data.highlightBox) {
+            var highlight = document.getElementById('calendarHighlight');
+            if (highlight) highlight.textContent = data.highlightBox;
+          }
+          if (data.yearLabel) {
+            var heading = document.getElementById('calendarEventsHeading');
+            if (heading) heading.textContent = 'Key Academic Events (' + data.yearLabel + ')';
+          }
+          if (Array.isArray(data.events) && data.events.length) {
+            var tbody = document.getElementById('calendarEventsBody');
+            if (tbody) {
+              tbody.innerHTML = data.events.map(function(item) {
+                return '<tr><td>' + escapeHtml(item.month || '') + '</td><td>' + escapeHtml(item.event || '') + '</td><td>' + escapeHtml(item.remarks || '') + '</td></tr>';
+              }).join('');
+            }
+          }
+          if (Array.isArray(data.holidays) && data.holidays.length) {
+            var list = document.getElementById('calendarHolidaysList');
+            if (list) {
+              list.innerHTML = data.holidays.map(function(item) {
+                return '<li>' + escapeHtml(item) + '</li>';
+              }).join('');
+            }
+          }
+        } catch (e) {
+          console.error('Calendar content load failed', e);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

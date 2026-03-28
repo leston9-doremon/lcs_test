@@ -393,7 +393,7 @@
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
       text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
     }
-    .acad-hero-text h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .acad-hero-text h2 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 800; color: #fff !important; margin-bottom: 10px; }
     .acad-hero-text h2::after { display: none; }
     .acad-hero-text p { font-size: 0.97rem; color: rgba(255,255,255,0.72); line-height: 1.7; margin: 0; max-width: 580px; }
 
@@ -547,7 +547,7 @@
 
       <div class="acad-hero">
         <div class="acad-hero-inner">
-          <div class="acad-hero-icon">📋</div>
+          <div class="acad-hero-icon"></div>
           <div class="acad-hero-text">
             <span class="acad-hero-badge">CBSE Board · Official Notices</span>
             <h2>CBSE Circulars</h2>
@@ -557,72 +557,18 @@
       </div>
 
       <div class="acad-tiles">
-        <div class="acad-tile"><div class="acad-tile-icon">🏛️</div><div class="acad-tile-label">Board</div><div class="acad-tile-value">CBSE, New Delhi</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">🔢</div><div class="acad-tile-label">Affiliation No.</div><div class="acad-tile-value">831368</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">📅</div><div class="acad-tile-label">Valid Until</div><div class="acad-tile-value">31 March 2029</div></div>
-        <div class="acad-tile"><div class="acad-tile-icon">🌐</div><div class="acad-tile-label">Official Site</div><div class="acad-tile-value">cbse.gov.in</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Board</div><div class="acad-tile-value">CBSE, New Delhi</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Affiliation No.</div><div class="acad-tile-value">831368</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Valid Until</div><div class="acad-tile-value">31 March 2029</div></div>
+        <div class="acad-tile"><div class="acad-tile-icon"></div><div class="acad-tile-label">Official Site</div><div class="acad-tile-value">cbse.gov.in</div></div>
       </div>
 
       <h2>Recent CBSE Circulars &amp; Notifications</h2>
 
-      <div class="circular-list">
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">CBSE Class X Board Examination Schedule 2024–25</div>
-            <div class="circ-meta">Issued by CBSE, New Delhi · Academic Year 2024–25</div>
-          </div>
-          <span class="circ-badge circ-new">NEW</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">Assessment &amp; Evaluation Policy — Continuous &amp; Comprehensive Evaluation (CCE)</div>
-            <div class="circ-meta">CBSE Academic Circular · Classes I–X</div>
-          </div>
-          <span class="circ-badge">ACADEMIC</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">National Education Policy (NEP) 2020 — Implementation Guidelines for Schools</div>
-            <div class="circ-meta">CBSE Policy Circular · All Affiliated Schools</div>
-          </div>
-          <span class="circ-badge">POLICY</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">CBSE Affiliation Bye-Laws &amp; Compliance Requirements 2024</div>
-            <div class="circ-meta">Affiliation Circular · All Affiliated Schools</div>
-          </div>
-          <span class="circ-badge">COMPLIANCE</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">Mandatory Registration of Students for Class X Board Examination 2024–25</div>
-            <div class="circ-meta">CBSE Registration Circular · Class X Students</div>
-          </div>
-          <span class="circ-badge">EXAM</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">CBSE Circular on Child Safety, Wellness &amp; Anti-Bullying Policy</div>
-            <div class="circ-meta">CBSE Child Welfare Circular · All Schools</div>
-          </div>
-          <span class="circ-badge">WELFARE</span>
-        </a>
-        <a href="https://cbse.gov.in" target="_blank" class="circular-item">
-          <div class="circ-icon">📄</div>
-          <div class="circ-body">
-            <div class="circ-title">Revised CBSE Syllabus &amp; Curriculum Framework for 2024–25</div>
-            <div class="circ-meta">Academic Circular · Classes I–X</div>
-          </div>
-          <span class="circ-badge">SYLLABUS</span>
-        </a>
+      <div id="cbse-circulars-loading" style="text-align:center;padding:24px 0;font-family:'Nunito',sans-serif;color:#5a6e6e;">
+        Loading circulars...
       </div>
+      <div class="circular-list" id="cbse-circulars-list" style="display:none;"></div>
 
       <h3>CBSE Official Resources</h3>
       <ul>
@@ -639,5 +585,90 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script>
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizeDocumentUrl(value) {
+      var url = String(value || '').trim();
+      if (!url) return '#';
+      if (/^(https?:)?\/\//i.test(url)) return url;
+      return 'https://' + url.replace(/^\/+/, '');
+    }
+
+    function getOpenableDocumentUrl(value) {
+      var url = normalizeDocumentUrl(value);
+      if (url === '#') return url;
+      return 'https://docs.google.com/gview?embedded=1&url=' + encodeURIComponent(url);
+    }
+
+    function renderCbseCirculars(items) {
+      var loading = document.getElementById('cbse-circulars-loading');
+      var list = document.getElementById('cbse-circulars-list');
+      if (!list) return;
+
+      if (!items.length) {
+        if (loading) {
+          loading.textContent = 'No CBSE circulars available right now.';
+          loading.style.display = 'block';
+        }
+        list.style.display = 'none';
+        return;
+      }
+
+      if (loading) loading.style.display = 'none';
+      list.style.display = 'block';
+      list.innerHTML = items.map(function (item, index) {
+        var sourceUrl = normalizeDocumentUrl(item.url || (item.meta && item.meta.url) || '');
+        var docUrl = getOpenableDocumentUrl(sourceUrl);
+        var badge = escapeHtml(
+          item.type ||
+          (item.meta && item.meta.badge) ||
+          (index === 0 ? 'NEW' : 'CBSE')
+        );
+        var metaParts = [];
+        var source = item.description || (item.meta && item.meta.source) || 'CBSE, New Delhi';
+        if (source) metaParts.push(source);
+        if (item.date) metaParts.push(formatDisplayDate(item.date));
+
+        return ''
+          + '<a href="' + escapeHtml(docUrl) + '" data-source-url="' + escapeHtml(sourceUrl) + '" target="_blank" rel="noopener noreferrer" class="circular-item" aria-label="Open circular PDF">'
+          +   '<div class="circ-icon"></div>'
+          +   '<div class="circ-body">'
+          +     '<div class="circ-title">' + escapeHtml(item.title || item.name || 'Untitled Circular') + '</div>'
+          +     '<div class="circ-meta">' + escapeHtml(metaParts.join(' · ')) + '</div>'
+          +   '</div>'
+          +   '<span class="circ-badge' + (index === 0 ? ' circ-new' : '') + '">' + badge + '</span>'
+          + '</a>';
+      }).join('');
+    }
+
+    async function loadCbseCircularsSection() {
+      var docs = await loadDocumentsData();
+      var filtered = Array.isArray(docs)
+        ? docs
+            .filter(function (item) {
+              return item && item.category === 'cbse-circular' && item.visible !== false;
+            })
+            .sort(function (a, b) {
+              var aOrder = Number(a.order || 0);
+              var bOrder = Number(b.order || 0);
+              if (aOrder !== bOrder) return aOrder - bOrder;
+              return new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0);
+            })
+        : [];
+
+      renderCbseCirculars(filtered);
+    }
+
+    window.addEventListener('DOMContentLoaded', loadCbseCircularsSection);
+  </script>
 </body>
 </html>

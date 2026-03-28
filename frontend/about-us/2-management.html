@@ -351,8 +351,9 @@
       const GROUPS = ['Diocese Leadership', 'Local Management', 'PTA Executive', 'Finance Committee'];
       
       const mgmtData = await loadManagementData();
+      const visibleManagement = (Array.isArray(mgmtData) ? mgmtData : []).filter(item => item.visible !== false);
 
-      if (!mgmtData || mgmtData.length === 0) {
+      if (!visibleManagement.length) {
         if (loading) loading.textContent = 'Management information coming soon.';
         return;
       }
@@ -362,7 +363,7 @@
       content.innerHTML = '';
 
       GROUPS.forEach(group => {
-        const groupMembers = mgmtData.filter(m => m.group === group);
+        const groupMembers = visibleManagement.filter(m => m.group === group);
         if (groupMembers.length === 0) return;
 
         content.innerHTML += `<h3 class="section-title">${group}</h3><div class="mgmt-cards">

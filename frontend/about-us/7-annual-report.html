@@ -331,41 +331,7 @@
       <h2>Annual Report</h2>
       <p>The Annual Report of Loretto Central School provides a comprehensive overview of the school's achievements, academic performance, extracurricular milestones, and financial summary for each academic year. We are committed to transparency and accountability to all our stakeholders.</p>
 
-      <div class="report-grid">
-        <div class="report-card">
-          <div class="report-card-top">
-            <div class="year-icon">📄</div>
-            <div class="year">2024–25</div>
-            <div class="year-label">Academic Year</div>
-          </div>
-          <div class="report-card-body">
-            <p>Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2024–25.</p>
-            <a href="https://school.edu/wp-content/uploads/2024/05/report.docx" class="report-download-btn" download target="_blank">📥 Download Report</a>
-          </div>
-        </div>
-        <div class="report-card">
-          <div class="report-card-top">
-            <div class="year-icon">📄</div>
-            <div class="year">2023–24</div>
-            <div class="year-label">Academic Year</div>
-          </div>
-          <div class="report-card-body">
-            <p>Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2023–24.</p>
-            <a href="https://school.edu/wp-content/uploads/2024/05/report.docx" class="report-download-btn" download target="_blank">📥 Download Report</a>
-          </div>
-        </div>
-        <div class="report-card">
-          <div class="report-card-top">
-            <div class="year-icon">📄</div>
-            <div class="year">2022–23</div>
-            <div class="year-label">Academic Year</div>
-          </div>
-          <div class="report-card-body">
-            <p>Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2022–23.</p>
-            <a href="https://school.edu/wp-content/uploads/2024/05/report.docx" class="report-download-btn" download target="_blank">📥 Download Report</a>
-          </div>
-        </div>
-      </div>
+      <div class="report-grid" id="annualReportGrid"></div>
 
       
   </div>
@@ -373,5 +339,160 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function initAnnualReportPage() {
+      var DEFAULT_REPORTS = [
+        {
+          id: 'annual-report-2024-25',
+          year: '2024-25',
+          title: 'Annual Report 2024-25',
+          description: 'Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2024-25.',
+          url: 'https://school.edu/wp-content/uploads/2024/05/report.docx',
+          visible: true,
+          updatedAt: '2024-05-01T00:00:00.000Z'
+        },
+        {
+          id: 'annual-report-2023-24',
+          year: '2023-24',
+          title: 'Annual Report 2023-24',
+          description: 'Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2023-24.',
+          url: 'https://school.edu/wp-content/uploads/2024/05/report.docx',
+          visible: true,
+          updatedAt: '2023-05-01T00:00:00.000Z'
+        },
+        {
+          id: 'annual-report-2022-23',
+          year: '2022-23',
+          title: 'Annual Report 2022-23',
+          description: 'Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year 2022-23.',
+          url: 'https://school.edu/wp-content/uploads/2024/05/report.docx',
+          visible: true,
+          updatedAt: '2022-05-01T00:00:00.000Z'
+        }
+      ];
+
+      function normalizeReports(items) {
+        return (Array.isArray(items) ? items : []).filter(function (item) {
+          return item && item.url && item.visible !== false;
+        }).map(function (item) {
+          return {
+            id: item.id || '',
+            year: item.year || '',
+            title: item.title || ('Annual Report ' + (item.year || '')),
+            description: item.description || ('Annual report covering academic performance, events, extracurricular achievements, and institutional milestones for the year ' + (item.year || '') + '.'),
+            url: item.url,
+            updatedAt: item.updatedAt || item.createdAt || ''
+          };
+        });
+      }
+
+      function sortReportsNewestFirst(items) {
+        return items.slice().sort(function (a, b) {
+          var aTime = new Date(a.updatedAt || 0).getTime();
+          var bTime = new Date(b.updatedAt || 0).getTime();
+          return bTime - aTime;
+        });
+      }
+
+      function renderReports(items) {
+        var grid = document.getElementById('annualReportGrid');
+        if (!grid) return;
+        if (!items.length) {
+          grid.innerHTML = '<div class="coming-soon-notice" style="grid-column:1 / -1;"><div class="notice-icon"></div><h3>No Reports Yet</h3><p>Annual reports will appear here once they are added from the admin panel.</p></div>';
+          return;
+        }
+        grid.innerHTML = items.map(function (report) {
+          return '<div class="report-card">'
+            + '<div class="report-card-top">'
+            + '<div class="year-icon"></div>'
+            + '<div class="year">' + escapeHtml(report.year) + '</div>'
+            + '<div class="year-label">Academic Year</div>'
+            + '</div>'
+            + '<div class="report-card-body">'
+            + '<p>' + escapeHtml(report.description) + '</p>'
+            + '<a href="' + escapeAttribute(buildReportViewUrl(report.url, report.title || ('annual-report-' + (report.year || 'report')) + '.pdf')) + '" class="report-download-btn" target="_blank" rel="noopener"> View PDF</a>'
+            + '</div>'
+            + '</div>';
+        }).join('');
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function escapeAttribute(value) {
+        return escapeHtml(value);
+      }
+
+      function buildReportViewUrl(url, filename) {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var raw = String(url || '').trim();
+        if (!raw) return '#';
+        if (raw.indexOf('res.cloudinary.com/') === -1) return raw;
+        var proxyBase = window._lorettoAnnualReportApiBase || localStorage.getItem('loretto_api_base') || '';
+        if (!proxyBase || proxyBase.indexOf('http') !== 0 || proxyBase.indexOf(window.location.host) !== -1) {
+          if (window.location.port === '5500' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            proxyBase = 'http://localhost:3000/api';
+          } else {
+            proxyBase = defaultRemoteApi;
+          }
+        }
+        return proxyBase + '/upload/download?url=' + encodeURIComponent(raw) + '&filename=' + encodeURIComponent(filename || 'annual-report.pdf') + '&inline=1';
+      }
+
+      function resolveAnnualReportApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [
+          localStorage.getItem('loretto_api_base') || '',
+          defaultRemoteApi,
+          window.location.origin + '/api',
+          'http://localhost:3000/api',
+          'http://127.0.0.1:3000/api',
+          'http://localhost:8000/api',
+          'http://127.0.0.1:8000/api'
+        ].filter(function (value, index, list) {
+          return value && list.indexOf(value) === index;
+        });
+
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health', { method: 'GET' })
+              .then(function (res) { return res.ok ? res.json() : null; })
+              .then(function (data) {
+                return data && data.service === 'loretto-backend' ? base : null;
+              })
+              .catch(function () { return null; });
+          });
+        });
+
+        return attempt.then(function (found) {
+          return found || defaultRemoteApi;
+        });
+      }
+
+      renderReports(sortReportsNewestFirst(normalizeReports(DEFAULT_REPORTS)));
+
+      resolveAnnualReportApiBase()
+        .then(function (base) {
+          window._lorettoAnnualReportApiBase = base;
+          return fetch(base + '/about/annual-report', { cache: 'no-store' });
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (item) {
+          var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+          var hasSavedReports = Object.prototype.hasOwnProperty.call(data, 'reports');
+          var reports = normalizeReports(hasSavedReports ? data.reports : DEFAULT_REPORTS);
+          renderReports(sortReportsNewestFirst(reports));
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>

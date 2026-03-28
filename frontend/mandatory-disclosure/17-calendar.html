@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calendar | Mandatory Disclosure | Loretto Central School</title>
+  <title>Mandatory Disclosure | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -257,11 +257,11 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Academic Calendar</h1>
+      <h1 id="disclosurePageTitle">Mandatory Disclosure</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a><span>›</span>
         <span>Mandatory Disclosure</span><span>›</span>
-        <span>Academic Calendar</span>
+        <span id="disclosureBreadcrumbTitle">Loading...</span>
       </div>
     </div>
   </div>
@@ -270,51 +270,13 @@
 <!-- CONTENT -->
 <section class="page-content">
   <div class="container">
-    <div class="content-card">
-
-      <h2>Academic Calendar</h2>
-      <p>The academic calendar for Loretto Central School is published here for the information of students, parents, and staff. The calendar is prepared at the beginning of each academic year and is subject to revision based on CBSE / state guidelines.</p>
-      <div class="highlight-box">
-        <p>📅 The academic year runs from <strong>April to March</strong> as per CBSE norms. A minimum of <strong>220 working days</strong> are maintained each year.</p>
-      </div>
-      <h3>Key Academic Events (2024–25)</h3>
-      <table class="info-table">
-        <thead><tr><th>Event / Activity</th><th>Approx. Period</th><th>Remarks</th></tr></thead>
-        <tbody>
-          <tr><td>School Reopening</td><td>First week of June</td><td>After summer vacation</td></tr>
-          <tr><td>Periodic Test – I (PT-1)</td><td>July</td><td>Classes I–X</td></tr>
-          <tr><td>Half-Yearly Examination</td><td>September / October</td><td>Classes I–X</td></tr>
-          <tr><td>Periodic Test – II (PT-2)</td><td>November / December</td><td>Classes I–X</td></tr>
-          <tr><td>Annual Day / School Day</td><td>December / January</td><td>Cultural programme</td></tr>
-          <tr><td>Pre-Board Examination</td><td>January</td><td>Class X</td></tr>
-          <tr><td>Annual Examination</td><td>February / March</td><td>Classes I–IX</td></tr>
-          <tr><td>CBSE Board Examination</td><td>February – March</td><td>Class X (as per CBSE schedule)</td></tr>
-          <tr><td>Summer Vacation</td><td>April – May</td><td>As per school calendar</td></tr>
-        </tbody>
-      </table>
-      <h3>Public Holidays &amp; Special Days</h3>
-      <p>The school observes all national holidays, state government holidays, and significant religious festivals. A detailed holiday list is provided to students and parents at the start of each academic year through the school diary / circular.</p>
-
-      <!-- PDF-DOWNLOAD-INJECTED -->
-      <div class="doc-display" style="margin-top:32px;">
-        <div class="doc-icon">📄</div>
-        <h3>Official Document</h3>
-        <p>This document is available on the school's official website and CBSE portal.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;">
-          <a href="https://school.edu/calandar/" target="_blank" class="btn-doc">
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M14 9v4a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 1h6v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="1" x2="8" y2="7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-            View on Official Website
-          </a>
-        </div>
-        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;">
-          Source: <a href="https://school.edu/calandar/" target="_blank" style="color:var(--gold);font-weight:600;">school.edu</a>
-        </p>
-      </div>
-    </div>
+    <div class="content-card" id="mandatoryDisclosureContent"></div>
   </div>
 </section>
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script src="/shared-data-loader.js"></script>
+  <script src="/components/MandatoryDisclosurePage.js"></script>
 </body>
 </html>

@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academics — Admin | Loretto Central School</title>
+  <script src="/admin/admin-auth.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="/admin/adminfooter.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:#0e6b6b; --navy-dark:#094f4f; --navy-deep:#062f2f;
+      --gold:#c8960c; --gold-light:#e8b020; --gold-pale:#f5e6c0;
+      --white:#ffffff; --bg:#f4f1eb; --bg2:#edeae2;
+      --text:#1a2e2e; --text-muted:#5a6e6e; --border:#ddd6c0;
+      --green:#27ae60; --red:#e74c3c;
+      --sidebar-w:240px; --radius:14px;
+      --shadow:0 4px 24px rgba(9,79,79,.10);
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Nunito',sans-serif; color:var(--text); background:var(--bg); min-height:100vh; overflow-x:hidden; }
+
+    /* ── LAYOUT ── */
+    .shell { display:flex; min-height:calc(100vh - 52px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width:var(--sidebar-w); background:var(--navy-deep);
+      display:flex; flex-direction:column; flex-shrink:0;
+      position:sticky; top:52px; height:calc(100vh - 52px);
+      overflow-y:auto; scrollbar-width:thin;
+      scrollbar-color:rgba(200,150,12,.3) transparent; z-index:100;
+    }
+    .sidebar::-webkit-scrollbar { width:4px; }
+    .sidebar::-webkit-scrollbar-thumb { background:rgba(200,150,12,.3); border-radius:4px; }
+    .sb-brand { padding:20px 16px 16px; border-bottom:1px solid rgba(255,255,255,.07); display:flex; align-items:center; gap:10px; }
+    .sb-icon { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--gold),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; box-shadow:0 3px 10px rgba(200,150,12,.4); }
+    .sb-title { font-family:'Playfair Display',serif; font-size:.84rem; font-weight:700; color:#fff; }
+    .sb-sub { font-size:.57rem; color:var(--gold-light); font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-top:1px; }
+    .sb-sec { font-size:.57rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.28); padding:16px 16px 5px; }
+    .sb-nav { padding:4px 9px; flex:1; }
+    .sb-lnk {
+      display:flex; align-items:center; gap:8px; padding:9px 11px; border-radius:9px;
+      font-size:.8rem; font-weight:600; color:rgba(255,255,255,.58);
+      text-decoration:none; cursor:pointer; transition:all .2s; margin-bottom:2px; position:relative;
+      border:none; background:none; width:100%; text-align:left;
+    }
+    .sb-lnk:hover { background:rgba(255,255,255,.06); color:rgba(255,255,255,.9); }
+    .sb-lnk.active { background:linear-gradient(135deg,rgba(200,150,12,.22),rgba(200,150,12,.12)); color:var(--gold-light); border:1px solid rgba(200,150,12,.3); }
+    .sb-lnk.active::before { content:''; position:absolute; left:0; top:22%; bottom:22%; width:3px; background:var(--gold-light); border-radius:0 3px 3px 0; }
+    .sb-lnk .ic { font-size:.9rem; width:18px; text-align:center; flex-shrink:0; }
+    .sb-lnk .bdg { margin-left:auto; font-size:.56rem; font-weight:800; padding:1px 6px; border-radius:8px; }
+    .sb-lnk .bdg.green { background:var(--green); color:#fff; }
+    .sb-lnk .bdg.gold  { background:var(--gold); color:var(--navy-deep); }
+    .sb-footer { padding:12px 9px 14px; border-top:1px solid rgba(255,255,255,.07); }
+    .sb-user { display:flex; align-items:center; gap:8px; padding:8px 11px; border-radius:9px; background:rgba(255,255,255,.05); }
+    .sb-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-light)); display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:800; color:var(--navy-deep); flex-shrink:0; }
+    .sb-uname { font-size:.74rem; font-weight:700; color:#fff; }
+    .sb-urole { font-size:.58rem; color:rgba(255,255,255,.4); }
+
+    /* ── MAIN ── */
+    .main { flex:1; min-width:0; display:flex; flex-direction:column; }
+
+    /* ── ADMIN TOPBAR ── */
+    .topbar {
+      height:56px; background:var(--white); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; padding:0 22px; gap:12px;
+      position:sticky; top:52px; z-index:50; box-shadow:0 2px 10px rgba(9,79,79,.06);
+    }
+    .tb-title { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--navy-dark); flex:1; }
+    .tb-title span { font-family:'Nunito',sans-serif; font-size:.68rem; font-weight:600; color:var(--text-muted); display:block; margin-top:1px; }
+    .tb-acts { display:flex; align-items:center; gap:8px; }
+    .btn {
+      display:inline-flex; align-items:center; gap:5px; padding:7px 13px;
+      border-radius:8px; cursor:pointer; font-family:'Nunito',sans-serif;
+      font-size:.72rem; font-weight:700; border:none; transition:all .2s; white-space:nowrap;
+    }
+    .btn:hover { transform:translateY(-1px); }
+    .btn.out { background:transparent; border:1.5px solid var(--border); color:var(--text-muted); }
+    .btn.out:hover { border-color:var(--navy); color:var(--navy); }
+    .btn.tl  { background:var(--navy); color:#fff; box-shadow:0 3px 12px rgba(9,79,79,.22); }
+    .btn.tl:hover { background:var(--navy-dark); }
+    .btn.gd  { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--navy-deep); box-shadow:0 3px 12px rgba(200,150,12,.28); }
+    .btn.rd  { background:rgba(231,76,60,.08); border:1.5px solid rgba(231,76,60,.2); color:var(--red); }
+    .btn.sm { padding:5px 10px; font-size:.67rem; }
+    
+    .api-status {
+      display:flex; align-items:center; gap:5px; font-size:.67rem; font-weight:700;
+      color:var(--green); background:rgba(39,174,96,.08); border:1px solid rgba(39,174,96,.2);
+      padding:4px 9px; border-radius:20px;
+    }
+    .api-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.35} }
+
+    /* ── PAGE TABS ── */
+    .page-tabs {
+      background:var(--white); border-bottom:2px solid var(--border);
+      display:flex; overflow-x:auto; padding:0 22px;
+      scrollbar-width:none; position:sticky; top:108px; z-index:40; gap:4px;
+    }
+    .page-tabs::-webkit-scrollbar { display:none; }
+    .tab-btn {
+      display:flex; align-items:center; gap:6px; padding:12px 18px;
+      font-size:.78rem; font-weight:700; color:var(--text-muted);
+      text-decoration:none; white-space:nowrap; background:none; border:none;
+      border-bottom:2.5px solid transparent; transition:all .2s; cursor:pointer; flex-shrink:0;
+      margin-bottom:-2px;
+    }
+    .tab-btn:hover { color:var(--navy); }
+    .tab-btn.active { color:var(--navy); border-bottom-color:var(--gold); }
+    .sn-cnt { font-size:.58rem; font-weight:800; background:rgba(14,107,107,.12); color:var(--navy); padding:1px 6px; border-radius:8px; }
+
+    /* ── PAGE BODY ── */
+    .pbody { padding:22px; flex:1; }
+
+    /* ── PANELS ── */
+    .panel { display:none; }
+    .panel.active { display:block; }
+
+    /* ── HERO CARD ── */
+    .hero-card {
+      background:linear-gradient(135deg,var(--navy-deep),var(--navy-dark)); color:#fff;
+      border-radius:18px; padding:24px 28px; box-shadow:var(--shadow);
+      margin-bottom:20px; position:relative; overflow:hidden;
+    }
+    .hero-card::after {
+      content:''; position:absolute; width:200px; height:200px; right:-30px; top:-50px;
+      border-radius:50%; background:radial-gradient(circle,rgba(232,176,32,.22),transparent 70%); pointer-events:none;
+    }
+    .hero-card h1 { font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:6px; position:relative; z-index:1; }
+    .hero-card p { max-width:680px; line-height:1.65; color:rgba(255,255,255,.82); font-size:.92rem; position:relative; z-index:1; }
+
+    /* ── BLOCK ── */
+    .block { background:var(--white); border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:18px; overflow:hidden; }
+    .blk-hd { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,var(--white),var(--bg)); }
+    .blk-title { font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700; color:var(--navy-dark); display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+    .blk-title .ic { font-size:1rem; }
+    .dbc { font-family:'Nunito',sans-serif; font-size:.56rem; font-weight:800; background:rgba(14,107,107,.1); color:var(--navy); border:1px solid rgba(14,107,107,.18); padding:2px 7px; border-radius:7px; }
+    .blk-acts { display:flex; gap:7px; flex-shrink:0; }
+    .blkbody { padding:18px; }
+
+    /* ── FORM ── */
+    .fg { display:grid; gap:12px; }
+    .fg.c2 { grid-template-columns:1fr 1fr; }
+    .fg.c3 { grid-template-columns:1fr 1fr 1fr; }
+    .fg.c4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+    .f label { display:block; font-size:.7rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+    .f label .req { color:var(--gold); margin-left:2px; }
+    .f label .dbh { font-size:.56rem; font-weight:700; color:var(--text-muted); background:var(--bg2); padding:1px 5px; border-radius:4px; margin-left:4px; font-style:normal; }
+    .f input, .f textarea, .f select {
+      width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:9px;
+      font-family:'Nunito',sans-serif; font-size:.85rem; color:var(--text);
+      background:var(--white); outline:none; transition:border .2s, box-shadow .2s;
+    }
+    .f input:focus, .f textarea:focus, .f select:focus { border-color:var(--navy); box-shadow:0 0 0 3px rgba(14,107,107,.09); }
+    .f textarea { resize:vertical; min-height:80px; }
+    .fhint { font-size:.62rem; color:var(--text-muted); margin-top:3px; }
+    .fhint code { background:var(--bg2); padding:1px 4px; border-radius:4px; font-family:monospace; font-size:.8em; color:#b35e00; }
+
+    /* ── CLOUDINARY UPLOAD WIDGET ── */
+    .cld { margin-top:6px; }
+    .cld-label { font-size:.72rem; font-weight:700; color:var(--navy-dark); margin-bottom:7px; display:flex; align-items:center; gap:6px; }
+    .cld-badge { font-size:.54rem; font-weight:800; background:rgba(255,140,0,.13); color:#b35e00; border:1px solid rgba(255,140,0,.3); padding:1px 6px; border-radius:7px; }
+    .cld-preview { width:100%; height:120px; border-radius:9px; overflow:hidden; border:1.5px solid var(--border); background:var(--bg2); position:relative; margin-bottom:8px; display:flex; align-items:center; justify-content:center; }
+    .cld-preview img { width:100%; height:100%; object-fit:cover; display:block; }
+    .cld-preview .cld-empty { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--text-muted); font-size:.72rem; }
+    .cld-preview .cld-tag { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,.55); color:rgba(255,255,255,.8); font-size:.5rem; padding:3px 6px; font-family:monospace; text-align:center; }
+    .cld-url-row { display:flex; gap:7px; align-items:center; }
+    .cld-url-row input { flex:1; font-size:.79rem; }
+    .cld-upload-btn {
+      flex-shrink:0; padding:7px 12px; border-radius:8px; cursor:pointer;
+      background:rgba(14,107,107,.1); border:1.5px solid rgba(14,107,107,.2);
+      color:var(--navy); font-family:'Nunito',sans-serif; font-size:.7rem; font-weight:700;
+      transition:all .2s; white-space:nowrap;
+    }
+    .cld-upload-btn:hover { background:rgba(14,107,107,.18); }
+    .cld-upload-btn.file-btn { background:rgba(200,150,12,.12); border-color:rgba(200,150,12,.3); color:var(--gold); }
+    .cld-upload-btn.file-btn:hover { background:rgba(200,150,12,.2); }
+    .cld-transforms { display:flex; gap:5px; flex-wrap:wrap; margin-top:7px; }
+    .cld-t { font-size:.59rem; font-weight:700; padding:2px 7px; border-radius:9px; cursor:pointer; background:var(--bg2); border:1px solid var(--border); color:var(--text-muted); transition:all .15s; }
+    .cld-t:hover,.cld-t.on { background:rgba(200,150,12,.15); border-color:var(--gold); color:var(--gold); }
+    .cld-hint { font-size:.6rem; color:var(--text-muted); margin-top:5px; }
+    .cld-hint code { background:var(--bg2); padding:1px 4px; border-radius:3px; font-family:monospace; font-size:.78em; color:#b35e00; }
+
+    /* ── TABLE ── */
+    .tbl { width:100%; border-collapse:collapse; }
+    .tbl thead th { font-size:.64rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--text-muted); padding:9px 13px; text-align:left; background:var(--bg); border-bottom:2px solid var(--border); }
+    .tbl tbody tr { border-bottom:1px solid var(--bg2); transition:background .15s; }
+    .tbl tbody tr:hover { background:rgba(14,107,107,.03); }
+    .tbl tbody td { padding:10px 13px; font-size:.8rem; color:var(--text); vertical-align:middle; }
+    .td-b { font-weight:700; }
+    .td-m { color:var(--text-muted); }
+    .td-code { font-family:monospace; font-size:.76rem; color:var(--text-muted); }
+
+    /* ── PILL ── */
+    .pill { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:20px; font-size:.61rem; font-weight:800; }
+    .pill::before { content:'●'; font-size:.44rem; }
+    .pill.live  { background:rgba(39,174,96,.12); color:#1e8449; border:1px solid rgba(39,174,96,.22); }
+    .pill.draft { background:var(--bg2); color:var(--text-muted); border:1px solid var(--border); }
+    .pill.new   { background:rgba(14,107,107,.12); color:var(--navy); border:1px solid rgba(14,107,107,.22); }
+    .pill.cbse  { background:rgba(200,150,12,.12); color:var(--gold); border:1px solid rgba(200,150,12,.3); }
+
+    /* ── ACT BTNS ── */
+    .abtns { display:flex; gap:5px; }
+    .ab { width:27px; height:27px; border-radius:6px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.76rem; transition:all .15s; }
+    .ab:hover { border-color:var(--navy); background:var(--bg); }
+    .ab.del:hover { border-color:var(--red); background:rgba(231,76,60,.06); }
+
+    /* ── TOGGLE ── */
+    .tog { position:relative; width:40px; height:22px; flex-shrink:0; }
+    .tog input { display:none; }
+    .tog-t { position:absolute; inset:0; background:var(--bg2); border-radius:12px; border:1.5px solid var(--border); cursor:pointer; transition:all .2s; }
+    .tog-t::after { content:''; position:absolute; width:14px; height:14px; border-radius:50%; background:#fff; top:3px; left:3px; box-shadow:0 2px 5px rgba(0,0,0,.18); transition:transform .2s; }
+    .tog input:checked ~ .tog-t { background:var(--navy); border-color:var(--navy-dark); }
+    .tog input:checked ~ .tog-t::after { transform:translateX(18px); }
+
+    /* ── TWO COL ── */
+    .two-col { display:grid; grid-template-columns:1.55fr 1fr; gap:18px; align-items:start; }
+
+    /* ── MODAL ── */
+    .modal-ov { display:none; position:fixed; inset:0; background:rgba(6,47,47,.65); backdrop-filter:blur(4px); z-index:99999; align-items:center; justify-content:center; padding:20px; }
+    .modal-ov.open { display:flex; }
+    .modal { background:#fff; border-radius:15px; max-width:580px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 28px 70px rgba(0,0,0,.28); animation:mIn .24s cubic-bezier(.22,1,.36,1); }
+    .modal.wide { max-width:760px; }
+    @keyframes mIn { from{opacity:0;transform:scale(.95) translateY(14px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    .modal-hd { display:flex; align-items:center; justify-content:space-between; padding:17px 20px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,var(--white),var(--bg)); }
+    .modal-title { font-family:'Playfair Display',serif; font-size:1.02rem; font-weight:700; color:var(--navy-dark); }
+    .modal-x { width:27px; height:27px; border-radius:50%; background:var(--bg2); border:none; cursor:pointer; font-size:.86rem; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:all .2s; }
+    .modal-x:hover { background:#fde8e8; color:var(--red); }
+    .modal-body { padding:20px; }
+    .modal-ft { display:flex; gap:9px; justify-content:flex-end; padding:14px 20px; border-top:1px solid var(--border); }
+
+    /* ── CIRCULAR ITEM ── */
+    .circ-item {
+      display:flex; align-items:center; gap:14px;
+      background:var(--bg); border:1px solid var(--border);
+      border-radius:10px; padding:14px 18px; margin-bottom:10px;
+      transition:all .2s;
+    }
+    .circ-item:hover { border-color:var(--navy); background:rgba(14,107,107,.04); }
+    .circ-ic { font-size:1.5rem; flex-shrink:0; }
+    .circ-body { flex:1; min-width:0; }
+    .circ-title { font-size:.9rem; font-weight:700; color:var(--navy); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .circ-meta { font-size:.74rem; color:var(--text-muted); }
+    .circ-acts { display:flex; gap:5px; align-items:center; flex-shrink:0; }
+
+    /* ── FACULTY AVATAR ── */
+    .fav { width:42px; height:42px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,var(--navy-dark),var(--navy)); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#fff; overflow:hidden; border:2px solid var(--gold); }
+    .fav img { width:100%; height:100%; object-fit:cover; }
+
+    /* ── BOOK TABLE ROW ── */
+    .book-class-hd td { background:rgba(14,107,107,.08) !important; font-weight:800 !important; color:var(--navy) !important; font-size:.78rem !important; letter-spacing:.06em; text-transform:uppercase; }
+
+    /* ── TOAST ── */
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--navy-deep); color:#fff; padding:11px 18px; border-radius:10px; font-size:.79rem; font-weight:700; display:flex; align-items:center; gap:8px; box-shadow:0 8px 28px rgba(0,0,0,.22); transform:translateY(80px); opacity:0; transition:all .3s cubic-bezier(.34,1.56,.64,1); z-index:99998; border-left:4px solid var(--gold-light); pointer-events:none; }
+    .toast.show { transform:translateY(0); opacity:1; }
+
+    /* ── SECTION DIVIDER ── */
+    .sec-div { display:flex; align-items:center; gap:10px; margin:18px 0 14px; }
+    .sec-div span { font-size:.66rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); white-space:nowrap; }
+    .sec-div::before,.sec-div::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    /* ── STAT TILES (academics overview) ── */
+    .tiles { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:18px; }
+    .tile { background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:18px 14px; text-align:center; box-shadow:var(--shadow); transition:all .2s; position:relative; overflow:hidden; }
+    .tile:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(9,79,79,.14); }
+    .tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+    .tile.t1::before { background:linear-gradient(90deg,var(--navy),var(--navy-dark)); }
+    .tile.t2::before { background:linear-gradient(90deg,var(--gold),var(--gold-light)); }
+    .tile.t3::before { background:linear-gradient(90deg,var(--green),#2ecc71); }
+    .tile.t4::before { background:linear-gradient(90deg,var(--orange),#f39c12); }
+    .tile-ic { font-size:1.6rem; margin-bottom:7px; }
+    .tile-val { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:800; color:var(--text); line-height:1; }
+    .tile-lbl { font-size:.68rem; font-weight:700; color:var(--text-muted); margin-top:4px; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1100px) { .two-col{grid-template-columns:1fr;} .tiles{grid-template-columns:1fr 1fr;} }
+    @media(max-width:900px)  { .fg.c3,.fg.c4{grid-template-columns:1fr 1fr;} }
+    @media(max-width:768px)  { .sidebar{display:none;} .fg.c2,.fg.c3,.fg.c4{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+
+<script src="adminnavbar.js"></script>
+
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-icon">📚</div>
+      <div>
+        <div class="sb-title">Loretto Admin</div>
+        <div class="sb-sub">Academics</div>
+      </div>
+    </div>
+    <div class="sb-sec">Academics Sections</div>
+    <nav class="sb-nav">
+      <button class="sb-lnk active" onclick="goTab('faculty')"><span class="ic">👨‍🏫</span> Faculty <span class="bdg green" id="sb-faculty-count">...</span></button>
+      <a href="#" class="sb-lnk" onclick="goTab('formerheads')"><span class="ic">📜</span> Leadership & History</a>
+      <button class="sb-lnk" onclick="goTab('cbse')"><span class="ic">📜</span> CBSE Circulars</button>
+      <button class="sb-lnk" onclick="goTab('school')"><span class="ic">🏢</span> School Circulars</button>
+      <button class="sb-lnk" onclick="goTab('booklist')"><span class="ic">📖</span> Book List</button>
+    </nav>
+    <div class="sb-sec">Site Navigation</div>
+    <nav class="sb-nav">
+      <a class="sb-lnk" href="admin-panel.html"><span class="ic">📊</span> Dashboard</a>
+      <a class="sb-lnk" href="admin-news.html"><span class="ic">📰</span> News</a>
+      <a class="sb-lnk" href="admin-admissions.html"><span class="ic">📋</span> Admissions</a>
+      <a class="sb-lnk" href="adminschool-profile.html"><span class="ic">🏛️</span> About Us</a>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div><div class="sb-uname">Administrator</div><div class="sb-urole">Super Admin</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="tb-title" id="atTitle">
+        Academics — Faculty
+        <span id="atSub">Collection: faculty · GET /api/faculty</span>
+      </div>
+      <div class="tb-acts">
+        <div class="api-status"><span class="api-dot"></span> API Connected</div>
+        <button class="btn out btn-sm" id="previewBtn" onclick="window.open('../academics/1-faculty.html','_blank')">👁️ Preview</button>
+        <button class="btn tl btn-sm" onclick="refreshData()">🔄 Refresh</button>
+        <button class="btn gd btn-sm" onclick="openAddModal()">＋ Add New</button>
+      </div>
+    </div>
+
+    <!-- Page Tabs -->
+    <nav class="page-tabs" id="pageTabs">
+      <button class="tab-btn active" onclick="goTab('faculty')">👨‍🏫 Faculty <span class="sn-cnt" id="cnt-faculty">0</span></button>
+      <button class="tab-btn" onclick="goTab('formerheads')">🏛️ Former Heads</button>
+      <button class="tab-btn" onclick="goTab('cbse')">📜 CBSE Circulars <span class="sn-cnt" id="cnt-cbse">0</span></button>
+      <button class="tab-btn" onclick="goTab('school')">🏢 School Circulars <span class="sn-cnt" id="cnt-school">0</span></button>
+      <button class="tab-btn" onclick="goTab('booklist')">📖 Book List</button>
+    </nav>
+
+    <!-- Page Body -->
+    <div class="pbody">
+
+      <!-- ════════════════════════════
+           TAB 1 — FACULTY
+      ════════════════════════════ -->
+      <div class="panel active" id="tab-faculty">
+        <div class="hero-card">
+          <h1>👨‍🏫 Faculty Profiles</h1>
+          <p>Manage the list of teaching staff, their subjects, qualifications, and photos. These are displayed on the public Faculty page.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="tiles" id="faculty-tiles">
+          <div class="tile t1"><div class="tile-ic"></div><div class="tile-val" id="t-faculty">—</div><div class="tile-lbl">Total Faculty</div></div>
+          <div class="tile t2"><div class="tile-ic"></div><div class="tile-val" id="t-subjects">—</div><div class="tile-lbl">Subjects Covered</div></div>
+          <div class="tile t3"><div class="tile-ic"></div><div class="tile-val" id="t-qualified">—</div><div class="tile-lbl">PG Qualified</div></div>
+          <div class="tile t4"><div class="tile-ic">⏱</div><div class="tile-val" id="t-avgexp">—</div><div class="tile-lbl">Avg Experience (Yrs)</div></div>
+        </div>
+
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic"></span> Faculty Members <span class="dbc">faculty</span></div>
+            <div class="blk-acts">
+              <input type="text" id="faculty-search" placeholder="Search name / subject..." style="padding:6px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:Nunito;font-size:.78rem;outline:none;width:180px;" oninput="filterFaculty()" />
+              <button class="atbtn gd" onclick="openAddModal()">＋ Add Faculty</button>
+            </div>
+          </div>
+          <div style="padding:0;">
+            <div id="faculty-loading" style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Loading faculty from MongoDB...</div>
+            <table class="tbl" id="faculty-table" style="display:none;">
+              <thead>
+                <tr>
+                  <th>Photo</th><th>Name</th><th>Subject</th><th>Qualification</th><th>Experience</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="faculty-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════
+           TAB 2 — FORMER HEADS
+      ════════════════════════════ -->
+      <div class="panel" id="tab-formerheads">
+        <div class="hero-card">
+          <h1>🏛️ Leadership & History</h1>
+          <p>Document the legacy and journey of Loretto Central School. Manage the current principal, former heads, and the school timeline.</p>
+        </div>
+
+        <!-- NEW: Current Principal Section -->
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic">👨‍💼</span> Current Principal <span class="dbc">academics.currentPrincipal</span></div>
+            <div class="blk-acts"><button class="atbtn gd" onclick="saveCurrentPrincipal()"> Save Changes</button></div>
+          </div>
+          <div class="blkbody">
+            <div class="fg">
+              <div class="fg c2">
+                <div class="f"><label>Name</label><input type="text" id="curr-name" placeholder="Rev. Fr. Jason Vijay Monis" /></div>
+                <div class="f"><label>Tenure / Period</label><input type="text" id="curr-period" placeholder="2024 – Present" /></div>
+              </div>
+              <div class="f"><label>Description / Description of Leadership</label>
+                <textarea id="curr-desc" style="height:100px;" placeholder="Describe current leadership accomplishments..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic"></span> Former Heads of Institution <span class="dbc">management</span></div>
+            <div class="blk-acts">
+              <button class="atbtn gd" onclick="openFormerHeadModal()">＋ Add Former Head</button>
+            </div>
+          </div>
+          <div style="padding:0;">
+            <div id="fh-loading" style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Loading from MongoDB...</div>
+            <table class="tbl" id="fh-table" style="display:none;">
+              <thead>
+                <tr><th>Period</th><th>Name</th><th>Note</th><th>Order</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="fh-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Stat tiles for former heads page -->
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic"></span> Legacy Stats <span class="dbc">academics.formerHeads.stats</span></div>
+            <div class="blk-acts"><button class="atbtn gd" onclick="saveLegacyStats()"> Save</button></div>
+          </div>
+          <div class="blkbody">
+            <p class="fhint" style="margin-bottom:12px;">These appear as the 4 stat tiles on the Former Heads public page. Stored in the <code>academics</code> MongoDB collection under <code>formerHeads.stats</code>.</p>
+            <div class="fg c4">
+              <div class="f"><label>Icon</label><input type="text" id="stat1-icon" value="🏗️" /></div>
+              <div class="f"><label>Label</label><input type="text" id="stat1-label" value="Founded" /></div>
+              <div class="f"><label>Value</label><input type="text" id="stat1-value" value="2010" /></div>
+              <div class="f"><label>Pos</label><input type="number" id="stat1-pos" value="1" /></div>
+            </div>
+            <div style="height:10px;"></div>
+            <div class="fg c4">
+              <div class="f"><label>Icon</label><input type="text" id="stat2-icon" value="👨‍🏫" /></div>
+              <div class="f"><label>Label</label><input type="text" id="stat2-label" value="Heads Served" /></div>
+              <div class="f"><label>Value</label><input type="text" id="stat2-value" value="Since Inception" /></div>
+              <div class="f"><label>Pos</label><input type="number" id="stat2-pos" value="2" /></div>
+            </div>
+            <div style="height:10px;"></div>
+            <div class="fg c4">
+              <div class="f"><label>Icon</label><input type="text" id="stat3-icon" value="🎓" /></div>
+              <div class="f"><label>Label</label><input type="text" id="stat3-label" value="CBSE Affiliation" /></div>
+              <div class="f"><label>Value</label><input type="text" id="stat3-value" value="No. 831368" /></div>
+              <div class="f"><label>Pos</label><input type="number" id="stat3-pos" value="3" /></div>
+            </div>
+            <div style="height:10px;"></div>
+            <div class="fg c4">
+              <div class="f"><label>Icon</label><input type="text" id="stat4-icon" value="📈" /></div>
+              <div class="f"><label>Label</label><input type="text" id="stat4-label" value="Growth" /></div>
+              <div class="f"><label>Value</label><input type="text" id="stat4-value" value="LKG to Class X" /></div>
+              <div class="f"><label>Pos</label><input type="number" id="stat4-pos" value="4" /></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW: The School's Journey (Timeline) -->
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic">🚀</span> The School's Journey <span class="dbc">academics.history.journey</span></div>
+            <div class="blk-acts">
+              <button class="atbtn out" onclick="addJourneyRow()">＋ Add Event</button>
+              <button class="atbtn gd" onclick="saveJourney()"> Save Timeline</button>
+            </div>
+          </div>
+          <div style="padding:0;">
+            <table class="tbl">
+              <thead><tr><th style="width:140px;">Year / Period</th><th>Event Description</th><th style="width:60px;">Acts</th></tr></thead>
+              <tbody id="journey-tbody">
+                <!-- Journey rows here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════
+           TAB 3 — CBSE CIRCULARS
+      ════════════════════════════ -->
+      <div class="panel" id="tab-cbse">
+        <div class="hero-card">
+          <h1>📜 CBSE Circulars</h1>
+          <p>Upload and manage official notifications from CBSE. PDFs are stored securely and served via a download proxy.</p>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <div class="block">
+              <div class="blk-hd">
+                <div class="blk-title"><span class="ic"></span> CBSE Circulars <span class="dbc">documents</span></div>
+                <div class="blk-acts">
+                  <button class="atbtn gd" onclick="openCBSEModal()">＋ Add Circular</button>
+                </div>
+              </div>
+              <div style="padding:0;">
+                <div id="cbse-loading" style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Loading from MongoDB...</div>
+                <div id="cbse-list" style="padding:14px 18px;display:none;"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="block">
+              <div class="blk-hd">
+                <div class="blk-title"><span class="ic"></span> CBSE Page Info <span class="dbc">academics.cbsePage</span></div>
+                <div class="blk-acts"><button class="atbtn gd" onclick="showToast('CBSE page info saved!')"> Save</button></div>
+              </div>
+              <div class="blkbody">
+                <div class="fg">
+                  <div class="f"><label>Affiliation No. <span class="dbh">cbsePage.affiliationNo</span></label><input type="text" value="831368" /></div>
+                  <div class="f"><label>Valid Until <span class="dbh">cbsePage.validUntil</span></label><input type="text" value="31 March 2029" /></div>
+                  <div class="f"><label>Official CBSE Website <span class="dbh">cbsePage.officialSite</span></label><input type="url" value="https://cbse.gov.in" /></div>
+                  <div class="f"><label>Hero Badge Text <span class="dbh">cbsePage.badge</span></label><input type="text" value="CBSE Board · Official Notices" /></div>
+                  <div class="f"><label>Hero Description <span class="dbh">cbsePage.heroDesc</span></label><textarea style="min-height:70px;">All official circulars, notifications, and directives issued by the Central Board of Secondary Education (CBSE), New Delhi that are relevant to Loretto Central School are published here.</textarea></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════
+           TAB 4 — SCHOOL CIRCULARS
+      ════════════════════════════ -->
+      <div class="panel" id="tab-school">
+        <div class="hero-card">
+          <h1>🏢 School Circulars</h1>
+          <p>Manage internal school circulars for parents and students. Newest circulars appear first on the public page.</p>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <div class="block">
+              <div class="blk-hd">
+                <div class="blk-title"><span class="ic"></span> School Circulars <span class="dbc">documents</span></div>
+                <div class="blk-acts">
+                  <button class="atbtn gd" onclick="openSchoolCircModal()">＋ Add Circular</button>
+                </div>
+              </div>
+              <div style="padding:0;">
+                <div id="school-loading" style="text-align:center;padding:40px;color:var(--text-muted);font-size:.85rem;">Loading from MongoDB...</div>
+                <div id="school-list" style="padding:14px 18px;display:none;"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="block">
+              <div class="blk-hd">
+                <div class="blk-title"><span class="ic"></span> School Circulars Page Info <span class="dbc">academics.schoolPage</span></div>
+                <div class="blk-acts"><button class="atbtn gd" onclick="showToast('School page info saved!')"> Save</button></div>
+              </div>
+              <div class="blkbody">
+                <div class="fg">
+                  <div class="f"><label>Academic Year <span class="dbh">schoolPage.academicYear</span></label><input type="text" value="2024 – 2025" /></div>
+                  <div class="f"><label>Hero Badge Text <span class="dbh">schoolPage.badge</span></label><input type="text" value="Internal Notices · Academic Year 2024–25" /></div>
+                  <div class="f"><label>Addressed To <span class="dbh">schoolPage.addressedTo</span></label><input type="text" value="Parents · Students · Staff" /></div>
+                  <div class="f"><label>Hero Description <span class="dbh">schoolPage.heroDesc</span></label><textarea style="min-height:70px;">Official circulars, notices, and announcements issued by Loretto Central School's administration. All circulars are organised by date, newest first.</textarea></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════
+           TAB 5 — BOOK LIST
+      ════════════════════════════ -->
+      <div class="panel" id="tab-booklist">
+        <div class="hero-card">
+          <h1>📖 Book List</h1>
+          <p>Upload the annual book list PDF and manage individual book entries for each class level.</p>
+        </div>
+
+        <!-- PDF Download option -->
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic"></span> Book List PDF (Cloudinary) <span class="dbc">documents · category: book-list</span></div>
+            <div class="blk-acts"><button class="atbtn gd" onclick="saveBookListPDF()"> Save</button></div>
+          </div>
+          <div class="blkbody">
+            <p class="fhint" style="margin-bottom:12px;">Upload the complete book list PDF to Cloudinary (<code>raw</code> resource type) and paste the URL. Students can download it from the public page.</p>
+            <div class="fg c3">
+              <div class="f"><label>Title <span class="req">*</span> <span class="dbh">title</span></label><input type="text" id="bookPdfTitle" value="Book List 2024–25" /></div>
+              <div class="f"><label>Academic Year <span class="dbh">date</span></label><input type="text" id="bookPdfYear" value="2024–25" /></div>
+              <div class="f"><label>Category (fixed) <span class="dbh">category</span></label><input type="text" value="book-list" readonly style="background:var(--bg2);color:var(--text-muted);" /></div>
+            </div>
+            <div class="f" style="margin-top:12px;">
+              <label>Cloudinary PDF URL <span class="req">*</span> <span class="dbh">url</span></label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="url" id="bookPdfUrl" placeholder="https://res.cloudinary.com/your-cloud/raw/upload/v.../loretto-uploads/loretto/documents/your-file.pdf" />
+                <!-- Hidden metadata fields -->
+                <input type="hidden" id="bookPdf-publicId" />
+                <input type="hidden" id="bookPdf-resourceType" value="raw" />
+                <input type="hidden" id="bookPdf-type" value="upload" />
+                <input type="hidden" id="bookPdf-originalFilename" value="" />
+                
+                <button class="btn gd btn-sm" onclick="triggerBookPDFUpload()">📄 Upload PDF</button>
+                <input type="file" id="bookPdfFile" accept="application/pdf" style="display:none;" onchange="uploadBookPDF(this)" />
+              </div>
+              <div class="fhint">Uploaded through the shared admin upload route as <code>resource_type: raw</code> into <code>loretto-uploads/loretto/documents</code>. Max 10MB.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inline book table editor -->
+        <div class="block">
+          <div class="blk-hd">
+            <div class="blk-title"><span class="ic"></span> Book List by Class <span class="dbc">academics.bookList.classes[ ]</span></div>
+            <div class="blk-acts">
+              <button class="atbtn out" onclick="addBookClass()">＋ Add Class Group</button>
+              <button class="atbtn gd" onclick="saveBookListContent()"> Save All</button>
+            </div>
+          </div>
+          <div style="padding:0;" id="book-table-wrap">
+            <table class="tbl" id="book-tbl">
+              <thead><tr><th>Subject</th><th>Book Title</th><th>Publisher</th><th>Class</th><th style="width:60px;">Actions</th></tr></thead>
+              <tbody id="book-tbody">
+                <!-- Pre-Primary -->
+                <tr class="book-class-hd"><td colspan="5"> Pre-Primary — LKG &amp; UKG <button class="ab" style="margin-left:8px;font-size:.65rem;width:auto;padding:2px 8px;border-radius:5px;" onclick="addBookRow(this,'LKG / UKG')">＋ Row</button></td></tr>
+                <tr><td><input type="text" value="English" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Stepping Stones / My English Book" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Approved Publisher" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="LKG / UKG" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="Maths" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Number Fun / My Maths Book" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Approved Publisher" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="LKG / UKG" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="EVS" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="My World Around Me" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Approved Publisher" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="LKG / UKG" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <!-- Class 1 -->
+                <tr class="book-class-hd"><td colspan="5"> Class I <button class="ab" style="margin-left:8px;font-size:.65rem;width:auto;padding:2px 8px;border-radius:5px;" onclick="addBookRow(this,'Class I')">＋ Row</button></td></tr>
+                <tr><td><input type="text" value="English" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Marigold I (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class I" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="Maths" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Math Magic I (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class I" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <!-- Class X -->
+                <tr class="book-class-hd"><td colspan="5"> Class X <button class="ab" style="margin-left:8px;font-size:.65rem;width:auto;padding:2px 8px;border-radius:5px;" onclick="addBookRow(this,'Class X')">＋ Row</button></td></tr>
+                <tr><td><input type="text" value="English" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="First Flight (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class X" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="Maths" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Mathematics X (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class X" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="Science" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Science X (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class X" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+                <tr><td><input type="text" value="Social Science" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td><td><input type="text" value="Democratic Politics II + India &amp; Contemporary World II + Understanding Economic Development + Contemporary India II (NCERT)" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><input type="text" value="Class X" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td><td><div class="abtns"><button class="ab del" onclick="this.closest('tr').remove()"></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /tab-booklist -->
+
+    </div><!-- /pbody -->
+  </main>
+</div><!-- /shell -->
+
+<!-- ════ FACULTY ADD/EDIT MODAL ════ -->
+<div class="modal-ov" id="facultyModal" onclick="if(event.target===this)closeFacultyModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="facultyModalTitle"> Add Faculty Member</div>
+      <button class="modal-x" onclick="closeFacultyModal()"></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="faculty-edit-id" />
+      <div class="fg">
+        <div class="fg c2">
+          <div class="f"><label>Full Name <span class="req">*</span> <span class="dbh">name</span></label><input type="text" id="f-name" placeholder="e.g. Mrs. Anitha Pais" /></div>
+          <div class="f"><label>Subject <span class="req">*</span> <span class="dbh">subject</span></label><input type="text" id="f-subject" placeholder="e.g. Mathematics" /></div>
+        </div>
+        <div class="fg c2">
+          <div class="f"><label>Qualification <span class="dbh">qualification</span></label><input type="text" id="f-qual" placeholder="e.g. M.Sc., B.Ed." /></div>
+          <div class="f"><label>Experience (years) <span class="dbh">experience</span></label><input type="text" id="f-exp" placeholder="e.g. 12" /></div>
+        </div>
+        <div class="f">
+          <label>Photo <span class="dbh">photo</span></label>
+          <div class="cld">
+            <div class="cld-label">Cloudinary Image <span class="cld-badge"> Cloudinary</span></div>
+            <div class="cld-preview" id="faculty-photo-preview">
+              <div class="cld-empty"><span style="font-size:1.8rem;"></span><span>No photo</span></div>
+              <div class="cld-tag">w_400,h_400,c_fill,g_face,r_max,q_auto,f_auto</div>
+            </div>
+            <div class="cld-url-row">
+              <input type="url" id="f-photo" placeholder="https://res.cloudinary.com/your-cloud/image/upload/..." oninput="previewFacultyPhoto(this.value)" />
+              <input type="hidden" id="f-publicId" />
+              <button class="btn gd btn-sm" onclick="document.getElementById('f-photo-file').click()">📷 Upload</button>
+              <input type="file" id="f-photo-file" accept="image/*" style="display:none;" onchange="uploadFacultyPhoto(this)" />
+            </div>
+            <div class="cld-transforms">
+              <span class="cld-t on">w_400</span><span class="cld-t on">h_400</span><span class="cld-t on">c_fill</span>
+              <span class="cld-t on">g_face</span><span class="cld-t on">r_max</span><span class="cld-t on">q_auto</span><span class="cld-t on">f_auto</span>
+            </div>
+            <div class="cld-hint">Recommended: <code>w_400,h_400,c_fill,g_face,r_max,q_auto,f_auto</code> for circular faculty avatars</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="atbtn out" onclick="closeFacultyModal()">Cancel</button>
+      <button class="atbtn gd" onclick="saveFaculty()"> Save to MongoDB</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FORMER HEAD MODAL ════ -->
+<div class="modal-ov" id="fhModal" onclick="if(event.target===this)closeFHModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title"> Add Former Head</div>
+      <button class="modal-x" onclick="closeFHModal()"></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fh-edit-id" />
+      <div class="fg">
+        <div class="fg c2">
+          <div class="f"><label>Period / Year <span class="req">*</span> <span class="dbh">role → period field</span></label><input type="text" id="fh-period" placeholder="e.g. 2010 – Founding Year" /></div>
+          <div class="f"><label>Name <span class="req">*</span> <span class="dbh">name</span></label><input type="text" id="fh-name" placeholder="e.g. Founding Principal" /></div>
+        </div>
+        <div class="f"><label>Note / Description <span class="dbh">contact → used as note field</span></label><textarea id="fh-note" placeholder="Brief description of their tenure..."></textarea></div>
+        <div class="f"><label>Photo (Cloudinary URL) <span class="dbh">photo</span></label>
+          <div class="cld-url-row">
+            <input type="url" id="fh-photo" placeholder="https://res.cloudinary.com/..." />
+            <input type="hidden" id="fh-publicId" />
+            <button class="btn gd btn-sm" onclick="document.getElementById('fh-photo-file').click()">📷 Upload</button>
+            <input type="file" id="fh-photo-file" accept="image/*" style="display:none;" onchange="uploadFHPhoto(this)" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="atbtn out" onclick="closeFHModal()">Cancel</button>
+      <button class="atbtn gd" onclick="saveFH()"> Save to MongoDB</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ CIRCULAR MODAL ════ -->
+<div class="modal-ov" id="circModal" onclick="if(event.target===this)closeCircModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="circModalTitle"> Add Circular</div>
+      <button class="modal-x" onclick="closeCircModal()"></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="circ-edit-id" />
+      <input type="hidden" id="circ-category" value="cbse-circular" />
+      <div class="fg">
+        <div class="f"><label>Title <span class="req">*</span> <span class="dbh">title</span></label><input type="text" id="circ-title" placeholder="e.g. CBSE Class X Board Examination Schedule 2024–25" /></div>
+        <div class="fg c2">
+          <div class="f"><label>Date <span class="dbh">date</span></label><input type="date" id="circ-date" /></div>
+          <div class="f"><label>Badge Label <span class="dbh">— display only</span></label><input type="text" id="circ-badge" placeholder="e.g. NEW, LATEST, IMPORTANT" /></div>
+        </div>
+        <div class="f"><label>Source / Issued By <span class="dbh">category → meta</span></label><input type="text" id="circ-source" placeholder="e.g. CBSE, New Delhi · Academic Year 2024–25" /></div>
+        <div class="f">
+          <label>File URL (Cloudinary PDF) <span class="req">*</span> <span class="dbh">url</span></label>
+          <div class="cld-url-row">
+            <input type="url" id="circ-url" placeholder="https://res.cloudinary.com/your-cloud/raw/upload/v.../loretto-uploads/loretto/documents/your-file.pdf" />
+            <!-- Hidden metadata fields -->
+            <input type="hidden" id="circ-publicId" />
+            <input type="hidden" id="circ-resourceType" value="raw" />
+            <input type="hidden" id="circ-type" value="authenticated" />
+
+            <button class="btn gd btn-sm" onclick="document.getElementById('circ-file').click()">📄 Upload PDF</button>
+            <input type="file" id="circ-file" accept="application/pdf" style="display:none;" onchange="uploadCircularPDF(this)" />
+          </div>
+          <div class="fhint">Uploaded as a public PDF in Cloudinary under <code>loretto-uploads/loretto/documents</code>.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="atbtn out" onclick="closeCircModal()">Cancel</button>
+      <button class="atbtn gd" onclick="saveCircular()"> Save to MongoDB</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TOAST ════ -->
+<div class="toast" id="toast"> Saved!</div>
+
+<script>
+var API_BASE = ''; 
+var ADMIN_TOKEN = typeof AdminAuth !== 'undefined' ? AdminAuth.getToken() : '';
+
+/* ── UTILS ── */
+function buildApiHeaders(extra) {
+  if (window.apiHeaders && window.apiHeaders !== buildApiHeaders) return window.apiHeaders(extra);
+  var h = { 'Content-Type': 'application/json' };
+  if (ADMIN_TOKEN) h['x-admin-token'] = ADMIN_TOKEN;
+  return Object.assign(h, extra || {});
+}
+function uid(prefix) { return (prefix || 'id') + '-' + Math.random().toString(36).substring(2, 9); }
+function esc(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+function showToast(msg, isErr) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.borderLeftColor = isErr ? 'var(--red)' : 'var(--gold-light)';
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
+}
+async function uploadFile(file) {
+  var fd = new FormData();
+  fd.append('file', file);
+  var res = await fetch('/api/upload', {
+    method: 'POST',
+    headers: { 'x-admin-token': ADMIN_TOKEN },
+    body: fd
+  });
+  var data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Upload failed');
+  return data;
+}
+async function deleteCloudinary(publicId, resourceType, type) {
+  if (!publicId) return;
+  var res = await fetch('/api/upload/delete', {
+    method: 'POST',
+    headers: buildApiHeaders(),
+    body: JSON.stringify({
+      publicId: publicId,
+      resourceType: resourceType || 'raw',
+      type: type || 'upload'
+    })
+  });
+  var data = await res.json().catch(function() { return {}; });
+  if (!res.ok || data.ok === false) throw new Error(data.error || 'Cloudinary delete failed');
+}
+
+/* ════════════════════════════════════════════
+   TAB SYSTEM
+════════════════════════════════════════════ */
+var TABS = ['faculty','formerheads','cbse','school','booklist'];
+var TAB_META = {
+  faculty:     { title:'Academics — Faculty',         sub:'Collection: faculty · GET /api/faculty',                preview:'../academics/1-faculty.html' },
+  formerheads: { title:'Academics — Leadership & History', sub:'Collection: management + academics.history', preview:'../academics/2-former-heads.html' },
+  cbse:        { title:'Academics — CBSE Circulars',  sub:'Collection: documents · filter: category=cbse-circular', preview:'../academics/3-cbse-circulars.html' },
+  school:      { title:'Academics — School Circulars',sub:'Collection: documents · filter: category=school-circular', preview:'../academics/4-school-circulars.html' },
+  booklist:    { title:'Academics — Book List',       sub:'Collection: documents + academics.bookList',          preview:'../academics/5-book-list.html' },
+};
+
+function goTab(id) {
+  TABS.forEach(function(t) {
+    document.getElementById('tab-'+t).classList.toggle('active', t === id);
+  });
+  var links = document.querySelectorAll('.subnav a');
+  links.forEach(function(a, i) { a.classList.toggle('active', TABS[i] === id); });
+  document.querySelectorAll('.sb-lnk').forEach(function(l) { l.classList.remove('active'); });
+  var sbl = document.querySelector('.sb-lnk[onclick="goTab(\''+id+'\')"]');
+  if (sbl) sbl.classList.add('active');
+  var m = TAB_META[id];
+  if (m) {
+    document.getElementById('atTitle').childNodes[0].textContent = m.title + ' ';
+    document.getElementById('atSub').textContent = m.sub;
+    document.getElementById('previewBtn').onclick = function(){ window.open(m.preview,'_blank'); };
+  }
+  // Load data on first visit
+  if (id === 'faculty' && !window._facultyLoaded) loadFaculty();
+  if (id === 'formerheads' && !window._fhLoaded) { loadFormerHeads(); loadLeadershipData(); }
+  if (id === 'cbse' && !window._cbseLoaded) loadDocuments('cbse-circular','cbse-loading','cbse-list','cnt-cbse');
+  if (id === 'school' && !window._schoolLoaded) loadDocuments('school-circular','school-loading','school-list','cnt-school');
+}
+
+/* ════════════════════════════════════════════
+   FACULTY — LOAD, RENDER, FILTER
+════════════════════════════════════════════ */
+var _allFaculty = [];
+
+async function loadFaculty() {
+  window._facultyLoaded = true;
+  try {
+    var res = await fetch('/api/faculty');
+    var data = await res.json();
+    _allFaculty = Array.isArray(data) ? data : [];
+    renderFaculty(_allFaculty);
+    updateFacultyTiles(_allFaculty);
+    document.getElementById('cnt-faculty').textContent = _allFaculty.length;
+    document.getElementById('sb-faculty-count').textContent = _allFaculty.length;
+  } catch(e) {
+    document.getElementById('faculty-loading').textContent = ' Could not connect to API. Is the server running?';
+    showToast('Cannot reach /api/faculty', 'err');
+  }
+}
+
+function renderFaculty(list) {
+  var tbody = document.getElementById('faculty-tbody');
+  var loading = document.getElementById('faculty-loading');
+  var table = document.getElementById('faculty-table');
+  if (!list.length) {
+    loading.style.display = 'block';
+    loading.textContent = 'No faculty found. Click "+ Add Faculty" to get started.';
+    table.style.display = 'none'; return;
+  }
+  loading.style.display = 'none';
+  table.style.display = 'table';
+  tbody.innerHTML = list.map(function(f) {
+    var initials = (f.name||'?').split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+    return '<tr data-id="'+f._id+'">'
+      + '<td><div class="fav">'
+      + (f.photo ? '<img src="'+f.photo+'" alt="'+f.name+'" />' : initials)
+      + '</div></td>'
+      + '<td class="td-b">' + (f.name||'—') + '</td>'
+      + '<td><span class="pill cbse">' + (f.subject||'—') + '</span></td>'
+      + '<td class="td-m">' + (f.qualification||'—') + '</td>'
+      + '<td class="td-m">' + (f.experience ? f.experience + ' yrs' : '—') + '</td>'
+      + '<td><div class="abtns">'
+      + '<button class="ab" aria-label="Edit faculty member" onclick="editFaculty(\''+f._id+'\')">E</button>'
+      + '<button class="ab del" aria-label="Delete faculty member" onclick="deleteFaculty(\''+f._id+'\')">×</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function updateFacultyTiles(list) {
+  document.getElementById('t-faculty').textContent = list.length;
+  var subjects = [...new Set(list.map(function(f){return f.subject;}).filter(Boolean))].length;
+  document.getElementById('t-subjects').textContent = subjects;
+  var pg = list.filter(function(f){ return f.qualification && (f.qualification.toLowerCase().includes('m.') || f.qualification.toLowerCase().includes('pg')); }).length;
+  document.getElementById('t-qualified').textContent = pg;
+  var exps = list.map(function(f){ return parseInt(f.experience)||0; }).filter(function(x){return x>0;});
+  var avg = exps.length ? Math.round(exps.reduce(function(a,b){return a+b;},0)/exps.length) : 0;
+  document.getElementById('t-avgexp').textContent = avg || '—';
+}
+
+function filterFaculty() {
+  var q = document.getElementById('faculty-search').value.toLowerCase();
+  var filtered = q ? _allFaculty.filter(function(f){
+    return (f.name||'').toLowerCase().includes(q) || (f.subject||'').toLowerCase().includes(q);
+  }) : _allFaculty;
+  renderFaculty(filtered);
+}
+
+/* ════════════════════════════════════════════
+   FACULTY MODAL
+════════════════════════════════════════════ */
+function openAddModal() { openFacultyModal(null); }
+
+function openFacultyModal(faculty) {
+  document.getElementById('faculty-edit-id').value = faculty ? faculty._id : '';
+  document.getElementById('facultyModalTitle').textContent = faculty ? ' Edit Faculty Member' : ' Add Faculty Member';
+  document.getElementById('f-name').value    = faculty ? faculty.name    || '' : '';
+  document.getElementById('f-subject').value = faculty ? faculty.subject || '' : '';
+  document.getElementById('f-qual').value    = faculty ? faculty.qualification || '' : '';
+  document.getElementById('f-exp').value     = faculty ? faculty.experience   || '' : '';
+  document.getElementById('f-photo').value   = faculty ? faculty.photo || '' : '';
+  previewFacultyPhoto(faculty ? faculty.photo || '' : '');
+  document.getElementById('facultyModal').classList.add('open');
+}
+
+function closeFacultyModal() { document.getElementById('facultyModal').classList.remove('open'); }
+
+function editFaculty(id) {
+  var f = _allFaculty.find(function(x){ return x._id === id; });
+  if (f) openFacultyModal(f);
+}
+
+async function saveFaculty() {
+  var id    = document.getElementById('faculty-edit-id').value;
+  var body  = {
+    name:          document.getElementById('f-name').value.trim(),
+    subject:       document.getElementById('f-subject').value.trim(),
+    qualification: document.getElementById('f-qual').value.trim(),
+    experience:    document.getElementById('f-exp').value.trim(),
+    photo:         document.getElementById('f-photo').value.trim(),
+    publicId:      document.getElementById('f-publicId') ? document.getElementById('f-publicId').value : '',
+    resourceType:  'image',
+    type:          'upload'
+  };
+  if (!body.name || !body.subject) { showToast('Name and subject are required', 'err'); return; }
+  try {
+    var url    = id ? API_BASE+'/api/faculty/'+id : API_BASE+'/api/faculty';
+    var method = id ? 'PUT' : 'POST';
+    var res = await fetch(url, { method, headers: buildApiHeaders(), body: JSON.stringify(body) });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    showToast(id ? 'Faculty updated in MongoDB!' : 'Faculty added to MongoDB!');
+    closeFacultyModal();
+    window._facultyLoaded = false;
+    loadFaculty();
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function deleteFaculty(id) {
+  if (!confirm('Delete this faculty member from MongoDB and Cloudinary?')) return;
+  var f = _allFaculty.find(function(x){ return x._id === id; });
+  try {
+    if (f && f.publicId) {
+      await deleteCloudinary(f.publicId, 'image', 'upload');
+    }
+    var res = await fetch('/api/faculty/'+id, { method:'DELETE', headers:buildApiHeaders() });
+    if (!res.ok) throw new Error('Failed');
+    showToast('Faculty deleted!');
+    window._facultyLoaded = false;
+    loadFaculty();
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+function previewFacultyPhoto(url) {
+  var preview = document.getElementById('faculty-photo-preview');
+  if (url) {
+    preview.innerHTML = '<img src="'+url+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\'" /><div class="cld-tag">w_400,h_400,c_fill,g_face,r_max,q_auto,f_auto</div>';
+  } else {
+    preview.innerHTML = '<div class="cld-empty"><span style="font-size:1.8rem;"></span><span>No photo</span></div>';
+  }
+}
+
+async function uploadFacultyPhoto(input) {
+  if (!input.files[0]) return;
+  showToast('Uploading photo...');
+  try {
+    var up = await uploadFile(input.files[0]);
+    document.getElementById('f-photo').value = up.url;
+    if (document.getElementById('f-publicId')) document.getElementById('f-publicId').value = up.publicId;
+    previewFacultyPhoto(up.url);
+    showToast('Photo uploaded!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+/* ════════════════════════════════════════════
+   FORMER HEADS
+════════════════════════════════════════════ */
+var _allFH = [];
+
+async function loadFormerHeads() {
+  window._fhLoaded = true;
+  try {
+    var res = await fetch('/api/management');
+    var data = await res.json();
+    // Filter for former heads (role contains "Former" or "Principal")
+    _allFH = Array.isArray(data) ? data : [];
+    renderFH(_allFH);
+  } catch(e) {
+    document.getElementById('fh-loading').textContent = ' Could not connect to API.';
+  }
+}
+
+function renderFH(list) {
+  var loading = document.getElementById('fh-loading');
+  var table   = document.getElementById('fh-table');
+  var tbody   = document.getElementById('fh-tbody');
+  if (!list.length) {
+    loading.style.display = 'block';
+    loading.textContent = 'No former heads found. Click "+ Add Former Head".';
+    table.style.display = 'none'; return;
+  }
+  loading.style.display = 'none';
+  table.style.display = 'table';
+  tbody.innerHTML = list.map(function(h, i) {
+    var periodText = h.period || h.role || '—';
+    var noteText = h.bio || h.contact || '—';
+    return '<tr>'
+      + '<td class="td-b td-code">' + periodText + '</td>'
+      + '<td class="td-b">' + (h.name||'—') + '</td>'
+      + '<td class="td-m" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + noteText + '</td>'
+      + '<td><input type="number" value="'+(i+1)+'" style="width:46px;border:1.5px solid var(--border);border-radius:6px;padding:3px 6px;font-family:Nunito;font-size:.8rem;background:var(--white);color:var(--text);outline:none;" /></td>'
+      + '<td><div class="abtns"><button class="ab" aria-label="Edit faculty highlight" onclick="editFH(\''+h._id+'\')">E</button><button class="ab del" aria-label="Delete faculty highlight" onclick="deleteFH(\''+h._id+'\')">×</button></div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function openFHModal() { 
+  document.getElementById('fh-edit-id').value=''; document.getElementById('fh-name').value=''; 
+  document.getElementById('fh-period').value=''; document.getElementById('fh-note').value=''; 
+  document.getElementById('fh-photo').value='';  document.getElementById('fh-publicId').value='';
+  document.getElementById('fhModal').classList.add('open'); 
+}
+function openFormerHeadModal() { openFHModal(); }
+function closeFHModal() { document.getElementById('fhModal').classList.remove('open'); }
+
+function editFH(id) {
+  var h = _allFH.find(function(x){ return x._id===id; });
+  if (!h) return;
+  document.getElementById('fh-edit-id').value  = h._id;
+  document.getElementById('fh-name').value     = h.name   || '';
+  document.getElementById('fh-period').value   = h.period || h.role || '';
+  document.getElementById('fh-note').value     = h.bio || h.contact || '';
+  document.getElementById('fh-photo').value    = h.photo  || '';
+  document.getElementById('fh-publicId').value = h.publicId || '';
+  document.getElementById('fhModal').classList.add('open');
+}
+
+async function saveFH() {
+  var id   = document.getElementById('fh-edit-id').value;
+  var body = {
+    name:         document.getElementById('fh-name').value.trim(),
+    role:         'former-head',
+    group:        'former-heads',
+    period:       document.getElementById('fh-period').value.trim(),
+    contact:      document.getElementById('fh-note').value.trim(),
+    bio:          document.getElementById('fh-note').value.trim(),
+    designation:  'Former Head',
+    photo:        document.getElementById('fh-photo').value.trim(),
+    publicId:     document.getElementById('fh-publicId').value,
+    resourceType: 'image',
+    type:         'upload'
+  };
+  if (!body.name || !body.period) { showToast('Name and period are required','err'); return; }
+  try {
+    var url = id ? API_BASE+'/api/management/'+id : API_BASE+'/api/management';
+    var res = await fetch(url,{method:id?'PUT':'POST',headers:buildApiHeaders(),body:JSON.stringify(body)});
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error||'Failed');
+    showToast('Saved to MongoDB!');
+    closeFHModal();
+    window._fhLoaded=false; loadFormerHeads();
+  } catch(e) { showToast(e.message,'err'); }
+}
+
+async function deleteFH(id) {
+  if (!confirm('Delete this entry from MongoDB and Cloudinary?')) return;
+  var d = _allFH.find(function(x){ return x._id===id; });
+  try {
+    if (d && d.publicId) {
+      await deleteCloudinary(d.publicId, 'image', 'upload');
+    }
+    await fetch('/api/management/'+id,{method:'DELETE',headers:buildApiHeaders()});
+    showToast('Deleted successfully!');
+    window._fhLoaded=false; loadFormerHeads();
+  } catch(e) { showToast(e.message,'err'); }
+}
+
+async function uploadFHPhoto(input) {
+  if (!input.files[0]) return;
+  showToast('Uploading photo...');
+  try {
+    var up = await uploadFile(input.files[0]);
+    document.getElementById('fh-photo').value = up.url;
+    document.getElementById('fh-publicId').value = up.publicId;
+    showToast('Photo uploaded!');
+  } catch(e) { showToast(e.message,'err'); }
+}
+
+/* ════════════════════════════════════════════
+   LEADERSHIP & HISTORY (CMS DATA)
+════════════════════════════════════════════ */
+async function loadLeadershipData() {
+  try {
+    // 1. Load Current Principal & Journey
+    var res1 = await fetch('/api/content/academics.history');
+    var data1 = await res1.json();
+    var history = data1.data || {};
+    var cp = history.currentPrincipal || {};
+    document.getElementById('curr-name').value   = cp.name || '';
+    document.getElementById('curr-period').value = cp.period || '';
+    document.getElementById('curr-desc').value   = cp.description || '';
+    
+    var journey = history.journey || [];
+    renderJourneyRows(journey);
+
+    // 2. Load Stats
+    var res2 = await fetch('/api/content/academics.stats');
+    var data2 = await res2.json();
+    var stats = data2.data || [];
+    if (stats.length) {
+      stats.forEach(function(s, i) {
+        var num = i + 1;
+        if (num > 4) return;
+        if (document.getElementById('stat'+num+'-icon'))  document.getElementById('stat'+num+'-icon').value  = s.icon || '';
+        if (document.getElementById('stat'+num+'-label')) document.getElementById('stat'+num+'-label').value = s.label || '';
+        if (document.getElementById('stat'+num+'-value')) document.getElementById('stat'+num+'-value').value = s.value || '';
+        if (document.getElementById('stat'+num+'-pos'))   document.getElementById('stat'+num+'-pos').value   = s.pos || num;
+      });
+    }
+  } catch(e) { console.error('History load failed', e); }
+}
+
+async function saveCurrentPrincipal() {
+  var data = {
+    name:        document.getElementById('curr-name').value.trim(),
+    period:      document.getElementById('curr-period').value.trim(),
+    description: document.getElementById('curr-desc').value.trim()
+  };
+  try {
+    // We update the 'academics.history' block, keeping journey intact
+    var res = await fetch('/api/content/academics.history');
+    var current = await res.json();
+    var history = current.data || {};
+    history.currentPrincipal = data;
+
+    var saveRes = await fetch('/api/content/academics.history', {
+      method: 'PUT',
+      headers: buildApiHeaders(),
+      body: JSON.stringify({ data: history })
+    });
+    if (!saveRes.ok) throw new Error('Failed to save principal');
+    showToast('Current Principal saved!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+function renderJourneyRows(list) {
+  var tbody = document.getElementById('journey-tbody');
+  tbody.innerHTML = '';
+  list.forEach(function(item) { addJourneyRow(item); });
+  if (!list.length) addJourneyRow(); // Add one empty row
+}
+
+function addJourneyRow(data) {
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td><input type="text" class="j-year" value="'+esc(data?data.year:'')+'" placeholder="e.g. 2010" /></td>'
+               + '<td><textarea class="j-event" placeholder="Event description...">'+esc(data?data.event:'')+'</textarea></td>'
+               + '<td><button class="ab del" onclick="this.closest(\'tr\').remove()"></button></td>';
+  document.getElementById('journey-tbody').appendChild(tr);
+}
+
+async function saveJourney() {
+  var rows = document.querySelectorAll('#journey-tbody tr');
+  var list = [];
+  rows.forEach(function(r) {
+    var yr = r.querySelector('.j-year').value.trim();
+    var ev = r.querySelector('.j-event').value.trim();
+    if (yr || ev) list.push({ year: yr, event: ev });
+  });
+  try {
+    var res = await fetch('/api/content/academics.history');
+    var current = await res.json();
+    var history = current.data || {};
+    history.journey = list;
+
+    var saveRes = await fetch('/api/content/academics.history', {
+      method: 'PUT',
+      headers: buildApiHeaders(),
+      body: JSON.stringify({ data: history })
+    });
+    if (!saveRes.ok) throw new Error('Failed to save journey');
+    showToast('School journey saved!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function saveLegacyStats() {
+  var stats = [];
+  for (var i=1; i<=4; i++) {
+    stats.push({
+      icon:  document.getElementById('stat'+i+'-icon').value.trim(),
+      label: document.getElementById('stat'+i+'-label').value.trim(),
+      value: document.getElementById('stat'+i+'-value').value.trim(),
+      pos:   document.getElementById('stat'+i+'-pos').value
+    });
+  }
+  try {
+    var res = await fetch('/api/content/academics.stats', {
+      method: 'PUT',
+      headers: buildApiHeaders(),
+      body: JSON.stringify({ data: stats })
+    });
+    if (!res.ok) throw new Error('Failed to save stats');
+    showToast('Legacy stats saved!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+/* ════════════════════════════════════════════
+   DOCUMENTS (CIRCULARS)
+════════════════════════════════════════════ */
+var _allDocs = {};
+
+async function loadDocuments(category, loadingId, listId, cntId) {
+  if (category === 'cbse-circular') window._cbseLoaded = true;
+  if (category === 'school-circular') window._schoolLoaded = true;
+  try {
+    var res  = await fetch('/api/documents');
+    var data = await res.json();
+    var all  = Array.isArray(data) ? data : [];
+    var filtered = all.filter(function(d){ return d.category === category; });
+    _allDocs[category] = filtered;
+    if (cntId) document.getElementById(cntId).textContent = filtered.length;
+    renderDocList(filtered, loadingId, listId, category);
+  } catch(e) {
+    document.getElementById(loadingId).textContent = ' Could not connect to API.';
+  }
+}
+
+function renderDocList(list, loadingId, listId, category) {
+  var loading = document.getElementById(loadingId);
+  var listEl  = document.getElementById(listId);
+  if (!list.length) {
+    loading.style.display='block';
+    loading.textContent = 'No circulars found. Click "+ Add Circular".';
+    listEl.style.display='none'; return;
+  }
+  loading.style.display='none';
+  listEl.style.display='block';
+  listEl.innerHTML = list.map(function(d) {
+    return '<div class="circ-item">'
+      + '<div class="circ-ic"></div>'
+      + '<div class="circ-body">'
+      + '<div class="circ-title">' + (d.title||'Untitled') + '</div>'
+      + '<div class="circ-meta">' + (d.date ? new Date(d.date).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) : '—') + '</div>'
+      + '</div>'
+      + '<div class="circ-acts">'
+      + (d.url ? '<a href="'+d.url+'" target="_blank" class="atbtn out" style="padding:5px 10px;font-size:.68rem;"> View</a>' : '')
+      + '<button class="ab" aria-label="Edit document" onclick="editDoc(\''+d._id+'\',\''+category+'\')">E</button>'
+      + '<button class="ab del" aria-label="Delete document" onclick="deleteDoc(\''+d._id+'\',\''+category+'\')">×</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function openCBSEModal() {
+  document.getElementById('circ-category').value = 'cbse-circular';
+  document.getElementById('circModalTitle').textContent = ' Add CBSE Circular';
+  document.getElementById('circ-edit-id').value=''; document.getElementById('circ-title').value='';
+  document.getElementById('circ-date').value=''; document.getElementById('circ-url').value='';
+  document.getElementById('circ-publicId').value='';
+  document.getElementById('circModal').classList.add('open');
+}
+function openSchoolCircModal() {
+  document.getElementById('circ-category').value = 'school-circular';
+  document.getElementById('circModalTitle').textContent = ' Add School Circular';
+  document.getElementById('circ-edit-id').value=''; document.getElementById('circ-title').value='';
+  document.getElementById('circ-date').value=''; document.getElementById('circ-url').value='';
+  document.getElementById('circ-publicId').value='';
+  document.getElementById('circModal').classList.add('open');
+}
+function closeCircModal() { document.getElementById('circModal').classList.remove('open'); }
+
+function editDoc(id, category) {
+  var d = (_allDocs[category]||[]).find(function(x){ return x._id===id; });
+  if (!d) return;
+  document.getElementById('circ-category').value = d.category;
+  document.getElementById('circ-edit-id').value  = d._id;
+  document.getElementById('circ-title').value    = d.title  || '';
+  document.getElementById('circ-date').value     = d.date   ? d.date.split('T')[0] : '';
+  document.getElementById('circ-url').value      = d.url    || '';
+  document.getElementById('circ-publicId').value = d.publicId || '';
+  document.getElementById('circ-resourceType').value = d.resourceType || 'raw';
+  document.getElementById('circ-type').value         = d.type || 'upload';
+  document.getElementById('circModal').classList.add('open');
+}
+
+async function saveCircular() {
+  var id       = document.getElementById('circ-edit-id').value;
+  var category = document.getElementById('circ-category').value;
+  var body = {
+    title:        document.getElementById('circ-title').value.trim(),
+    date:         document.getElementById('circ-date').value,
+    url:          document.getElementById('circ-url').value.trim(),
+    publicId:     document.getElementById('circ-publicId').value,
+    resourceType: document.getElementById('circ-resourceType').value,
+    type:         document.getElementById('circ-type').value,
+    category:     category,
+  };
+  if (!body.title) { showToast('Title is required','err'); return; }
+  try {
+    var url = id ? API_BASE+'/api/documents/'+id : API_BASE+'/api/documents';
+    var res = await fetch(url,{method:id?'PUT':'POST',headers:buildApiHeaders(),body:JSON.stringify(body)});
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error||'Failed');
+    showToast('Circular saved to MongoDB!');
+    closeCircModal();
+    var loadId = category==='cbse-circular' ? 'cbse-loading' : 'school-loading';
+    var listId = category==='cbse-circular' ? 'cbse-list'    : 'school-list';
+    var cntId  = category==='cbse-circular' ? 'cnt-cbse'     : 'cnt-school';
+    if (category==='cbse-circular') window._cbseLoaded=false;
+    else window._schoolLoaded=false;
+    loadDocuments(category,loadId,listId,cntId);
+  } catch(e) { showToast(e.message,'err'); }
+}
+
+async function deleteDoc(id, category) {
+  if (!confirm('Delete from MongoDB and Cloudinary?')) return;
+  var d = (_allDocs[category]||[]).find(function(x){ return x._id===id; });
+  try {
+    // Delete from Cloudinary if metadata exists
+    if (d && d.publicId) {
+      await deleteCloudinary(d.publicId, d.resourceType || 'raw', d.type || 'upload');
+    }
+    await fetch('/api/documents/'+id, { method:'DELETE', headers:buildApiHeaders() });
+    showToast('Deleted successfully!');
+    var loadId = category==='cbse-circular' ? 'cbse-loading' : 'school-loading';
+    var listId = category==='cbse-circular' ? 'cbse-list'    : 'school-list';
+    var cntId  = category==='cbse-circular' ? 'cnt-cbse'     : 'cnt-school';
+    if (category==='cbse-circular') window._cbseLoaded=false;
+    else window._schoolLoaded=false;
+    loadDocuments(category,loadId,listId,cntId);
+  } catch(e) { showToast(e.message,'err'); }
+}
+
+async function uploadCircularPDF(input) {
+  if (!input.files[0]) return;
+  try {
+    showToast('Uploading PDF...');
+    var data = await uploadFile(input.files[0]);
+    
+    document.getElementById('circ-url').value          = data.url;
+    document.getElementById('circ-publicId').value     = data.publicId;
+    document.getElementById('circ-resourceType').value = data.resourceType;
+    document.getElementById('circ-type').value         = data.type || 'upload';
+    
+    showToast('PDF uploaded!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+/* ════════════════════════════════════════════
+   BOOK LIST
+════════════════════════════════════════════ */
+function addBookRow(btn, cls) {
+  var hdr = btn.closest('tr');
+  var row = document.createElement('tr');
+  row.innerHTML = '<td><input type="text" placeholder="Subject..." style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td>'
+    + '<td><input type="text" placeholder="Book title..." style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+    + '<td><input type="text" value="NCERT" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+    + '<td><input type="text" value="'+cls+'" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+    + '<td><div class="abtns"><button class="ab del" onclick="this.closest(\'tr\').remove()"></button></div></td>';
+  var tbody = document.getElementById('book-tbody');
+  // Insert after last row of this class group
+  var rows = tbody.querySelectorAll('tr');
+  var lastRow = hdr;
+  for (var i=0;i<rows.length;i++) {
+    if (rows[i] === hdr) {
+      // Find next class header after this one
+      for (var j=i+1;j<rows.length;j++) {
+        if (rows[j].classList.contains('book-class-hd')) { tbody.insertBefore(row,rows[j]); return; }
+        lastRow = rows[j];
+      }
+      break;
+    }
+  }
+  tbody.appendChild(row);
+}
+
+function addBookClass() {
+  var cls = prompt('Class group name (e.g. Class II, Class V):');
+  if (!cls) return;
+  var tbody = document.getElementById('book-tbody');
+  var hdr = document.createElement('tr');
+  hdr.className = 'book-class-hd';
+  hdr.innerHTML = '<td colspan="5"> '+cls+' <button class="ab" style="margin-left:8px;font-size:.65rem;width:auto;padding:2px 8px;border-radius:5px;" onclick="addBookRow(this,\''+cls+'\')">＋ Row</button></td>';
+  tbody.appendChild(hdr);
+  addBookRow(hdr.querySelector('button'), cls);
+}
+
+function triggerBookPDFUpload() { document.getElementById('bookPdfFile').click(); }
+
+function buildBookListClasses() {
+  var tbody = document.getElementById('book-tbody');
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  var classes = [];
+  var currentGroup = null;
+
+  rows.forEach(function(row) {
+    if (row.classList.contains('book-class-hd')) {
+      var headerText = row.textContent.replace('＋ Row', '').trim();
+      currentGroup = { label: headerText, books: [] };
+      classes.push(currentGroup);
+      return;
+    }
+
+    if (!currentGroup) return;
+    var inputs = row.querySelectorAll('input');
+    if (inputs.length < 4) return;
+    var item = {
+      subject: (inputs[0].value || '').trim(),
+      title: (inputs[1].value || '').trim(),
+      publisher: (inputs[2].value || '').trim(),
+      className: (inputs[3].value || '').trim()
+    };
+    if (item.subject || item.title || item.publisher || item.className) {
+      currentGroup.books.push(item);
+    }
+  });
+
+  return classes.filter(function(group) {
+    return group.label || group.books.length;
+  });
+}
+
+function renderBookListEditor(classes) {
+  var tbody = document.getElementById('book-tbody');
+  if (!tbody) return;
+  var groups = Array.isArray(classes) ? classes : [];
+  if (!groups.length) return;
+
+  tbody.innerHTML = groups.map(function(group) {
+    var label = esc(group.label || 'Class Group');
+    var rows = (Array.isArray(group.books) ? group.books : []).map(function(book) {
+      return '<tr>'
+        + '<td><input type="text" value="' + esc(book.subject || '') + '" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text);font-weight:700;" /></td>'
+        + '<td><input type="text" value="' + esc(book.title || '') + '" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+        + '<td><input type="text" value="' + esc(book.publisher || '') + '" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+        + '<td><input type="text" value="' + esc(book.className || '') + '" style="border:none;background:transparent;font-family:Nunito;font-size:.8rem;width:100%;outline:none;color:var(--text-muted);" /></td>'
+        + '<td><div class="abtns"><button class="ab del" onclick="this.closest(\'tr\').remove()"></button></div></td>'
+        + '</tr>';
+    }).join('');
+    return '<tr class="book-class-hd"><td colspan="5"> ' + label + ' <button class="ab" style="margin-left:8px;font-size:.65rem;width:auto;padding:2px 8px;border-radius:5px;" onclick="addBookRow(this,\'' + label.replace(/'/g, "\\'") + '\')">＋ Row</button></td></tr>' + rows;
+  }).join('');
+}
+
+async function uploadBookPDF(input) {
+  if (!input.files[0]) return;
+  try {
+    showToast('Uploading book list PDF...');
+    var data = await uploadFile(input.files[0]);
+    
+    document.getElementById('bookPdfUrl').value          = data.url;
+    document.getElementById('bookPdf-publicId').value     = data.publicId;
+    document.getElementById('bookPdf-resourceType').value = data.resourceType;
+    document.getElementById('bookPdf-type').value         = data.type || 'upload';
+    document.getElementById('bookPdf-originalFilename').value = data.originalFilename || data.storedFilename || '';
+    
+    showToast('Book list PDF uploaded!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function saveBookListPDF() {
+  var url = document.getElementById('bookPdfUrl').value.trim();
+  if (!url) { showToast('Please upload a PDF first','err'); return; }
+  var academicYear = document.getElementById('bookPdfYear').value.trim();
+  var title = document.getElementById('bookPdfTitle').value.trim() || 'Book List 2024–25';
+  var body = {
+    title:        title,
+    url:          url,
+    publicId:     document.getElementById('bookPdf-publicId').value,
+    resourceType: document.getElementById('bookPdf-resourceType').value,
+    type:         document.getElementById('bookPdf-type').value,
+    category:     'book-list',
+    date:         new Date().toISOString(),
+    description:  academicYear ? ('Academic Year: ' + academicYear) : '',
+    meta: {
+      originalFilename: document.getElementById('bookPdf-originalFilename').value || '',
+      academicYear: academicYear
+    }
+  };
+  try {
+    var targetId = window._bookListDocId || '';
+    var res = await fetch(targetId ? ('/api/documents/' + targetId) : '/api/documents', {
+      method: targetId ? 'PUT' : 'POST',
+      headers: buildApiHeaders(),
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    window._bookListDocId = data && data._id ? data._id : targetId;
+    document.getElementById('bookPdf-originalFilename').value = (data.meta && data.meta.originalFilename) || body.meta.originalFilename || '';
+    showToast('Book list saved!');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function saveBookListContent() {
+  var data = {
+    title: document.getElementById('bookPdfTitle').value.trim() || 'Book List 2024–25',
+    academicYear: document.getElementById('bookPdfYear').value.trim() || '',
+    classes: buildBookListClasses()
+  };
+  try {
+    var res = await fetch('/api/content/academics.bookList', {
+      method: 'PUT',
+      headers: buildApiHeaders(),
+      body: JSON.stringify({ data: data })
+    });
+    var payload = await res.json();
+    if (!res.ok) throw new Error(payload.error || 'Failed to save book list');
+    showToast('Book list saved to MongoDB!');
+  } catch (e) {
+    showToast(e.message, 'err');
+  }
+}
+
+async function loadBookListContent() {
+  try {
+    var res = await fetch('/api/content/academics.bookList');
+    var payload = await res.json();
+    var data = payload && payload.data ? payload.data : {};
+    if (data.title) document.getElementById('bookPdfTitle').value = data.title;
+    if (data.academicYear) document.getElementById('bookPdfYear').value = data.academicYear;
+    if (Array.isArray(data.classes) && data.classes.length) renderBookListEditor(data.classes);
+  } catch (e) {
+    console.error('Book list content load failed', e);
+  }
+}
+
+async function loadBookListPDF() {
+  try {
+    var res = await fetch('/api/documents?category=book-list');
+    var items = await res.json();
+    if (!Array.isArray(items) || !items.length) return;
+    var latest = items.sort(function(a, b) {
+      return new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0);
+    })[0];
+    window._bookListDocId = latest && latest._id ? latest._id : '';
+    if (latest.title) document.getElementById('bookPdfTitle').value = latest.title;
+    if (latest.url) document.getElementById('bookPdfUrl').value = latest.url;
+    if (latest.publicId) document.getElementById('bookPdf-publicId').value = latest.publicId;
+    if (latest.resourceType) document.getElementById('bookPdf-resourceType').value = latest.resourceType;
+    if (latest.type) document.getElementById('bookPdf-type').value = latest.type;
+    if (latest.meta && latest.meta.originalFilename) {
+      document.getElementById('bookPdf-originalFilename').value = latest.meta.originalFilename;
+    }
+    if (latest.meta && latest.meta.academicYear && !document.getElementById('bookPdfYear').value) {
+      document.getElementById('bookPdfYear').value = latest.meta.academicYear;
+    }
+  } catch (e) {
+    console.error('Book list PDF load failed', e);
+  }
+}
+
+/* ════════════════════════════════════════════
+   REFRESH + BOOT
+════════════════════════════════════════════ */
+function refreshData() {
+  window._facultyLoaded=false; window._fhLoaded=false;
+  window._cbseLoaded=false; window._schoolLoaded=false;
+  var active = document.querySelector('.panel.active');
+  if (active) {
+    var id = active.id.replace('tab-','');
+    goTab(id); // triggers load
+  }
+  showToast('Data refreshed!');
+}
+
+// Admin token prompt removed
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); showToast('Use specific Save buttons per section.'); }
+});
+
+/* ── BOOT: load faculty on page load ── */
+window.addEventListener('DOMContentLoaded', function() {
+  loadFaculty();
+  loadBookListContent();
+  loadBookListPDF();
+  // Pre-load document counts
+  fetch('/api/documents').then(function(r){return r.json();}).then(function(data){
+    if (!Array.isArray(data)) return;
+    document.getElementById('cnt-cbse').textContent   = data.filter(function(d){return d.category==='cbse-circular';}).length;
+    document.getElementById('cnt-school').textContent = data.filter(function(d){return d.category==='school-circular';}).length;
+  }).catch(function(){});
+});
+</script>
+</body>
+</html>

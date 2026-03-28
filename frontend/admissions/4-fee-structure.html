@@ -353,14 +353,14 @@
   <div class="container">
     <div class="content-card">
       <h2>Fee Structure</h2>
-      <div class="ay-badge">📅 Academic Year <span>2025–2026</span></div>
+      <div class="ay-badge"> Academic Year <span id="feeAcademicYearDisplay">2025–2026</span></div>
       <p>The fee structure below is applicable for the Academic Year 2025–2026. Fees are to be paid as per the schedule prescribed by the school management. Please download the official fee structure PDF for the most current and complete details.</p>
 
       <!-- PRIMARY FEE TABLE (sample based on typical CBSE school structure - exact figures from PDF) -->
-      <h3>📊 Fee Structure Overview</h3>
+      <h3 id="feePageHeadingDisplay">Fee Structure Overview</h3>
       <p>The official fee structure for the academic year 2025–26 is available for download below. The table below provides a general overview of fee categories applicable across classes.</p>
 
-      <div class="fee-table-wrapper">
+      <div class="fee-table-wrapper" id="feeTableSection">
         <table class="fee-table">
           <thead>
             <tr>
@@ -369,7 +369,7 @@
               <th>Frequency</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="feeTableBodyDisplay">
             <tr>
               <td>Tuition Fee</td>
               <td>Core academic instruction charges</td>
@@ -410,18 +410,18 @@
       </div>
 
       <!-- Download CTA -->
-      <div class="fee-download-cta">
+      <div class="fee-download-cta" id="feeDownloadSection">
         <div class="cta-text">
-          <h3>📄 Download Official Fee Structure PDF</h3>
-          <p>Download the complete and up-to-date fee structure for Academic Year 2025–2026, including class-wise breakdowns and all applicable charges.</p>
+          <h3 id="feeDownloadTitleDisplay">Download Official Fee Structure PDF</h3>
+          <p id="feeDownloadDescDisplay">Download the complete and up-to-date fee structure for Academic Year 2025–2026, including class-wise breakdowns and all applicable charges.</p>
         </div>
-        <a href="https://school.edu/wp-content/uploads/2025/06/fees-3.pdf" class="fee-dl-btn" target="_blank">📥 Download Fee Structure (PDF)</a>
+        <a href="https://school.edu/wp-content/uploads/2025/06/fees-3.pdf" class="fee-dl-btn" target="_blank" id="feeDownloadBtnDisplay"> Download Fee Structure (PDF)</a>
       </div>
 
       <!-- Fee Notes -->
       <div class="fee-notes">
-        <h3>📌 Important Fee Notes</h3>
-        <ul class="fee-note-list">
+        <h3> Important Fee Notes</h3>
+        <ul class="fee-note-list" id="feeNotesListDisplay">
           <li><div class="note-dot"></div>The entire fee for the academic year is to be remitted by the end of February.</li>
           <li><div class="note-dot"></div>Fee payment may be made in instalments as prescribed by the school management.</li>
           <li><div class="note-dot"></div>No fees shall be refunded for any cause once paid.</li>
@@ -433,26 +433,9 @@
       </div>
 
       <!-- Payment Methods -->
-      <div class="payment-section">
-        <h3>💳 Fee Payment Methods</h3>
-        <div class="payment-cards">
-          <div class="payment-card">
-            <div class="pay-icon">🏦</div>
-            <h4>School Office (Cash / DD)</h4>
-            <p>Pay in person at the school accounts office during working hours. Demand Drafts are also accepted.</p>
-          </div>
-          <div class="payment-card">
-            <div class="pay-icon">💻</div>
-            <h4>Online Payment</h4>
-            <p>Pay conveniently through our online payment portal. Secure and instant.</p>
-            <a href="https://school.edu/online-fees-payment/" class="online-pay-btn" target="_blank">Pay Online →</a>
-          </div>
-          <div class="payment-card">
-            <div class="pay-icon">📱</div>
-            <h4>NEFT / Bank Transfer</h4>
-            <p>Direct bank transfer to the school's bank account. Contact the office for bank details.</p>
-          </div>
-        </div>
+      <div class="payment-section" id="feePaymentSection">
+        <h3> Fee Payment Methods</h3>
+        <div class="payment-cards" id="paymentCardsDisplay"></div>
       </div>
 
     </div>
@@ -461,5 +444,73 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    (function initFeePage() {
+      function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+      }
+      function resolveApiBase() {
+        var defaultRemoteApi = 'https://loretto-cbse-school.onrender.com/api';
+        var candidates = [localStorage.getItem('loretto_api_base') || '', defaultRemoteApi, window.location.origin + '/api', 'http://localhost:3000/api', 'http://127.0.0.1:3000/api'].filter(function (value, index, list) { return value && list.indexOf(value) === index; });
+        var attempt = Promise.resolve(null);
+        candidates.forEach(function (base) {
+          attempt = attempt.then(function (found) {
+            if (found) return found;
+            return fetch(base + '/health').then(function (res) { return res.ok ? res.json() : null; }).then(function (data) { return data && data.service === 'loretto-backend' ? base : null; }).catch(function () { return null; });
+          });
+        });
+        return attempt.then(function (found) { return found || defaultRemoteApi; });
+      }
+      function forceDownloadUrl(url, filename) {
+        var value = String(url || '');
+        if (!value) return '#';
+        if (value.indexOf('res.cloudinary.com/') !== -1 && (/\.pdf(?:$|[?#])/i.test(value) || value.indexOf('/raw/') !== -1)) {
+          var proxyBase = localStorage.getItem('loretto_api_base');
+          if (!proxyBase || proxyBase.indexOf('http') !== 0 || proxyBase.indexOf(window.location.host) !== -1) {
+            if (window.location.port === '5500' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+              proxyBase = 'http://localhost:3000/api';
+            } else {
+              proxyBase = defaultRemoteApi;
+            }
+          }
+          var downloadUrl = proxyBase + '/upload/download?url=' + encodeURIComponent(value) + '&filename=' + encodeURIComponent(filename || 'fee-structure.pdf');
+          console.log('[Download Proxy] Target:', value, '-> Link:', downloadUrl);
+          return downloadUrl;
+        }
+        return value;
+      }
+      function render(data) {
+        if (data.acYear) document.getElementById('feeAcademicYearDisplay').textContent = data.acYear;
+        if (data.pageHeading) document.getElementById('feePageHeadingDisplay').textContent = data.pageHeading;
+        if (Array.isArray(data.rows) && data.rows.length) {
+          document.getElementById('feeTableBodyDisplay').innerHTML = data.rows.map(function (item) {
+            return '<tr><td>' + escapeHtml(item.category || '') + '</td><td>' + escapeHtml(item.description || '') + '</td><td>' + escapeHtml(item.frequency || '') + '</td></tr>';
+          }).join('');
+        }
+        if (typeof data.showTable === 'boolean') document.getElementById('feeTableSection').style.display = data.showTable ? '' : 'none';
+        if (typeof data.showDl === 'boolean') document.getElementById('feeDownloadSection').style.display = data.showDl ? '' : 'none';
+        if (typeof data.showPay === 'boolean') document.getElementById('feePaymentSection').style.display = data.showPay ? '' : 'none';
+        if (data.dlTitle) document.getElementById('feeDownloadTitleDisplay').textContent = data.dlTitle;
+        if (data.dlDesc) document.getElementById('feeDownloadDescDisplay').textContent = data.dlDesc;
+        if (data.dlUrl) document.getElementById('feeDownloadBtnDisplay').href = forceDownloadUrl(data.dlUrl, data.dlOriginalFilename || 'fee-structure.pdf');
+        if (data.dlOriginalFilename) document.getElementById('feeDownloadBtnDisplay').setAttribute('download', data.dlOriginalFilename);
+        if (data.dlBtnText) document.getElementById('feeDownloadBtnDisplay').textContent = ' ' + data.dlBtnText;
+        if (Array.isArray(data.notes) && data.notes.length) {
+          document.getElementById('feeNotesListDisplay').innerHTML = data.notes.map(function (item) {
+            return '<li><div class="note-dot"></div>' + escapeHtml(item.text || '') + '</li>';
+          }).join('');
+        }
+        if (Array.isArray(data.payMethods) && data.payMethods.length) {
+          document.getElementById('paymentCardsDisplay').innerHTML = data.payMethods.map(function (item) {
+            return '<div class="payment-card"><div class="pay-icon"></div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.desc || '') + '</p>' + (item.linkText && item.linkUrl ? '<a href="' + escapeHtml(item.linkUrl) + '" class="online-pay-btn" target="_blank" rel="noopener">' + escapeHtml(item.linkText) + '</a>' : '') + '</div>';
+          }).join('');
+        }
+      }
+      resolveApiBase().then(function (base) { return fetch(base + '/content/admissions-fee', { cache: 'no-store' }); }).then(function (res) { return res.json(); }).then(function (item) {
+        var data = item && item.data && typeof item.data === 'object' ? item.data : {};
+        if (Object.keys(data).length) render(data);
+      }).catch(function () {});
+    })();
+  </script>
 </body>
 </html>

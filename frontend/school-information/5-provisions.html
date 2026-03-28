@@ -6,6 +6,7 @@
   <title>Provisions | School Information | Loretto Central School</title>
   <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="/shared-data-loader.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -377,7 +378,7 @@
 <div class="page-banner">
   <div class="container">
     <div class="page-banner-content">
-      <h1>Provisions</h1>
+      <h1 id="provisionsPageTitle">Provisions</h1>
       <div class="breadcrumb">
         <a href="../index.html">Home</a>
         <span>›</span>
@@ -409,10 +410,10 @@
     <div class="content-card">
 
       <h2>Provisions</h2>
-      <p>Loretto Central School makes comprehensive provisions for the academic, physical, and emotional well-being of all its students, creating an inclusive, safe, and resourceful learning environment.</p>
-      <div class="highlight-box"><p>All provisions are regularly reviewed and updated to meet CBSE norms and the evolving needs of our student community. Parents are encouraged to report any gaps or concerns to the school office.</p></div>
+      <p id="provisionsIntro">Loretto Central School makes comprehensive provisions for the academic, physical, and emotional well-being of all its students, creating an inclusive, safe, and resourceful learning environment.</p>
+      <div class="highlight-box"><p id="provisionsHighlight">All provisions are regularly reviewed and updated to meet CBSE norms and the evolving needs of our student community. Parents are encouraged to report any gaps or concerns to the school office.</p></div>
       <h3>Academic Provisions</h3>
-      <ul>
+      <ul id="provisionsAcademicList">
         <li>Well-equipped classrooms with adequate seating, lighting, and ventilation</li>
         <li>Smart boards and audio-visual aids in select classrooms</li>
         <li>NCERT and CBSE-approved textbooks for all classes</li>
@@ -422,7 +423,7 @@
         <li>Remedial classes and extra coaching for students needing academic support</li>
       </ul>
       <h3>Health &amp; Safety Provisions</h3>
-      <ul>
+      <ul id="provisionsHealthSafetyList">
         <li>First Aid room with a trained first-aider on campus</li>
         <li>Purified drinking water available throughout the school</li>
         <li>Separate, well-maintained washrooms for boys, girls, and staff</li>
@@ -431,13 +432,13 @@
         <li>Ramps and accessible pathways for students with physical disabilities</li>
       </ul>
       <h3>Student Welfare</h3>
-      <div class="feat-grid">
-        <div class="feat-card"><div class="icon">🍽️</div><h4>Canteen</h4><p>Clean, hygienic canteen providing nutritious snacks and meals during break hours.</p></div>
-        <div class="feat-card"><div class="icon">🚌</div><h4>Transport</h4><p>School transport service on major routes. Contact office for route details and fees.</p></div>
-        <div class="feat-card"><div class="icon">🤝</div><h4>Counselling</h4><p>Student counselling for academic stress, career guidance, and personal challenges.</p></div>
-        <div class="feat-card"><div class="icon">🏅</div><h4>Scholarships</h4><p>Merit-based and need-based fee concessions available. Apply through school office.</p></div>
-        <div class="feat-card"><div class="icon">📋</div><h4>Grievance Redressal</h4><p>Grievance box at the school office. All complaints addressed within 7 working days.</p></div>
-        <div class="feat-card"><div class="icon">🌿</div><h4>Green Campus</h4><p>Eco-friendly initiative with gardens, rainwater harvesting, and cleanliness drives.</p></div>
+      <div class="feat-grid" id="provisionsWelfareGrid">
+        <div class="feat-card"><div class="icon"></div><h4>Canteen</h4><p>Clean, hygienic canteen providing nutritious snacks and meals during break hours.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Transport</h4><p>School transport service on major routes. Contact office for route details and fees.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Counselling</h4><p>Student counselling for academic stress, career guidance, and personal challenges.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Scholarships</h4><p>Merit-based and need-based fee concessions available. Apply through school office.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Grievance Redressal</h4><p>Grievance box at the school office. All complaints addressed within 7 working days.</p></div>
+        <div class="feat-card"><div class="icon"></div><h4>Green Campus</h4><p>Eco-friendly initiative with gardens, rainwater harvesting, and cleanliness drives.</p></div>
       </div>
       
   </div>
@@ -445,5 +446,62 @@
 
   <script src="/components/Navbar.js"></script>
   <script src="/components/Footer.js"></script>
+  <script>
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var block = await loadContentBlock('school-info.provisions');
+        var data = block && block.data ? block.data : null;
+        if (!data || typeof data !== 'object') return;
+
+        if (typeof data.intro === 'string') {
+          var introEl = document.getElementById('provisionsIntro');
+          if (introEl) introEl.textContent = data.intro;
+        }
+
+        if (typeof data.highlightBox === 'string') {
+          var highlightEl = document.getElementById('provisionsHighlight');
+          if (highlightEl) highlightEl.textContent = data.highlightBox;
+        }
+
+        if (Array.isArray(data.academic) && data.academic.length) {
+          var academicEl = document.getElementById('provisionsAcademicList');
+          if (academicEl) {
+            academicEl.innerHTML = data.academic.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+
+        if (Array.isArray(data.healthSafety) && data.healthSafety.length) {
+          var healthEl = document.getElementById('provisionsHealthSafetyList');
+          if (healthEl) {
+            healthEl.innerHTML = data.healthSafety.map(function (item) {
+              return '<li>' + escapeHtml(item || '') + '</li>';
+            }).join('');
+          }
+        }
+
+        if (Array.isArray(data.welfare) && data.welfare.length) {
+          var welfareEl = document.getElementById('provisionsWelfareGrid');
+          if (welfareEl) {
+            welfareEl.innerHTML = data.welfare.map(function (item) {
+              return '<div class="feat-card"><div class="icon">' + escapeHtml(item.icon || '') + '</div><h4>' + escapeHtml(item.title || '') + '</h4><p>' + escapeHtml(item.description || '') + '</p></div>';
+            }).join('');
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load provisions content:', error);
+      }
+    });
+  </script>
 </body>
 </html>
