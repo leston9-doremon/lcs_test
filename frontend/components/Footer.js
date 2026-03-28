@@ -42,9 +42,9 @@
     logo: R + 'logo.png'
   };
   var DEFAULT_CONTACT_SETTINGS = {
-    address: 'Main Road, Bantwal, Karnataka',
-    phones: '+91 98765 43210',
-    emails: 'info@school.edu',
+    address: 'Amtady Village Loretto Post, Bantwal 574211',
+    phones: '94806 63011',
+    emails: 'lorettocentralschool@gmail.com',
     officeHours: 'Mon-Sat: 8:00 AM - 4:00 PM'
   };
 
@@ -159,9 +159,9 @@
     '      <div class="footer-col">',
     '        <h4>Contact</h4>',
     '        <ul class="footer-contact-list">',
-    '          <li><span>&#128205;</span> Main Road, Bantwal, Karnataka</li>',
-    '          <li><a href="tel:+919876543210"><span>&#128222;</span> +91 98765 43210</a></li>',
-    '          <li><a href="mailto:info@school.edu"><span>&#9993;&#65039;</span> info@school.edu</a></li>',
+    '          <li><span>&#128205;</span> Amtady Village Loretto Post, Bantwal 574211</li>',
+    '          <li><a href="tel:+919480663011"><span>&#128222;</span> 94806 63011</a></li>',
+    '          <li><a href="mailto:lorettocentralschool@gmail.com"><span>&#9993;&#65039;</span> lorettocentralschool@gmail.com</a></li>',
     '          <li><span>&#128336;</span> Mon&#8211;Sat: 8:00 AM &#8211; 4:00 PM</li>',
     '          <li class="footer-login-link"><a href="' + R + 'login/parent-login.html">&#128106; Parent Login Portal</a></li>',
     '        </ul>',
